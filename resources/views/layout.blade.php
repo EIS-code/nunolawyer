@@ -70,35 +70,35 @@
                         </li>
                         <!--li class="app-sidebar__heading">{{ __('Article / Purpose') }}</li-->
                         <li>
-                            <a href="forms-controls.html" class="{{ (request()->is('') ? 'mm-active' : '') }}">
+                            <a class="{{ (request()->is('') ? 'mm-active' : '') }}">
                                 <i class="metismenu-icon pe-7s-notebook"></i>
                                 {{ __('Article / Purpose') }}
                             </a>
                         </li>
                         <!--li class="app-sidebar__heading">{{ __('POA & agreement') }}</li-->
                         <li>
-                            <a href="forms-validation.html" class="{{ (request()->is('') ? 'mm-active' : '') }}">
+                            <a class="{{ (request()->is('') ? 'mm-active' : '') }}">
                                 <i class="metismenu-icon pe-7s-note"></i>
                                 {{ __('POA & agreement') }}
                             </a>
                         </li>
                         <!--li class="app-sidebar__heading">{{ __('Translate model or documents') }}</li-->
                         <li>
-                            <a href="charts-chartjs.html" class="{{ (request()->is('') ? 'mm-active' : '') }}">
+                            <a class="{{ (request()->is('') ? 'mm-active' : '') }}">
                                 <i class="metismenu-icon pe-7s-file"></i>
                                 {{ __('Translate model or documents') }}
                             </a>
                         </li>
                         <!--li class="app-sidebar__heading">{{ __('Our fee / policy document') }}</li-->
                         <li>
-                            <a href="charts-chartjs.html" class="{{ (request()->is('') ? 'mm-active' : '') }}">
+                            <a class="{{ (request()->is('') ? 'mm-active' : '') }}">
                                 <i class="metismenu-icon pe-7s-file"></i>
                                 {{ __('Our fee / policy document') }}
                             </a>
                         </li>
                         <!--li class="app-sidebar__heading">{{ __('Account') }}</li-->
                         <li>
-                            <a href="charts-chartjs.html" class="{{ (request()->is('') ? 'mm-active' : '') }}">
+                            <a class="{{ (request()->is('') ? 'mm-active' : '') }}">
                                 <i class="metismenu-icon pe-7s-pen"></i>
                                 {{ __('Account') }}
                             </a>
