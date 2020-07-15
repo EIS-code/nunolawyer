@@ -7,6 +7,7 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Spatie\Permission\Traits\HasRoles;
 use OwenIt\Auditing\Contracts\Auditable;
+use App\PurposeArticle;
 
 class Client extends Authenticatable implements MustVerifyEmail, Auditable
 {
@@ -48,7 +49,7 @@ class Client extends Authenticatable implements MustVerifyEmail, Auditable
      * @var array
      */
     protected $hidden = [
-        'password'
+        'password', 'remember_token'
     ];
 
     /**
@@ -116,6 +117,11 @@ class Client extends Authenticatable implements MustVerifyEmail, Auditable
     public function clientPurposeArticles()
     {
         return $this->hasMany('App\ClientPurposeArticle', 'client_id', 'id')->where('is_removed', self::$notRemoved);
+    }
+
+    public static function getAllClientPurposeArticles()
+    {
+        return PurposeArticle::where('is_removed', self::$notRemoved)->get();
     }
 
     public function clientConditions()

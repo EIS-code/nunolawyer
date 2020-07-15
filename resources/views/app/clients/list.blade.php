@@ -71,6 +71,23 @@
                                             <input type="date" name="rst" class="form-control" @if(!empty($term->get('rst'))) value="{{$term->get('rst')}}" @endif>
                                         </div>
                                     </div>
+                                    <div class="col-md-6">
+                                        <label>{{ __('Purpose / Article') }}</label>
+
+                                        <select class="form-control" name="pur">
+                                            <option value="">{{ __('Select') }}</option>
+
+                                            @php
+                                                $purposeArticles = $clientModel::getAllClientPurposeArticles();
+                                            @endphp
+
+                                            @if (!empty($purposeArticles) && !$purposeArticles->isEmpty())
+                                                @foreach ($purposeArticles as $purposeArticle)
+                                                    <option value="{{ $purposeArticle['id'] }}" @if ($term->get('pur')) selected="true" @endif>{{ $purposeArticle['title'] }}</option>
+                                                @endforeach
+                                            @endif
+                                        </select>
+                                    </div>
                                 </div>
                                 <br />
                                 <div class="row">

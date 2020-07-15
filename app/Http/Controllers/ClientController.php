@@ -4,7 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Role;
 use App\BaseModel;
-use App\CLient;
+use App\Client;
 use App\PurposeArticle;
 use App\ClientPurposeArticle;
 use App\ClientCondition;
@@ -100,6 +100,12 @@ class ClientController extends Controller
 
                 $clients->whereIn('work_status', $ws);
             }
+
+            if ($request->get('pur', false)) {
+                $pur = $request->get('pur');
+
+                $clients->join(ClientPurposeArticle::getTableName(), ClientPurposeArticle::getTableName() . '.client_id', Client::getTableName() . '.id');
+            }
         }
 
         /*$clients = $clientModel::orderBy('id','ASC')
@@ -142,7 +148,8 @@ class ClientController extends Controller
                         })
                         ->paginate(20);*/
 
-        $clients->where('is_removed', BaseModel::$notRemoved);
+        $clients->select(Client::getTableName() . '.*')
+                ->where(Client::getTableName() . '.is_removed', BaseModel::$notRemoved);
 
         if ($isExport) {
             $this->clientExport->collection = $clients->get();
