@@ -5,6 +5,7 @@ namespace App;
 use Spatie\Permission\Traits\HasRoles;
 use Illuminate\Support\Facades\Storage;
 use OwenIt\Auditing\Contracts\Auditable;
+use Illuminate\Support\Facades\File;
 
 class PoaAgreement extends BaseModel implements Auditable
 {
@@ -40,7 +41,7 @@ class PoaAgreement extends BaseModel implements Auditable
             $url               = Storage::disk(self::$fileSystem)->url($storageFolderName . '/' . $file); */
             $url = storage_path("app/public/" . self::$storageFolderName . '/' . $file);
 
-            if (!Storage::exists($url)) {
+            if (!File::exists($url)) {
                 $url = NULL;
             }
         }
