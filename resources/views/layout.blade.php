@@ -70,14 +70,14 @@
                         </li>
                         <!--li class="app-sidebar__heading">{{ __('Article / Purpose') }}</li-->
                         <li>
-                            <a class="{{ (request()->is('') ? 'mm-active' : '') }}">
+                            <a href="{{ route('article_purpose.index') }}" class="{{ (request()->is('article_purpose*') ? 'mm-active' : '') }}">
                                 <i class="metismenu-icon pe-7s-notebook"></i>
                                 {{ __('Article / Purpose') }}
                             </a>
                         </li>
                         <!--li class="app-sidebar__heading">{{ __('POA & agreement') }}</li-->
                         <li>
-                            <a class="{{ (request()->is('') ? 'mm-active' : '') }}">
+                            <a href="{{ route('poa.index') }}" class="{{ (request()->is('poa*') ? 'mm-active' : '') }}">
                                 <i class="metismenu-icon pe-7s-note"></i>
                                 {{ __('POA & agreement') }}
                             </a>

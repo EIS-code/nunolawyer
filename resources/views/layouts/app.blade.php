@@ -13,10 +13,12 @@
     <script defer src="{{ asset('js/app.js') }}" defer></script>
     <script defer src="http://maps.google.com/maps/api/js?sensor=true"></script>
     <script defer src="{{ asset('js/main.js') }}"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/select2@4.1.0-beta.1/dist/js/select2.min.js"></script>
 
     <!-- Styles -->
     <link href="{{ asset('css/app.css') }}" rel="stylesheet"></link>
     <link href="{{ asset('css/main.css') }}" rel="stylesheet"></link>
+    <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-beta.1/dist/css/select2.min.css" rel="stylesheet" />
 </head>
 <body>
     <div class="app-container app-theme-white body-tabs-shadow fixed-sidebar fixed-header">

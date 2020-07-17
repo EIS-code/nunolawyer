@@ -280,6 +280,16 @@
                     });
                 }
             }
+
+            // Select2
+            $(".purpose_articles").select2({
+                placeholder: "{{ __('Select purpose / articles') }}",
+                allowClear: true
+            });
+            $(".work_status").select2({
+                placeholder: "{{ __('Select work status') }}",
+                allowClear: true
+            });
         }
     });
 </script>

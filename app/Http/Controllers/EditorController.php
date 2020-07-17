@@ -6,6 +6,7 @@ use App\Role;
 use App\BaseModel;
 use App\CLient;
 use App\ModelHasRoles;
+use App\ClientPurposeArticle;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Maatwebsite\Excel\Facades\Excel;
@@ -18,7 +19,12 @@ class EditorController extends Controller
 
     public function __construct()
     {
-        $this->middleware(['permission:editors_show'])->only(['show']);
+        $this->middleware(['permission:editors_create'])->only(['create','store']);
+        $this->middleware(['permission:editors_show'])->only('show');
+        $this->middleware(['permission:editors_edit'])->only(['edit','update']);
+        $this->middleware(['permission:editors_delete'])->only('destroy');
+        $this->middleware(['permission:editors_ban'])->only(['banEditor','activateEditor']);
+        $this->middleware(['permission:editors_activity'])->only('activityLog');
 
         $this->editorExport = new EditorExport();
     }
@@ -80,18 +86,28 @@ class EditorController extends Controller
 
                 $clients->whereIn('work_status', $ws);
             }
+
+            if ($request->get('pur', false)) {
+                $pur = $request->get('pur');
+
+                $clients->join(ClientPurposeArticle::getTableName(), function($join) use($pur) {
+                    $join->on(Client::getTableName() . '.id', '=', ClientPurposeArticle::getTableName() . '.client_id')
+                         ->where(ClientPurposeArticle::getTableName() . '.purpose_article_id', (int)$pur)
+                         ->where(ClientPurposeArticle::getTableName() . '.is_removed', BaseModel::$notRemoved);
+                });
+            }
         }
 
         $clients
                 ->select(DB::raw($clientModel::getTableName() . '.*'))
                 ->join(ModelHasRoles::getTableName(), function($join) {
-                    $join->on('model_id', '=', 'id');
+                    $join->on(ModelHasRoles::getTableName() . '.model_id', '=', Client::getTableName() . '.id');
                 })
                 ->join(Role::getTableName(), function($join) {
                     $join->on(ModelHasRoles::getTableName() . '.role_id', '=', Role::getTableName() . '.id');
                 })
                 ->whereRaw('lower(' . Role::getTableName() . '.name) = "editor"')
-                ->where('is_removed', BaseModel::$notRemoved);
+                ->where(Client::getTableName() . '.is_removed', BaseModel::$notRemoved);
 
         if ($isExport) {
             $this->editorExport->collection = $clients->get();
@@ -99,7 +115,7 @@ class EditorController extends Controller
             return $this->exportCSV();
         }
 
-        $clients = $clients->paginate(20);
+        $clients = $clients->paginate(1);
 
         return view('app.editors.list', ['clients' => $clients, 'term' => $request, 'request' => $request, 'clientModel' => $clientModel, 'isFiltered' => $isFiltered]);
     }

@@ -3384,6 +3384,9 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
 
     // Public
     _proto.toggle = function toggle() {
+      /* SHIV */
+      return false;
+
       if (this._element.disabled || $(this._element).hasClass(ClassName$4.DISABLED)) {
         return;
       }

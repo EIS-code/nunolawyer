@@ -24,8 +24,8 @@
                 <form method="POST" action="{{ route('clients.store') }}" enctype='multipart/form-data'>
                     @csrf
                     <div class="form-group row">
-                        <div class="col-md-2">{{ __('Registration Date') }}<span style="color: red;">*</span></div>
-                        <div class="col-md-8">
+                        <div class="col-md-6">
+                            <label>{{ __('Registration Date') }}<span style="color: red;">*</span></label>
                             <input id="registration_date" type="date" class="form-control{{ $errors->has('registration_date') ? ' is-invalid' : '' }}" name="registration_date" value="{{ old('registration_date', date('Y-m-d', time())) }}" required autofocus>
 
                             @if ($errors->has('registration_date'))
@@ -34,34 +34,8 @@
                                 </span>
                             @endif
                         </div>
-                    </div>
-                    <div class="form-group row">
-                        <div class="col-md-2">{{ __('First Name') . ' ' . __('(Middle Name if any)') }}<span style="color: red;">*</span></div>
-                        <div class="col-md-8">
-                            <input id="first_name" type="text" class="form-control{{ $errors->has('first_name') ? ' is-invalid' : '' }}" name="first_name" value="{{ old('first_name') }}">
-
-                            @if ($errors->has('first_name'))
-                                <span class="invalid-feedback" role="alert">
-                                    <strong>{{ $errors->first('first_name') }}</strong>
-                                </span>
-                            @endif
-                        </div>
-                    </div>
-                    <div class="form-group row">
-                        <div class="col-md-2">{{ __('Last Name') }}<span style="color: red;">*</span></div>
-                        <div class="col-md-8">
-                            <input id="last_name" type="text" class="form-control{{ $errors->has('last_name') ? ' is-invalid' : '' }}" name="last_name" value="{{ old('last_name') }}">
-
-                            @if ($errors->has('last_name'))
-                                <span class="invalid-feedback" role="alert">
-                                    <strong>{{ $errors->first('last_name') }}</strong>
-                                </span>
-                            @endif
-                        </div>
-                    </div>
-                    <div class="form-group row">
-                        <div class="col-md-2">{{ __('E-Mail') }}<span style="color: red;">*</span></div>
-                        <div class="col-md-8">
+                        <div class="col-md-6">
+                            <label>{{ __('E-Mail') }}<span style="color: red;">*</span></label>
                             <input id="email" type="email" class="form-control{{ $errors->has('email') ? ' is-invalid' : '' }}" name="email" value="{{ old('email') }}" required>
 
                             @if ($errors->has('email'))
@@ -72,8 +46,30 @@
                         </div>
                     </div>
                     <div class="form-group row">
-                        <div class="col-md-2">{{ __('Secondary E-Mail') }}</div>
-                        <div class="col-md-8">
+                        <div class="col-md-6">
+                            <label>{{ __('First Name') . ' ' . __('(Middle Name if any)') }}<span style="color: red;">*</span></label>
+                            <input id="first_name" type="text" class="form-control{{ $errors->has('first_name') ? ' is-invalid' : '' }}" name="first_name" value="{{ old('first_name') }}">
+
+                            @if ($errors->has('first_name'))
+                                <span class="invalid-feedback" role="alert">
+                                    <strong>{{ $errors->first('first_name') }}</strong>
+                                </span>
+                            @endif
+                        </div>
+                        <div class="col-md-6">
+                            <label>{{ __('Last Name') }}<span style="color: red;">*</span></label>
+                            <input id="last_name" type="text" class="form-control{{ $errors->has('last_name') ? ' is-invalid' : '' }}" name="last_name" value="{{ old('last_name') }}">
+
+                            @if ($errors->has('last_name'))
+                                <span class="invalid-feedback" role="alert">
+                                    <strong>{{ $errors->first('last_name') }}</strong>
+                                </span>
+                            @endif
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <div class="col-md-6">
+                            <label>{{ __('Secondary E-Mail') }}</label>
                             <input id="secondary_email" type="email" class="form-control{{ $errors->has('secondary_email') ? ' is-invalid' : '' }}" name="secondary_email" value="{{ old('secondary_email') }}">
 
                             @if ($errors->has('secondary_email'))
@@ -82,28 +78,8 @@
                                 </span>
                             @endif
                         </div>
-                    </div>
-                    <div class="form-group row">
-                        <div class="col-md-2">{{ __('Password') }}<span style="color: red;">*</span></div>
-                        <div class="col-md-8">
-                            <input id="password" type="password" class="form-control{{ $errors->has('password') ? ' is-invalid' : '' }}" name="password" required>
-
-                            @if ($errors->has('password'))
-                                <span class="invalid-feedback" role="alert">
-                                    <strong>{{ $errors->first('password') }}</strong>
-                                </span>
-                            @endif
-                        </div>
-                    </div>
-                    <div class="form-group row">
-                        <div class="col-md-2">{{ __('Confirm Password') }}<span style="color: red;">*</span></div>
-                        <div class="col-md-8">
-                            <input id="password-confirm" type="password" class="form-control" name="password_confirmation" required>
-                        </div>
-                    </div>
-                    <div class="form-group row">
-                        <div class="col-md-2">{{ __('Date of birth') }}</div>
-                        <div class="col-md-8">
+                        <div class="col-md-6">
+                            <label>{{ __('Date of birth') }}</label>
                             <input id="dob" type="date" class="form-control{{ $errors->has('dob') ? ' is-invalid' : '' }}" name="dob" value="{{ old('dob') }}">
 
                             @if ($errors->has('dob'))
@@ -114,8 +90,24 @@
                         </div>
                     </div>
                     <div class="form-group row">
-                        <div class="col-md-2">{{ __('Contact') }}</div>
-                        <div class="col-md-3">
+                        <div class="col-md-6">
+                            <label>{{ __('Password') }}<span style="color: red;">*</span></label>
+                            <input id="password" type="password" class="form-control{{ $errors->has('password') ? ' is-invalid' : '' }}" name="password" required>
+
+                            @if ($errors->has('password'))
+                                <span class="invalid-feedback" role="alert">
+                                    <strong>{{ $errors->first('password') }}</strong>
+                                </span>
+                            @endif
+                        </div>
+                        <div class="col-md-6">
+                            <label>{{ __('Confirm Password') }}<span style="color: red;">*</span></label>
+                            <input id="password-confirm" type="password" class="form-control" name="password_confirmation" required>
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <div class="col-md-6">
+                            <label>{{ __('Contact') }}</label>
                             <input id="contact" type="number" class="form-control{{ $errors->has('contact') ? ' is-invalid' : '' }}" name="contact" value="{{ old('contact') }}">
 
                             @if ($errors->has('contact'))
@@ -124,10 +116,8 @@
                                 </span>
                             @endif
                         </div>
-                    </div>
-                    <div class="form-group row">
-                        <div class="col-md-2">{{ __('Passport Number') }}</div>
-                        <div class="col-md-3">
+                        <div class="col-md-6">
+                            <label>{{ __('Passport Number') }}</label>
                             <input id="passport_number" type="text" class="form-control{{ $errors->has('passport_number') ? ' is-invalid' : '' }}" name="passport_number" value="{{ old('passport_number') }}">
 
                             @if ($errors->has('passport_number'))
@@ -138,8 +128,8 @@
                         </div>
                     </div>
                     <div class="form-group row">
-                        <div class="col-md-2">{{ __('Process Address') }}</div>
-                        <div class="col-md-8">
+                        <div class="col-md-6">
+                            <label>{{ __('Process Address') }}</label>
                             <input id="process_address" type="text" class="form-control{{ $errors->has('process_address') ? ' is-invalid' : '' }}" name="process_address" value="{{ old('process_address') }}">
 
                             @if ($errors->has('process_address'))
@@ -148,10 +138,8 @@
                                 </span>
                             @endif
                         </div>
-                    </div>
-                    <div class="form-group row">
-                        <div class="col-md-2">{{ __('Nationality') }}</div>
-                        <div class="col-md-3">
+                        <div class="col-md-6">
+                            <label>{{ __('Nationality') }}</label>
                             <input id="nationality" type="text" class="form-control{{ $errors->has('nationality') ? ' is-invalid' : '' }}" name="nationality" value="{{ old('nationality') }}">
 
                             @if ($errors->has('nationality'))
@@ -164,9 +152,9 @@
 
                     <div class="form-group row">
                         <div class="col-md-2">{{ __('Purpose and Article') }}</div>
-                        <div class="col-md-8">
-                            <select class="form-control{{ $errors->has('nationality') ? ' is-invalid' : '' }}" name="purpose_articles[]" multiple="true">
-                                <option value="" {{ (empty(old('purpose_articles')) ? 'selected="true"' : '') }}>{{ __('Select') }}</option>
+                        <div class="col-md-10">
+                            <select class="form-control{{ $errors->has('purpose_articles') ? ' is-invalid' : '' }} purpose_articles" name="purpose_articles[]" multiple="true">
+                                <!--option value="" {{ (empty(old('purpose_articles')) ? 'selected="true"' : '') }}>{{ __('Select') }}</option-->
 
                                 @foreach ($purposeArticles as $purposeArticle)
                                     <option value="{{ $purposeArticle->id }}" {{ (!empty(old('purpose_articles')) && in_array($purposeArticle->id, old('purpose_articles')) ? 'selected="true"' : '') }}>{{ $purposeArticle->title }}</option>
@@ -532,11 +520,23 @@
                     <div class="form-group row">
                         <div class="col-md-2">{{ __('Role') }}</div>
                         <div class="col-md-3">
-                            <select class="form-control" name="role_id">
+                            <select class="form-control" name="role_id" style="display: none;">
                                 @foreach($roles as $role)
-                                    <option value="{{$role->id}}" {{ ($isEditors && $role->id == '3' ? 'selected="true"' : 'disabled="true"') }}>{{$role->name}}</option>
+                                    @if ($isEditors && $role->id != '3')
+                                        @continue
+                                    @elseif (!$isEditors && $role->id != '2')
+                                        @continue
+                                    @endif
+                                    <option value="{{$role->id}}" {{ ($isEditors && $role->id == '3' ? 'selected="true"' : ($isEditors ? 'disabled="true"' : '')) }}>{{$role->name}}</option>
                                 @endforeach
                             </select>
+                            <span class="badge badge-lg badge-secondary text-white">
+                                @if ($isEditors)
+                                    {{ __('Editor') }}
+                                @else
+                                    {{ __('Client') }}
+                                @endif
+                            </span>
                         </div>
                     </div>
 

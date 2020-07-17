@@ -26,8 +26,8 @@
                     @method('PATCH')
                     @csrf
                     <div class="form-group row">
-                        <div class="col-md-2">{{ __('Registration Date') }}<span style="color: red;">*</span></div>
-                        <div class="col-md-8">
+                        <div class="col-md-6">
+                            <label>{{ __('Registration Date') }}<span style="color: red;">*</span></label>
                             <input id="registration_date" type="date" class="form-control{{ $errors->has('registration_date') ? ' is-invalid' : '' }}" name="registration_date" value="{{ date('Y-m-d', strtotime($client->registration_date)) }}" required autofocus>
 
                             @if ($errors->has('registration_date'))
@@ -36,34 +36,8 @@
                                 </span>
                             @endif
                         </div>
-                    </div>
-                    <div class="form-group row">
-                        <div class="col-md-2">{{ __('First Name') }}<span style="color: red;">*</span></div>
-                        <div class="col-md-8">
-                            <input id="first_name" type="text" class="form-control{{ $errors->has('first_name') ? ' is-invalid' : '' }}" name="first_name" value="{{ $client->first_name }}" required autofocus>
-
-                            @if ($errors->has('first_name'))
-                                <span class="invalid-feedback" role="alert">
-                                    <strong>{{ $errors->first('first_name') }}</strong>
-                                </span>
-                            @endif
-                        </div>
-                    </div>
-                    <div class="form-group row">
-                        <div class="col-md-2">{{ __('Last Name') }}<span style="color: red;">*</span></div>
-                        <div class="col-md-8">
-                            <input id="last_name" type="text" class="form-control{{ $errors->has('last_name') ? ' is-invalid' : '' }}" name="last_name" value="{{ $client->last_name }}">
-
-                            @if ($errors->has('last_name'))
-                                <span class="invalid-feedback" role="alert">
-                                    <strong>{{ $errors->first('last_name') }}</strong>
-                                </span>
-                            @endif
-                        </div>
-                    </div>
-                    <div class="form-group row">
-                        <div class="col-md-2">{{ __('E-Mail') }}<span style="color: red;">*</span></div>
-                        <div class="col-md-8">
+                        <div class="col-md-6">
+                            <label>{{ __('E-Mail') }}<span style="color: red;">*</span></label>
                             <input id="email" type="email" class="form-control{{ $errors->has('email') ? ' is-invalid' : '' }}" name="email" value="{{ $client->email }}" required>
 
                             @if ($errors->has('email'))
@@ -74,13 +48,45 @@
                         </div>
                     </div>
                     <div class="form-group row">
-                        <div class="col-md-2">{{ __('Secondary E-Mail') }}</div>
-                        <div class="col-md-8">
+                        <div class="col-md-6">
+                            <label>{{ __('First Name') }}<span style="color: red;">*</span></label>
+                            <input id="first_name" type="text" class="form-control{{ $errors->has('first_name') ? ' is-invalid' : '' }}" name="first_name" value="{{ $client->first_name }}" required autofocus>
+
+                            @if ($errors->has('first_name'))
+                                <span class="invalid-feedback" role="alert">
+                                    <strong>{{ $errors->first('first_name') }}</strong>
+                                </span>
+                            @endif
+                        </div>
+                        <div class="col-md-6">
+                            <label>{{ __('Last Name') }}<span style="color: red;">*</span></label>
+                            <input id="last_name" type="text" class="form-control{{ $errors->has('last_name') ? ' is-invalid' : '' }}" name="last_name" value="{{ $client->last_name }}">
+
+                            @if ($errors->has('last_name'))
+                                <span class="invalid-feedback" role="alert">
+                                    <strong>{{ $errors->first('last_name') }}</strong>
+                                </span>
+                            @endif
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <div class="col-md-6">
+                            <label>{{ __('Secondary E-Mail') }}</label>
                             <input id="secondary_email" type="email" class="form-control{{ $errors->has('secondary_email') ? ' is-invalid' : '' }}" name="secondary_email" value="{{ $client->secondary_email }}">
 
                             @if ($errors->has('secondary_email'))
                                 <span class="invalid-feedback" role="alert">
                                     <strong>{{ $errors->first('secondary_email') }}</strong>
+                                </span>
+                            @endif
+                        </div>
+                        <div class="col-md-6">
+                            <label>{{ __('Date of birth') }}</label>
+                            <input id="dob" type="date" class="form-control{{ $errors->has('dob') ? ' is-invalid' : '' }}" name="dob" value="{{ $client->dob }}">
+
+                            @if ($errors->has('dob'))
+                                <span class="invalid-feedback" role="alert">
+                                    <strong>{{ $errors->first('dob') }}</strong>
                                 </span>
                             @endif
                         </div>
@@ -104,20 +110,8 @@
                         </div>
                     </div-->
                     <div class="form-group row">
-                        <div class="col-md-2">{{ __('Date of birth') }}</div>
-                        <div class="col-md-8">
-                            <input id="dob" type="date" class="form-control{{ $errors->has('dob') ? ' is-invalid' : '' }}" name="dob" value="{{ $client->dob }}">
-
-                            @if ($errors->has('dob'))
-                                <span class="invalid-feedback" role="alert">
-                                    <strong>{{ $errors->first('dob') }}</strong>
-                                </span>
-                            @endif
-                        </div>
-                    </div>
-                    <div class="form-group row">
-                        <div class="col-md-2">{{ __('Contact') }}</div>
-                        <div class="col-md-3">
+                        <div class="col-md-6">
+                            <label>{{ __('Contact') }}</label>
                             <input id="contact" type="number" class="form-control{{ $errors->has('contact') ? ' is-invalid' : '' }}" name="contact" value="{{ $client->contact }}">
 
                             @if ($errors->has('contact'))
@@ -126,10 +120,8 @@
                                 </span>
                             @endif
                         </div>
-                    </div>
-                    <div class="form-group row">
-                        <div class="col-md-2">{{ __('Passport Number') }}</div>
-                        <div class="col-md-3">
+                        <div class="col-md-6">
+                            <label>{{ __('Passport Number') }}</label>
                             <input id="passport_number" type="text" class="form-control{{ $errors->has('passport_number') ? ' is-invalid' : '' }}" name="passport_number" value="{{ $client->passport_number }}">
 
                             @if ($errors->has('passport_number'))
@@ -140,13 +132,23 @@
                         </div>
                     </div>
                     <div class="form-group row">
-                        <div class="col-md-2">{{ __('Process Address') }}</div>
-                        <div class="col-md-8">
+                        <div class="col-md-6">
+                            <label>{{ __('Process Address') }}</label>
                             <input id="process_address" type="text" class="form-control{{ $errors->has('process_address') ? ' is-invalid' : '' }}" name="process_address" value="{{ $client->process_address }}">
 
                             @if ($errors->has('process_address'))
                                 <span class="invalid-feedback" role="alert">
                                     <strong>{{ $errors->first('process_address') }}</strong>
+                                </span>
+                            @endif
+                        </div>
+                        <div class="col-md-6">
+                            <label>{{ __('Nationality') }}</label>
+                            <input id="nationality" type="text" class="form-control{{ $errors->has('nationality') ? ' is-invalid' : '' }}" name="nationality" value="{{ $client->nationality }}">
+
+                            @if ($errors->has('nationality'))
+                                <span class="invalid-feedback" role="alert">
+                                    <strong>{{ $errors->first('nationality') }}</strong>
                                 </span>
                             @endif
                         </div>
@@ -156,8 +158,8 @@
                         @php $purposeArticleIds = $client->clientPurposeArticles->pluck('purpose_article_id')->toArray(); @endphp
 
                         <div class="col-md-2">{{ __('Purpose and Article') }}</div>
-                        <div class="col-md-8">
-                            <select class="form-control{{ $errors->has('nationality') ? ' is-invalid' : '' }}" name="purpose_articles[]" multiple="true">
+                        <div class="col-md-10">
+                            <select class="form-control{{ $errors->has('nationality') ? ' is-invalid' : '' }} purpose_articles" name="purpose_articles[]" multiple="true">
                                 <option value="" {{ (empty($purposeArticleIds) ? 'selected="true"' : '') }}>{{ __('Select') }}</option>
 
                                 @foreach ($purposeArticles as $purposeArticle)
@@ -627,29 +629,30 @@
                     </div>
 
                     <div class="form-group row">
-                        <div class="col-md-2">{{ __('Nationality') }}</div>
-                        <div class="col-md-3">
-                            <input id="nationality" type="text" class="form-control{{ $errors->has('nationality') ? ' is-invalid' : '' }}" name="nationality" value="{{ $client->nationality }}">
-
-                            @if ($errors->has('nationality'))
-                                <span class="invalid-feedback" role="alert">
-                                    <strong>{{ $errors->first('nationality') }}</strong>
-                                </span>
-                            @endif
-                        </div>
-                    </div>
-
-                    <div class="form-group row">
                         <div class="col-md-2">{{ __('Role') }}</div>
                         <div class="col-md-3">
                             @if($client->isSuperAdmin())
-                                <span class="badge badge-lg badge-secondary text-white">admin</span>
+                                <span class="badge badge-lg badge-secondary text-white">
+                                    {{ __('admin') }}
+                                </span>
                             @else
-                                <select class="form-control" name="role_id">
+                                <select class="form-control" name="role_id" style="display: none;">
                                     @foreach($roles as $role)
+                                        @if ($isEditors && $role->id != '3')
+                                            @continue
+                                        @elseif (!$isEditors && $role->id != '2')
+                                            @continue
+                                        @endif
                                         <option value="{{$role->id}}" @if($client->hasRole($role)) selected @endif>{{$role->name}}</option>
                                     @endforeach
                                 </select>
+                                <span class="badge badge-lg badge-secondary text-white">
+                                    @if ($isEditors)
+                                        {{ __('Editor') }}
+                                    @else
+                                        {{ __('Client') }}
+                                    @endif
+                                </span>
                             @endif
                         </div>
                     </div>
@@ -659,7 +662,7 @@
                         <div class="col-md-6">
                             @foreach ($client::$workStatus as $value => $text)
                                 <label>
-                                    <input type="radio" id="status-{{ strtolower(str_ireplace(' ', '-', $text)) }}" name="work_status" value="{{ $value }}" @if ($client->work_status == $text) checked="true"' @endif />&nbsp;{{ $text }}
+                                    <input type="radio" id="status-{{ strtolower(str_ireplace(' ', '-', $text)) }}" name="work_status" value="{{ $value }}" @if (old('work_status', $client->getAttributes()['work_status']) == $value) checked="true"' @endif />&nbsp;{{ $text }}
                                 </label>&nbsp;
                             @endforeach
 
@@ -671,7 +674,10 @@
                         </div>
                     </div>
 
-                    <div class="div-to-follow {{ ($client->work_status == 'To Follow' ? '' : 'd-none') }}">
+                    @php
+                        $isShow = (old('work_status', $client->getAttributes()['work_status']) == '1');
+                    @endphp
+                    <div class="div-to-follow {{ ($isShow ? '' : 'd-none') }}">
                         <div class="form-group row">
                             <div class="col-md-2">{{ __('Assign Date') }}<span style="color: red;">*</span></div>
                             <div class="col-md-3">
@@ -688,7 +694,7 @@
                         <div class="form-group row">
                             <div class="col-md-2">{{ __('Assign To') }}<span style="color: red;">*</span></div>
                             <div class="col-md-3">
-                                <select id="assign_to"class="form-control{{ $errors->has('assign_to') ? ' is-invalid' : '' }}" name="assign_to" >
+                                <select id="assign_to"class="form-control{{ $errors->has('assign_to') ? ' is-invalid' : '' }}" name="assign_to">
                                     <option value="">{{ __('Select') }}</option>
 
                                     @foreach ($assignTo as $assign)

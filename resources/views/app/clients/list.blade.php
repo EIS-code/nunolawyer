@@ -83,7 +83,7 @@
 
                                             @if (!empty($purposeArticles) && !$purposeArticles->isEmpty())
                                                 @foreach ($purposeArticles as $purposeArticle)
-                                                    <option value="{{ $purposeArticle['id'] }}" @if ($term->get('pur')) selected="true" @endif>{{ $purposeArticle['title'] }}</option>
+                                                    <option value="{{ $purposeArticle['id'] }}" @if ($term->get('pur') && $term->get('pur') == $purposeArticle['id']) selected="true" @endif>{{ $purposeArticle['title'] }}</option>
                                                 @endforeach
                                             @endif
                                         </select>
@@ -95,8 +95,8 @@
                                         <label>{{__('Work Status')}}</label>
                                     </div>
                                     <div class="col-md-12">
-                                        <select name="ws[]" multiple="true">
-                                            <option value="">{{ __('Select') }}</option>
+                                        <select name="ws[]" multiple="true" class="form-control work_status">
+                                            <!--option value="">{{ __('Select') }}</option-->
 
                                             @foreach ($clientModel::$workStatus as $value => $text)
                                                 <option value="{{ $value }}" @php echo (!empty($term->get('ws')) && in_array($value, $term->get('ws')) ? 'selected' : ''); @endphp>{{ $text }}</option>
@@ -233,7 +233,7 @@
 
                     <div class="float-left">
                         @if(!empty($term))
-                            {{ $clients->appends(['s' => $term])->links() }}
+                            {{ $clients->appends($term->all())->links() }}
                         @else
                             {{ $clients->links() }}
                         @endif
@@ -246,4 +246,5 @@
             </div>
         </div>
     </div>
+    @include('app.clients.scripts')
 @endsection

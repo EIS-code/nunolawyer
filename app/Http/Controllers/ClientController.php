@@ -13,6 +13,7 @@ use App\ClientEmailProgressReport;
 use App\ClientPrivateInformation;
 use App\ClientDocument;
 use App\ClientTermsAndCondition;
+use App\ModelHasRoles;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
@@ -32,15 +33,24 @@ class ClientController extends Controller
 
     public function __construct()
     {
-        $this->middleware(['permission:clients_create'])->only(['create','store']);
-        $this->middleware(['permission:clients_show'])->only('show');
-        $this->middleware(['permission:clients_edit'])->only(['edit','update']);
-        $this->middleware(['permission:clients_delete'])->only('destroy');
-        $this->middleware(['permission:clients_ban'])->only(['banClient','activateClient']);
-        $this->middleware(['permission:clients_activity'])->only('activityLog');
-
         $this->clientExport = new ClientExport();
         Client::$isEditors  = $this->isEditors = request()->is('editors*');
+
+        if ($this->isEditors) {
+            $this->middleware(['permission:editors_create'])->only(['create','store']);
+            $this->middleware(['permission:editors_show'])->only('show');
+            $this->middleware(['permission:editors_edit'])->only(['edit','update']);
+            $this->middleware(['permission:editors_delete'])->only('destroy');
+            $this->middleware(['permission:editors_ban'])->only(['banEditor','activateEditor']);
+            $this->middleware(['permission:editors_activity'])->only('activityLog');
+        } else {
+            $this->middleware(['permission:clients_create'])->only(['create','store']);
+            $this->middleware(['permission:clients_show'])->only('show');
+            $this->middleware(['permission:clients_edit'])->only(['edit','update']);
+            $this->middleware(['permission:clients_delete'])->only('destroy');
+            $this->middleware(['permission:clients_ban'])->only(['banClient','activateClient']);
+            $this->middleware(['permission:clients_activity'])->only('activityLog');
+        }
     }
 
     /**
@@ -104,7 +114,11 @@ class ClientController extends Controller
             if ($request->get('pur', false)) {
                 $pur = $request->get('pur');
 
-                $clients->join(ClientPurposeArticle::getTableName(), ClientPurposeArticle::getTableName() . '.client_id', Client::getTableName() . '.id');
+                $clients->join(ClientPurposeArticle::getTableName(), function($join) use($pur) {
+                    $join->on(Client::getTableName() . '.id', '=', ClientPurposeArticle::getTableName() . '.client_id')
+                         ->where(ClientPurposeArticle::getTableName() . '.purpose_article_id', (int)$pur)
+                         ->where(ClientPurposeArticle::getTableName() . '.is_removed', BaseModel::$notRemoved);
+                });
             }
         }
 
@@ -149,6 +163,13 @@ class ClientController extends Controller
                         ->paginate(20);*/
 
         $clients->select(Client::getTableName() . '.*')
+                ->join(ModelHasRoles::getTableName(), function($join) {
+                    $join->on(ModelHasRoles::getTableName() . '.model_id', '=', Client::getTableName() . '.id');
+                })
+                ->join(Role::getTableName(), function($join) {
+                    $join->on(ModelHasRoles::getTableName() . '.role_id', '=', Role::getTableName() . '.id');
+                })
+                ->whereRaw('lower(' . Role::getTableName() . '.name) = "client"')
                 ->where(Client::getTableName() . '.is_removed', BaseModel::$notRemoved);
 
         if ($isExport) {
@@ -214,8 +235,8 @@ class ClientController extends Controller
             'registration_date' => ['required', 'date_format:Y-m-d'],
             'first_name'        => ['required', 'string', 'max:255'],
             'last_name'         => ['required', 'string', 'max:255'],
-            // 'email'             => ['required', 'string', 'email', 'max:255', 'unique:' . Client::getTableName() . ',email'],
-            // 'secondary_email'   => ['string', 'nullable', 'email', 'max:255', 'unique:' . Client::getTableName() . ',secondary_email'],
+            'email'             => ['required', 'string', 'email', 'max:255', 'unique:' . Client::getTableName() . ',email'],
+            'secondary_email'   => ['string', 'nullable', 'email', 'max:255', 'unique:' . Client::getTableName() . ',secondary_email'],
             'dob'               => ['date_format:Y-m-d', 'nullable'],
             'contact'           => ['string', 'nullable', 'not_regex:/[#$%^&*+=\\[\]\';,\/{}|":<>?~\\\\]/'],
             'passport_number'   => ['string', 'nullable'],
@@ -235,8 +256,8 @@ class ClientController extends Controller
         $client = CLient::create([
             'first_name'      => $data['first_name'],
             'last_name'       => $data['last_name'],
-            // 'email'           => $data['email'],
-            // 'secondary_email' => (!empty($data['secondary_email'])) ? $data['secondary_email'] : NULL,
+            'email'           => $data['email'],
+            'secondary_email' => (!empty($data['secondary_email'])) ? $data['secondary_email'] : NULL,
             'dob'             => (!empty($data['dob'])) ? $data['dob'] : NULL,
             'contact'         => (!empty($data['contact'])) ? $data['contact'] : NULL,
             'passport_number' => (!empty($data['passport_number'])) ? $data['passport_number'] : NULL,
@@ -269,9 +290,17 @@ class ClientController extends Controller
                 }
             }
 
-            return redirect('clients')->with('success', __("Client created!"));
+            if ($this->isEditors) {
+                return redirect('editors')->with('success', __("Editor created!"));
+            } else {
+                return redirect('clients')->with('success', __("Client created!"));
+            }
         } else {
-            return redirect('clients/create')->with('error', __("There has been an error!"));
+            if ($this->isEditors) {
+                return redirect('editors/create')->with('error', __("There has been an error!"));
+            } else {
+                return redirect('clients/create')->with('error', __("There has been an error!"));
+            }
         }
     }
 

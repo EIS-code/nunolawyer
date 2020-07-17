@@ -30,16 +30,39 @@ class ClientRoleSeeder extends Seeder
         ]);
 
         $permissions = array(
-            ['name' => 'clients_access', 'display_name' => 'Access', 'group_name' => 'Clients', 'group_slug' => 'clients', 'guard_name' => 'web'],
-            ['name' => 'clients_create', 'display_name' => 'Create', 'group_name' => 'Clients', 'group_slug' => 'clients', 'guard_name' => 'web'],
-            ['name' => 'clients_show', 'display_name' => 'Show', 'group_name' => 'Clients', 'group_slug' => 'clients', 'guard_name' => 'web'],
-            ['name' => 'clients_edit', 'display_name' => 'Edit', 'group_name' => 'Clients', 'group_slug' => 'clients', 'guard_name' => 'web'],
-            ['name' => 'clients_delete', 'display_name' => 'Delete', 'group_name' => 'Clients', 'group_slug' => 'clients', 'guard_name' => 'web'],
+            ['name' => 'clients_access', 'display_name' => 'Client Access', 'group_name' => 'Clients', 'group_slug' => 'clients', 'guard_name' => 'web'],
+            ['name' => 'clients_create', 'display_name' => 'Client Create', 'group_name' => 'Clients', 'group_slug' => 'clients', 'guard_name' => 'web'],
+            ['name' => 'clients_show', 'display_name' => 'Client Show', 'group_name' => 'Clients', 'group_slug' => 'clients', 'guard_name' => 'web'],
+            ['name' => 'clients_edit', 'display_name' => 'Client Edit', 'group_name' => 'Clients', 'group_slug' => 'clients', 'guard_name' => 'web'],
+            ['name' => 'clients_delete', 'display_name' => 'Client Delete', 'group_name' => 'Clients', 'group_slug' => 'clients', 'guard_name' => 'web'],
             ['name' => 'clients_ban', 'display_name' => 'Ban/Activate client', 'group_name' => 'Clients', 'group_slug' => 'clients', 'guard_name' => 'web'],
-            ['name' => 'clients_activity', 'display_name' => 'Activity Log', 'group_name' => 'Clients', 'group_slug' => 'clients', 'guard_name' => 'web'],
+            ['name' => 'clients_activity', 'display_name' => 'Client activity Log', 'group_name' => 'Clients', 'group_slug' => 'clients', 'guard_name' => 'web'],
             ['name' => 'clients_print', 'display_name' => 'Client Print', 'group_name' => 'Clients', 'group_slug' => 'clients', 'guard_name' => 'web'],
-            ['name' => 'editors_show', 'display_name' => 'Editor Show', 'group_name' => 'Clients', 'group_slug' => 'clients', 'guard_name' => 'web'],
-            ['name' => 'editors_access', 'display_name' => 'Editor Access', 'group_name' => 'Clients', 'group_slug' => 'clients', 'guard_name' => 'web'],
+
+            ['name' => 'editors_create', 'display_name' => 'Editor Create', 'group_name' => 'Editors', 'group_slug' => 'editors', 'guard_name' => 'web'],
+            ['name' => 'editors_edit', 'display_name' => 'Editor Edit', 'group_name' => 'Editors', 'group_slug' => 'editors', 'guard_name' => 'web'],
+            ['name' => 'editors_delete', 'display_name' => 'Editor Delete', 'group_name' => 'Editors', 'group_slug' => 'editors', 'guard_name' => 'web'],
+            ['name' => 'editors_ban', 'display_name' => 'Editor Ban/Activate editor', 'group_name' => 'Editors', 'group_slug' => 'editors', 'guard_name' => 'web'],
+            ['name' => 'editors_activity', 'display_name' => 'Editor activity Log', 'group_name' => 'Editors', 'group_slug' => 'editors', 'guard_name' => 'web'],
+            ['name' => 'editors_print', 'display_name' => 'Editor Print', 'group_name' => 'Editors', 'group_slug' => 'editors', 'guard_name' => 'web'],
+            ['name' => 'editors_show', 'display_name' => 'Editor Show', 'group_name' => 'Editors', 'group_slug' => 'editors', 'guard_name' => 'web'],
+            ['name' => 'editors_access', 'display_name' => 'Editor Access', 'group_name' => 'Editors', 'group_slug' => 'editors', 'guard_name' => 'web'],
+
+            ['name' => 'article_purpose_access', 'display_name' => 'Article purpose access', 'group_name' => 'ArticlePurpose', 'group_slug' => 'article_purpose', 'guard_name' => 'web'],
+            // ['name' => 'article_purpose_show', 'display_name' => 'Article purpose show', 'group_name' => 'ArticlePurpose', 'group_slug' => 'article_purpose', 'guard_name' => 'web'],
+            ['name' => 'article_purpose_create', 'display_name' => 'Article purpose Create', 'group_name' => 'ArticlePurpose', 'group_slug' => 'article_purpose', 'guard_name' => 'web'],
+            ['name' => 'article_purpose_edit', 'display_name' => 'Article purpose Edit', 'group_name' => 'ArticlePurpose', 'group_slug' => 'article_purpose', 'guard_name' => 'web'],
+            ['name' => 'article_purpose_delete', 'display_name' => 'Article purpose Delete', 'group_name' => 'ArticlePurpose', 'group_slug' => 'article_purpose', 'guard_name' => 'web'],
+            ['name' => 'article_purpose_show_client', 'display_name' => 'Article purpose show client', 'group_name' => 'ArticlePurpose', 'group_slug' => 'article_purpose', 'guard_name' => 'web'],
+            ['name' => 'article_purpose_show_editor', 'display_name' => 'Article purpose show editor', 'group_name' => 'ArticlePurpose', 'group_slug' => 'article_purpose', 'guard_name' => 'web'],
+
+            ['name' => 'poa_access', 'display_name' => 'POA access', 'group_name' => 'POA', 'group_slug' => 'poa', 'guard_name' => 'web'],
+            // ['name' => 'poa_show', 'display_name' => 'POA show', 'group_name' => 'POA', 'group_slug' => 'poa', 'guard_name' => 'web'],
+            ['name' => 'poa_create', 'display_name' => 'POA Create', 'group_name' => 'POA', 'group_slug' => 'poa', 'guard_name' => 'web'],
+            ['name' => 'poa_edit', 'display_name' => 'POA Edit', 'group_name' => 'POA', 'group_slug' => 'poa', 'guard_name' => 'web'],
+            ['name' => 'poa_delete', 'display_name' => 'POA Delete', 'group_name' => 'POA', 'group_slug' => 'poa', 'guard_name' => 'web'],
+            ['name' => 'poa_view', 'display_name' => 'POA view', 'group_name' => 'POA', 'group_slug' => 'poa', 'guard_name' => 'web'],
+            ['name' => 'poa_download', 'display_name' => 'POA download', 'group_name' => 'POA', 'group_slug' => 'poa', 'guard_name' => 'web'],
 
             ['name' => 'roles_access', 'display_name' => 'Access', 'group_name' => 'Roles', 'group_slug' => 'roles', 'guard_name' => 'web'],
             ['name' => 'roles_create', 'display_name' => 'Create', 'group_name' => 'Roles', 'group_slug' => 'roles', 'guard_name' => 'web'],
@@ -76,8 +99,8 @@ class ClientRoleSeeder extends Seeder
         ]);
 
         $assignClientPermissions = $getPermissions->map(function($item){
-            $restrictedPerms = ['clients_delete', 'clients_ban', 'clients_activity', 'roles_delete', 'permissions_delete', 'activitylog_delete'];
-            if(!in_array($item->name, $restrictedPerms)){
+            $restrictedPerms = ['clients_delete', 'clients_ban', 'clients_activity', 'editors_delete', 'editors_ban', 'editors_activity', 'roles_delete', 'permissions_delete', 'activitylog_delete'];
+            if (!in_array($item->name, $restrictedPerms) && $item->group_slug == 'clients') {
                 return [$item->name];
             }
         });
@@ -88,12 +111,12 @@ class ClientRoleSeeder extends Seeder
             'name' => 'editor',
             'guard_name' => 'web'
         ]);
-        /*$assignEditorPermissions = $getPermissions->map(function($item){
-            $restrictedPerms = ['clients_delete', 'clients_ban', 'clients_activity', 'roles_delete', 'permissions_delete', 'activitylog_delete'];
-            if (!in_array($item->name, $restrictedPerms)) {
+        $assignEditorPermissions = $getPermissions->map(function($item){
+            $restrictedPerms = ['editors_delete', 'editors_ban', 'editors_activity', 'roles_delete', 'permissions_delete', 'activitylog_delete'];
+            if (!in_array($item->name, $restrictedPerms) && $item->group_slug == 'editors') {
                 return [$item->name];
             }
         });
-        $editorRole->givePermissionTo($assignEditorPermissions);*/
+        $editorRole->givePermissionTo($assignEditorPermissions);
     }
 }

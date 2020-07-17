@@ -71,6 +71,23 @@
                                             <input type="date" name="rst" class="form-control" @if(!empty($term->get('rst'))) value="{{$term->get('rst')}}" @endif>
                                         </div>
                                     </div>
+                                    <div class="col-md-6">
+                                        <label>{{ __('Purpose / Article') }}</label>
+
+                                        <select class="form-control" name="pur">
+                                            <option value="">{{ __('Select') }}</option>
+
+                                            @php
+                                                $purposeArticles = $clientModel::getAllClientPurposeArticles();
+                                            @endphp
+
+                                            @if (!empty($purposeArticles) && !$purposeArticles->isEmpty())
+                                                @foreach ($purposeArticles as $purposeArticle)
+                                                    <option value="{{ $purposeArticle['id'] }}" @if ($term->get('pur') && $term->get('pur') == $purposeArticle['id']) selected="true" @endif>{{ $purposeArticle['title'] }}</option>
+                                                @endforeach
+                                            @endif
+                                        </select>
+                                    </div>
                                 </div>
                                 <br />
                                 <div class="row">
@@ -78,8 +95,8 @@
                                         <label>{{__('Work Status')}}</label>
                                     </div>
                                     <div class="col-md-12">
-                                        <select name="ws[]" multiple="true">
-                                            <option value="">{{ __('Select') }}</option>
+                                        <select name="ws[]" multiple="true" class="form-control work_status">
+                                            <!--option value="">{{ __('Select') }}</option-->
 
                                             @foreach ($clientModel::$workStatus as $value => $text)
                                                 <option value="{{ $value }}" @php echo (!empty($term->get('ws')) && in_array($value, $term->get('ws')) ? 'selected' : ''); @endphp>{{ $text }}</option>
@@ -114,7 +131,7 @@
                     <div class="col-md-4">
                         <div class="page-title pull-right">
                             <div class="heading">
-                                @can('clients_create')
+                                @can('editors_create')
                                     <a href="{{route('editors.create')}}" class="btn btn-primary btn-round"><i class="metismenu-icon pe-7s-user"></i> {{__('Add New Editor')}}</a>
                                 @endcan
                             </div>
@@ -141,10 +158,10 @@
                                 <th>{{__('E-mail')}}</th>
                                 <th>{{ __('Contact') }}</th>
                                 <th>{{__('Role')}}</th>
-                                @can('clients_activity')
+                                @can('editors_activity')
                                     <th>{{ __('Log') }}</th>
                                 @endcan
-                                @can('clients_print')
+                                @can('editors_print')
                                     <th>{{ __('View') }}</th>
                                 @endcan
                             </tr>
@@ -158,33 +175,33 @@
                                 @foreach($clients as $client)
                                     <tr>
                                         <td width="1">
-                                            @can('clients_show')
-                                                <a href="{{route('editors.show', $client->id)}}" target="__blank" data-toggle="tooltip" data-placement="top" title="{{__('View Client')}}">
+                                            @can('editors_show')
+                                                <a href="{{route('editors.show', $client->id)}}" target="__blank" data-toggle="tooltip" data-placement="top" title="{{__('View Editor')}}">
                                                     <i class="fa fa-eye"></i>
                                                 </a>
                                             @endcan
                                         </td>
                                         <td width="1">
-                                            @can('clients_edit')
-                                                <a href="{{route('editors.edit', $client->id)}}" data-toggle="tooltip" data-placement="top" title="{{__('Edit Client')}}">
+                                            @can('editors_edit')
+                                                <a href="{{route('editors.edit', $client->id)}}" data-toggle="tooltip" data-placement="top" title="{{__('Edit Editor')}}">
                                                     <i class="fa fa-edit"></i>
                                                 </a>
                                             @endcan
                                         </td>
                                         <td width="1">
                                             @if(!$client->isSuperAdmin())
-                                                @can('clients_delete')
+                                                @can('editors_delete')
                                                     <form action="{{ route('editors.destroy', $client->id) }}" method="POST">
                                                         @method('DELETE')
                                                         @csrf
-                                                        <a href="#" class="deleteBtn" data-confirm-message="{{__("Are you sure you want to delete this client?")}}" data-toggle="tooltip" data-placement="top" title="{{__('Delete Client')}}"><i class="fa fa-trash"></i></a>
+                                                        <a href="#" class="deleteBtn" data-confirm-message="{{__("Are you sure you want to delete this editor?")}}" data-toggle="tooltip" data-placement="top" title="{{__('Delete Editor')}}"><i class="fa fa-trash"></i></a>
                                                     </form>
                                                 @endcan
                                             @endif
                                         </td>
                                         <td>{{ $client->registration_date }}</td>
                                         <td>
-                                            @if(auth()->user()->can('clients_show'))
+                                            @if(auth()->user()->can('editors_show'))
                                                 <a href="{{route('editors.show', $client->id)}}" target="__blank" >{{ $client->first_name . ' ' . $client->last_name }}</a>
                                             @else
                                                 {{ $client->first_name . ' ' . $client->last_name }}
@@ -196,12 +213,12 @@
                                         <td>{{$client->email}}</td>
                                         <td>{{$client->contact}}</td>
                                         <td><span class="badge badge-lg badge-secondary text-white">{{@$client->getRoleNames()[0]}}</span></td>
-                                        @can('clients_activity')
+                                        @can('editors_activity')
                                             <td>
                                                 <a href="{{ route('editors.activity', $client->id) }}#" target="_blank">{{ __('Log') }}</a>
                                             </td>
                                         @endcan
-                                        @can('clients_print')
+                                        @can('editors_print')
                                             <td>
                                                 <a href="{{ route('editors.print', $client->id) }}" target="_blank">{{ __('Print') }}</a>
                                             </td>
@@ -214,7 +231,7 @@
 
                     <div class="float-left">
                         @if(!empty($term))
-                            {{ $clients->appends(['s' => $term])->links() }}
+                            {{ $clients->appends($term->all())->links() }}
                         @else
                             {{ $clients->links() }}
                         @endif
@@ -227,4 +244,5 @@
             </div>
         </div>
     </div>
+    @include('app.clients.scripts')
 @endsection

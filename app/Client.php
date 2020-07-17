@@ -69,18 +69,24 @@ class Client extends Authenticatable implements MustVerifyEmail, Auditable
     const TO_FOLLOW     = '1';
     const WORK_DONE_ALL = '2';
 
-    public static $workStatus = [];
+    public static $workStatus = [
+        self::DEFAULT       => 'Default',
+        self::TO_FOLLOW     => 'To Follow',
+        self::WORK_DONE_ALL => 'Work done all'
+    ];
 
     public static $isEditors = false;
 
-    public function __construct()
+    /*public function __construct()
     {
         self::$workStatus = [
             self::DEFAULT       => __('Default'),
             self::TO_FOLLOW     => __('To Follow'),
             self::WORK_DONE_ALL => __('Work done all')
         ];
-    }
+
+        parent::__construct();
+    }*/
 
     public function isSuperAdmin()
     {

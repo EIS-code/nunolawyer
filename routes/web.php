@@ -43,6 +43,15 @@ Route::middleware($middlewares)->group(function() {
         Route::get('editors/{id}/print', 'ClientController@print')->name('editors.print');
     });
 
+    Route::group(['middleware' => ['permission:article_purpose_access']], function () {
+        Route::resources(['article_purpose' => 'ArticlePurposeController']);
+    });
+
+    Route::group(['middleware' => ['permission:poa_access']], function () {
+        Route::resources(['poa' => 'PoaController']);
+        Route::get('poa/{id}/download', 'PoaController@download')->name('poa.download');
+    });
+
     Route::group(['middleware' => ['permission:roles_access']], function () {
         Route::resources(['roles' => 'RoleController']);
     });

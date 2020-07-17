@@ -1,0 +1,49 @@
+<?php
+
+namespace App;
+
+use Spatie\Permission\Traits\HasRoles;
+use Illuminate\Support\Facades\Storage;
+use OwenIt\Auditing\Contracts\Auditable;
+
+class PoaAgreement extends BaseModel implements Auditable
+{
+	use HasRoles;
+    use \OwenIt\Auditing\Auditable;
+
+    public static $fileSystem  = 'public';
+    public static $storageFolderName = 'poa';
+
+    protected $fillable = [
+        'text',
+        'file',
+        'is_removed',
+    ];
+
+    public function getFileAttribute($value)
+    {
+        if (empty($value)) {
+            return $value;
+        }
+
+        $storageFolderName = (str_ireplace("\\", "/", $this->storageFolderName));
+        return Storage::disk($this->fileSystem)->url($storageFolderName . $value);
+    }
+
+    public function getFileUrl()
+    {
+        $file = $this->file;
+        $url  = NULL;
+
+        if (!empty($file)) {
+            $storageFolderName = (str_ireplace("\\", "/", PoaAgreement::$storageFolderName));
+            $url               = Storage::disk(PoaAgreement::$fileSystem)->url($storageFolderName . $file);
+
+            if (!Storage::exists($url)) {
+                $url = NULL;
+            }
+        }
+
+        return $url;
+    }
+}
