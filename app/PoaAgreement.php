@@ -26,18 +26,18 @@ class PoaAgreement extends BaseModel implements Auditable
             return $value;
         }
 
-        $storageFolderName = (str_ireplace("\\", "/", $this->storageFolderName));
-        return Storage::disk($this->fileSystem)->url($storageFolderName . $value);
+        $storageFolderName = (str_ireplace("\\", "/", self::$storageFolderName));
+        return Storage::disk(self::$fileSystem)->url($storageFolderName . '/' . $value);
     }
 
     public function getFileUrl()
     {
-        $file = $this->file;
+        $file = $this->getAttributes()['file'];
         $url  = NULL;
 
         if (!empty($file)) {
-            $storageFolderName = (str_ireplace("\\", "/", PoaAgreement::$storageFolderName));
-            $url               = Storage::disk(PoaAgreement::$fileSystem)->url($storageFolderName . $file);
+            $storageFolderName = (str_ireplace("\\", "/", self::$storageFolderName));
+            $url               = Storage::disk(self::$fileSystem)->url($storageFolderName . '/' . $file);
 
             if (!Storage::exists($url)) {
                 $url = NULL;

@@ -127,6 +127,7 @@ class PoaController extends Controller
 
             $validator->validate();
 
+            $fileName  = false;
             if ($poaAgreement->update($data)) {
                 $file = $request->file('file', false);
 
@@ -144,7 +145,11 @@ class PoaController extends Controller
                     }
                 }
 
-                return redirect('poa')->with('success', __("POA Agreement updated!"));
+                if ($fileName) {
+                    return redirect('poa')->with('success', __("POA Agreement updated!"));
+                } else {
+                    return redirect('poa')->with('success', __("POA Agreement updated but file not stored!"));
+                }
             } else {
                 return redirect('poa')->with('error', __("There has been an error!"));
             }
