@@ -36,8 +36,9 @@ class PoaAgreement extends BaseModel implements Auditable
         $url  = NULL;
 
         if (!empty($file)) {
-            $storageFolderName = (str_ireplace("\\", "/", self::$storageFolderName));
-            $url               = Storage::disk(self::$fileSystem)->url($storageFolderName . '/' . $file);
+            /* $storageFolderName = (str_ireplace("\\", "/", self::$storageFolderName));
+            $url               = Storage::disk(self::$fileSystem)->url($storageFolderName . '/' . $file); */
+            $url = storage_path("app/public/" . self::$storageFolderName . '/' . $file);
 
             if (!Storage::exists($url)) {
                 $url = NULL;
