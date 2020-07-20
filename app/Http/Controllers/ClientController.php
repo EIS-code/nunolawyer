@@ -14,6 +14,8 @@ use App\ClientPrivateInformation;
 use App\ClientDocument;
 use App\ClientTermsAndCondition;
 use App\ModelHasRoles;
+use App\Account;
+use App\FollowUp;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
@@ -246,7 +248,7 @@ class ClientController extends Controller
             'photo'             => ['string', 'nullable'],
             'banned'            => ['integer', 'in:0,1'],
             'assign_date'       => array_merge(['date_format:Y-m-d'], $assignDate),
-            'assign_to'         => array_merge(['integer', 'exists:' . Client::getTableName() . ',id'], $assignTo),
+            // 'assign_to'         => array_merge(['integer', 'exists:' . Client::getTableName() . ',id'], $assignTo),
             'password'          => ['required', 'string', 'min:8', 'confirmed'],
             'is_superadmin'     => ['in:0']
         ]);
@@ -267,13 +269,18 @@ class ClientController extends Controller
             'photo'           => (!empty($data['photo'])) ? $data['photo'] : NULL,
             'banned'          => (isset($data['banned'])) ? $data['banned'] : '0',
             'assign_date'     => (!empty($data['assign_date'])) ? $data['assign_date'] : NULL,
-            'assign_to'       => (!empty($data['assign_to'])) ? $data['assign_to'] : NULL,
+            // 'assign_to'       => (!empty($data['assign_to'])) ? $data['assign_to'] : NULL,
             'password'        => Hash::make($data['password']),
             'is_superadmin'   => '0'
         ]);
 
         if ($client) {
             $clientId = $client->id;
+
+            $assignTo = (!empty($data['assign_to'])) ? $data['assign_to'] : [];
+            if (!empty($assignTo)) {
+                $this->storeAssignTo($clientId, $assignTo);
+            }
 
             $this->storeOtherInfos($clientId, $request);
 
@@ -304,11 +311,37 @@ class ClientController extends Controller
         }
     }
 
+    public function storeAssignTo(int $clientId, array $assignTo, $operation = 'insert')
+    {
+        if (!empty($clientId) && !empty($assignTo)) {
+            if ($operation == 'update') {
+                $find = FollowUp::where(['client_id' => $clientId, 'is_removed' => BaseModel::$notRemoved])->update(['is_removed' => BaseModel::$removed]);
+            }
+
+            foreach ($assignTo as $index => $assignee) {
+                $data = [];
+
+                $data[$index] = [
+                    'follow_by'   => $assignee,
+                    'follow_from' => \Auth::user()->id,
+                    'client_id'   => $clientId,
+                    'is_removed'  => BaseModel::$notRemoved
+                ];
+
+                $validator = FollowUp::validators($data[$index], true);
+                if ($validator) {
+                    FollowUp::updateOrCreate($data[$index], $data[$index]);
+                }
+            }
+        }
+    }
+
     public function storeOtherInfos(int $clientId, Request $request, $operation = 'insert')
     {
         if (!empty($clientId)) {
             // Purpose and articles.
             $purposeAarticals = $request->get('purpose_articles', []);
+            $lastSelectedId   = $request->get('last_purpose_articles', '0');
 
             // Remove old records.
             if ($operation == 'update') {
@@ -319,10 +352,13 @@ class ClientController extends Controller
                 foreach ((array)$purposeAarticals as $index => $purposeAartical) {
                     $data = [];
 
+                    $isLastInserted = ($purposeAartical == $lastSelectedId) ? '1' : '0';
+
                     $data[$index] = [
                         'purpose_article_id' => $purposeAartical,
                         'client_id'          => $clientId,
-                        'is_removed'         => BaseModel::$notRemoved
+                        'is_removed'         => BaseModel::$notRemoved,
+                        'is_last_inserted'   => $isLastInserted
                     ];
 
                     $validator = ClientPurposeArticle::validators($data[$index], true);
@@ -375,16 +411,20 @@ class ClientController extends Controller
             }
 
             if (!empty($feeDates)) {
+                $inc   = 0;
+                $count = count($feeDates);
                 foreach ((array)$feeDates as $index => $feeDate) {
                     $data = [];
 
+                    $receivedLawyerFee      = (!empty($receivedLawyerFees[$index]) ? $receivedLawyerFees[$index] : NULL);
+                    $receivedGovernmentFee  = (!empty($receivedGovernmentFees[$index]) ? $receivedGovernmentFees[$index] : NULL);
                     $data[$index] = [
                         'date'                    => $feeDate,
                         'proposed_lawyer_fee'     => (!empty($proposedLawyerFees[$index]) ? $proposedLawyerFees[$index] : NULL),
-                        'received_lawyer_fee'     => (!empty($receivedLawyerFees[$index]) ? $receivedLawyerFees[$index] : NULL),
+                        'received_lawyer_fee'     => $receivedLawyerFee,
                         'missing_lawyer_fee'      => (!empty($missingLawyerFees[$index]) ? $missingLawyerFees[$index] : NULL),
                         'proposed_government_fee' => (!empty($proposedGovernmentFees[$index]) ? $proposedGovernmentFees[$index] : NULL),
-                        'received_government_fee' => (!empty($receivedGovernmentFees[$index]) ? $receivedGovernmentFees[$index] : NULL),
+                        'received_government_fee' => $receivedGovernmentFee,
                         'missing_government_fee'  => (!empty($missingGovernmentFees[$index]) ? $missingGovernmentFees[$index] : NULL),
                         'client_id'               => $clientId,
                         'is_removed'              => BaseModel::$notRemoved
@@ -394,6 +434,28 @@ class ClientController extends Controller
                     if ($validator) {
                         ClientFee::updateOrCreate($data[$index], $data[$index]);
                     }
+
+                    if ($inc == ($count - 1)) {
+                        $accountData = [];
+
+                        // Get last purpose article id.
+                        $getLastPurposeArticleId = ClientPurposeArticle::where(['is_removed' => BaseModel::$notRemoved, 'is_last_inserted' => '1', 'client_id' => $clientId])->first();
+
+                        if (!empty($getLastPurposeArticleId)) {
+                            $accountData['created_by']          = \Auth::user()->id;
+                            $accountData['client_id']           = $clientId;
+                            $accountData['date']                = $feeDate;
+                            $accountData['received_amount']     = ($receivedLawyerFee + $receivedGovernmentFee);
+                            $accountData['purpose_article_id']  = ($getLastPurposeArticleId->purpose_article_id);
+                        }
+
+                        $validator = Account::validators($accountData, true);
+                        if ($validator) {
+                            Account::updateOrCreate($accountData, $accountData);
+                        }
+                    }
+
+                    $inc++;
                 }
             }
 
@@ -601,12 +663,14 @@ class ClientController extends Controller
             $editorRoles     = Role::whereRaw("lower(name) = 'editor'")->first();
             $assignTo        = [];
             $purposeArticles = PurposeArticle::where('is_removed', PurposeArticle::$notRemoved)->get();
+            $assignedTo      = FollowUp::where('is_removed', PurposeArticle::$notRemoved)->where('client_id', $id)->get();
+            $assignedTo      = (!empty($assignedTo) && !$assignedTo->isEmpty()) ? $assignedTo->pluck('follow_by')->toArray() : [];
 
             if (!empty($editorRoles)) {
                 $assignTo = $editorRoles->users;
             }
 
-            return view('app.clients.edit', ['client' => $client, 'roles' => $roles, 'assignTo' => $assignTo, 'purposeArticles' => $purposeArticles]);
+            return view('app.clients.edit', ['client' => $client, 'roles' => $roles, 'assignTo' => $assignTo, 'purposeArticles' => $purposeArticles, 'assignedTo' => $assignedTo]);
         } else {
             if ($this->isEditors) {
                 return redirect('editors')->with('error',__("Editor not found!"));
@@ -664,7 +728,7 @@ class ClientController extends Controller
                 'photo'             => ['string', 'nullable'],
                 'banned'            => ['integer', 'in:0,1'],
                 'assign_date'       => array_merge(['date_format:Y-m-d'], $assignDate),
-                'assign_to'         => array_merge(['integer', 'exists:' . Client::getTableName() . ',id'], $assignTo),
+                // 'assign_to'         => array_merge(['integer', 'exists:' . Client::getTableName() . ',id'], $assignTo),
                 'password'          => ['string', 'min:8', 'confirmed'],
                 'is_superadmin'     => ['in:0']
             ]);
@@ -677,8 +741,17 @@ class ClientController extends Controller
             if (empty($data['assign_date'])) {
                 unset($data['assign_date']);
             }
+            $assignTo = [];
+            if (isset($data['assign_to'])) {
+                $assignTo = (array)$data['assign_to'];
+                unset($data['assign_to']);
+            }
 
             if ($client->update($data)) {
+                if (!empty($assignTo)) {
+                    $this->storeAssignTo($id, $assignTo, 'update');
+                }
+
                 $this->storeOtherInfos($id, $request, 'update');
 
                 // Update role

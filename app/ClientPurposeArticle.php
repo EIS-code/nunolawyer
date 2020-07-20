@@ -21,6 +21,8 @@ class ClientPurposeArticle extends BaseModel implements Auditable
     protected $fillable = [
         'purpose_article_id',
         'client_id',
+        'is_removed',
+        'is_last_inserted',
     ];
     
     public static function validators(array $data, $returnBoolsOnly = false)

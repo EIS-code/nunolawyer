@@ -30,7 +30,7 @@ class CreateClientsTable extends Migration
             $table->string('photo')->nullable();
             $table->boolean('banned')->default(false);
             $table->timestamp('assign_date')->nullable();
-            $table->integer('assign_to')->nullable();
+            // $table->integer('assign_to')->nullable();
             $table->string('password');
             $table->boolean('is_superadmin')->default(false);
 			$table->timestamp('last_login_at')->nullable();

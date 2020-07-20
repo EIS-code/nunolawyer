@@ -159,6 +159,7 @@
                                 @foreach ($purposeArticles as $purposeArticle)
                                     <option value="{{ $purposeArticle->id }}" {{ (!empty(old('purpose_articles')) && in_array($purposeArticle->id, old('purpose_articles')) ? 'selected="true"' : '') }}>{{ $purposeArticle->title }}</option>
                                 @endforeach
+                                <input type="hidden" name="last_purpose_articles" id="last_purpose_articles" />
                             </select>
 
                             @if ($errors->has('purpose_articles'))
@@ -579,17 +580,17 @@
                         <div class="form-group row">
                             <div class="col-md-2">{{ __('Assign To') }}<span style="color: red;">*</span></div>
                             <div class="col-md-3">
-                                <select id="assign_to"class="form-control{{ $errors->has('assign_to') ? ' is-invalid' : '' }}" name="assign_to" >
-                                    <option value="">{{ __('Select') }}</option>
+                                <select id="assign_to" multiple="true" class="form-control {{ $errors->has('assign_to.0') ? ' is-invalid' : '' }} assign_to" name="assign_to[]" >
+                                    <!--option value="">{{ __('Select') }}</option-->
 
-                                    @foreach ($assignTo as $assign)
-                                        <option value="{{ $assign->id }}" {{ (old('assign_to') == $assign->id ? 'selected' : '') }}>{{ $assign->first_name . ' ' . $assign->last_name }}</option>
+                                    @foreach ($assignTo as $index => $assign)
+                                        <option value="{{ $assign->id }}" {{ (old('assign_to.' . $index) == $assign->id ? 'selected' : '') }}>{{ $assign->first_name . ' ' . $assign->last_name }}</option>
                                     @endforeach
                                 </select>
 
-                                @if ($errors->has('assign_to'))
+                                @if ($errors->has('assign_to.0'))
                                     <span class="invalid-feedback" role="alert">
-                                        <strong>{{ $errors->first('assign_to') }}</strong>
+                                        <strong>{{ $errors->first('assign_to.0') }}</strong>
                                     </span>
                                 @endif
                             </div>

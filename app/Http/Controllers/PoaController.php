@@ -15,7 +15,7 @@ class PoaController extends Controller
 {
     public function __construct()
     {
-        $this->middleware(['permission:poa_view'])->only(['view']);
+        $this->middleware(['permission:poa_view'])->only(['index']);
         $this->middleware(['permission:poa_create'])->only(['create','store']);
         $this->middleware(['permission:poa_edit'])->only(['edit','update']);
         $this->middleware(['permission:poa_delete'])->only('destroy');

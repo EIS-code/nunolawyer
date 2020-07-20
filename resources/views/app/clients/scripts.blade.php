@@ -285,9 +285,27 @@
             $(".purpose_articles").select2({
                 placeholder: "{{ __('Select purpose / articles') }}",
                 allowClear: true
+            }).on("select2:select", function (e) {
+                $("#last_purpose_articles").val(e.params.data.id);
+
+                let $element = $(e.params.data.element);
+
+                if ($element) {
+                    $element.detach();
+                    $(this).append($element);
+                    $(this).trigger("change");
+                }
+            }).on("select2:unselect", function (e) {
+                $("#last_purpose_articles").val(e.params.data.id);
             });
+
             $(".work_status").select2({
                 placeholder: "{{ __('Select work status') }}",
+                allowClear: true
+            });
+
+            $(".assign_to").select2({
+                placeholder: "{{ __('Select') }}",
                 allowClear: true
             });
         }

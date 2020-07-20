@@ -161,9 +161,9 @@ return [
         |
         | When exporting and importing files, we use a temporary file, before
         | storing reading or downloading. Here you can customize that path.
-        |
+        | sys_get_temp_dir()
         */
-        'local_path'  => sys_get_temp_dir(),
+        'local_path'  => storage_path(),
 
         /*
         |--------------------------------------------------------------------------

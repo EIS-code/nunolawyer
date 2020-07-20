@@ -5,7 +5,7 @@ namespace App;
 use Spatie\Permission\Traits\HasRoles;
 use OwenIt\Auditing\Contracts\Auditable;
 
-class PurposeArticle extends BaseModel implements Auditable
+class OurFeePolicyDocument extends BaseModel implements Auditable
 {
     use HasRoles;
     use \OwenIt\Auditing\Auditable;

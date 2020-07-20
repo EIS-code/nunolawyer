@@ -84,23 +84,29 @@
                         </li>
                         <!--li class="app-sidebar__heading">{{ __('Translate model or documents') }}</li-->
                         <li>
-                            <a class="{{ (request()->is('') ? 'mm-active' : '') }}">
+                            <a href="{{ route('translate_model_document.index') }}" class="{{ (request()->is('translate_model_document*') ? 'mm-active' : '') }}">
                                 <i class="metismenu-icon pe-7s-file"></i>
                                 {{ __('Translate model or documents') }}
                             </a>
                         </li>
                         <!--li class="app-sidebar__heading">{{ __('Our fee / policy document') }}</li-->
                         <li>
-                            <a class="{{ (request()->is('') ? 'mm-active' : '') }}">
+                            <a href="{{ route('our_fee_policy_document.index') }}" class="{{ (request()->is('our_fee_policy_document*') ? 'mm-active' : '') }}">
                                 <i class="metismenu-icon pe-7s-file"></i>
                                 {{ __('Our fee / policy document') }}
                             </a>
                         </li>
                         <!--li class="app-sidebar__heading">{{ __('Account') }}</li-->
                         <li>
-                            <a class="{{ (request()->is('') ? 'mm-active' : '') }}">
+                            <a href="{{ route('account.index') }}" class="{{ (request()->is('account*') ? 'mm-active' : '') }}">
                                 <i class="metismenu-icon pe-7s-pen"></i>
                                 {{ __('Account') }}
+                            </a>
+                        </li>
+                        <li>
+                            <a href="{{ route('follow_up.index') }}" class="{{ (request()->is('follow_up*') ? 'mm-active' : '') }}">
+                                <i class="metismenu-icon pe-7s-pen"></i>
+                                {{ __('Follow Up') }}
                             </a>
                         </li>
                         @can('roles_access')

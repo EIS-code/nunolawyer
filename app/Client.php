@@ -98,14 +98,23 @@ class Client extends Authenticatable implements MustVerifyEmail, Auditable
         return with(new static)->getTable();
     }
 
-    public function getAssignToAttribute($value)
+    public static function getClientNames(int $clientId)
     {
-        if (!empty($value)) {
-            $getClient = self::where('id', '=', (int)$value)->first();
+        if (!empty($clientId)) {
+            $getClient = self::where('id', '=', (int)$clientId)->where('is_removed', self::$notRemoved)->first();
 
             if (!empty($getClient)) {
                 return $getClient->first_name . ' ' . $getClient->last_name;
             }
+        }
+
+        return NULL;
+    }
+
+    public function getAssignToAttribute($value)
+    {
+        if (!empty($value)) {
+            return $this->getClientNames($value);
         }
 
         return $value;

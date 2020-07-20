@@ -64,6 +64,29 @@ class ClientRoleSeeder extends Seeder
             ['name' => 'poa_view', 'display_name' => 'POA view', 'group_name' => 'POA', 'group_slug' => 'poa', 'guard_name' => 'web'],
             ['name' => 'poa_download', 'display_name' => 'POA download', 'group_name' => 'POA', 'group_slug' => 'poa', 'guard_name' => 'web'],
 
+            ['name' => 'account_access', 'display_name' => 'Account access', 'group_name' => 'Account', 'group_slug' => 'poa', 'guard_name' => 'web'],
+
+            ['name' => 'follow_up_access', 'display_name' => 'Follow up access', 'group_name' => 'FollowUp', 'group_slug' => 'poa', 'guard_name' => 'web'],
+            ['name' => 'follow_up_show', 'display_name' => 'Follow up show', 'group_name' => 'FollowUp', 'group_slug' => 'poa', 'guard_name' => 'web'],
+
+            ['name' => 'translate_model_document_access', 'display_name' => 'Translate Model Document access', 'group_name' => 'TMD', 'group_slug' => 'tmd', 'guard_name' => 'web'],
+            ['name' => 'translate_model_document_create', 'display_name' => 'Translate Model Document Create', 'group_name' => 'TMD', 'group_slug' => 'tmd', 'guard_name' => 'web'],
+            ['name' => 'translate_model_document_edit', 'display_name' => 'Translate Model Document Edit', 'group_name' => 'TMD', 'group_slug' => 'tmd', 'guard_name' => 'web'],
+            ['name' => 'translate_model_document_delete', 'display_name' => 'Translate Model Document Delete', 'group_name' => 'TMD', 'group_slug' => 'tmd', 'guard_name' => 'web'],
+            ['name' => 'translate_model_document_show_client', 'display_name' => 'Translate Model Document show client', 'group_name' => 'TMD', 'group_slug' => 'tmd', 'guard_name' => 'web'],
+            ['name' => 'translate_model_document_show_file', 'display_name' => 'Translate Model Document view file', 'group_name' => 'TMD', 'group_slug' => 'tmd', 'guard_name' => 'web'],
+
+            ['name' => 'poa_access', 'display_name' => 'POA access', 'group_name' => 'POA', 'group_slug' => 'poa', 'guard_name' => 'web'],
+            // ['name' => 'poa_show', 'display_name' => 'POA show', 'group_name' => 'POA', 'group_slug' => 'poa', 'guard_name' => 'web'],
+            ['name' => 'poa_create', 'display_name' => 'POA Create', 'group_name' => 'POA', 'group_slug' => 'poa', 'guard_name' => 'web'],
+            ['name' => 'poa_edit', 'display_name' => 'POA Edit', 'group_name' => 'POA', 'group_slug' => 'poa', 'guard_name' => 'web'],
+            ['name' => 'poa_delete', 'display_name' => 'POA Delete', 'group_name' => 'POA', 'group_slug' => 'poa', 'guard_name' => 'web'],
+
+            ['name' => 'our_fee_policy_document_access', 'display_name' => 'Our Fee Policy Document access', 'group_name' => 'OurFeePolicy', 'group_slug' => 'our_fee_policy_document', 'guard_name' => 'web'],
+            ['name' => 'our_fee_policy_document_create', 'display_name' => 'Our Fee Policy Document Create', 'group_name' => 'OurFeePolicy', 'group_slug' => 'our_fee_policy_document', 'guard_name' => 'web'],
+            ['name' => 'our_fee_policy_document_edit', 'display_name' => 'Our Fee Policy Document Edit', 'group_name' => 'OurFeePolicy', 'group_slug' => 'our_fee_policy_document', 'guard_name' => 'web'],
+            ['name' => 'our_fee_policy_document_delete', 'display_name' => 'Our Fee Policy Document Delete', 'group_name' => 'OurFeePolicy', 'group_slug' => 'our_fee_policy_document', 'guard_name' => 'web'],
+
             ['name' => 'roles_access', 'display_name' => 'Access', 'group_name' => 'Roles', 'group_slug' => 'roles', 'guard_name' => 'web'],
             ['name' => 'roles_create', 'display_name' => 'Create', 'group_name' => 'Roles', 'group_slug' => 'roles', 'guard_name' => 'web'],
             ['name' => 'roles_show', 'display_name' => 'Show', 'group_name' => 'Roles', 'group_slug' => 'roles', 'guard_name' => 'web'],

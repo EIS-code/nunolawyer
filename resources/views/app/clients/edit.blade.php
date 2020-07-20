@@ -155,16 +155,21 @@
                     </div>
 
                     <div class="form-group row">
-                        @php $purposeArticleIds = $client->clientPurposeArticles->pluck('purpose_article_id')->toArray(); @endphp
+                        @php
+                            $clientPurposeArticles = $client->clientPurposeArticles;
+                            $lastInsertedId        = $clientPurposeArticles->where('is_last_inserted', '1')->first();
+                            $purposeArticleIds     = $clientPurposeArticles->pluck('purpose_article_id')->toArray();
+                        @endphp
 
                         <div class="col-md-2">{{ __('Purpose and Article') }}</div>
                         <div class="col-md-10">
                             <select class="form-control{{ $errors->has('nationality') ? ' is-invalid' : '' }} purpose_articles" name="purpose_articles[]" multiple="true">
-                                <option value="" {{ (empty($purposeArticleIds) ? 'selected="true"' : '') }}>{{ __('Select') }}</option>
+                                <!--option value="" {{ (empty($purposeArticleIds) ? 'selected="true"' : '') }}>{{ __('Select') }}</option-->
 
                                 @foreach ($purposeArticles as $purposeArticle)
                                     <option value="{{ $purposeArticle->id }}" {{ (!empty($purposeArticleIds) && in_array($purposeArticle->id, $purposeArticleIds) ? 'selected="true"' : '') }}>{{ $purposeArticle->title }}</option>
                                 @endforeach
+                                <input type="hidden" name="last_purpose_articles" id="last_purpose_articles" value="{{ (!empty($lastInsertedId)) ? $lastInsertedId->purpose_article_id : '' }}" />
                             </select>
 
                             @if ($errors->has('purpose_articles'))
@@ -694,17 +699,17 @@
                         <div class="form-group row">
                             <div class="col-md-2">{{ __('Assign To') }}<span style="color: red;">*</span></div>
                             <div class="col-md-3">
-                                <select id="assign_to"class="form-control{{ $errors->has('assign_to') ? ' is-invalid' : '' }}" name="assign_to">
-                                    <option value="">{{ __('Select') }}</option>
+                                <select id="assign_to" multiple="true" class="form-control {{ $errors->has('assign_to.0') ? ' is-invalid' : '' }} assign_to" name="assign_to[]">
+                                    <!--option value="">{{ __('Select') }}</option-->
 
                                     @foreach ($assignTo as $assign)
-                                        <option value="{{ $assign->id }}" {{ ($client->getAttributes()['assign_to'] == $assign->id ? 'selected' : '') }}>{{ $assign->first_name . ' ' . $assign->last_name }}</option>
+                                        <option value="{{ $assign->id }}" {{ (in_array($assign->id, $assignedTo) ? 'selected' : '') }}>{{ $assign->first_name . ' ' . $assign->last_name }}</option>
                                     @endforeach
                                 </select>
 
-                                @if ($errors->has('assign_to'))
+                                @if ($errors->has('assign_to.0'))
                                     <span class="invalid-feedback" role="alert">
-                                        <strong>{{ $errors->first('assign_to') }}</strong>
+                                        <strong>{{ $errors->first('assign_to.0') }}</strong>
                                     </span>
                                 @endif
                             </div>

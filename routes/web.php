@@ -52,8 +52,24 @@ Route::middleware($middlewares)->group(function() {
         Route::get('poa/{id}/download', 'PoaController@download')->name('poa.download');
     });
 
+    Route::group(['middleware' => ['permission:account_access']], function () {
+        Route::resources(['account' => 'AccountController']);
+    });
+
+    Route::group(['middleware' => ['permission:follow_up_access']], function () {
+        Route::resources(['follow_up' => 'FollowUpController']);
+    });
+
+    Route::group(['middleware' => ['permission:translate_model_document_access']], function () {
+        Route::resources(['translate_model_document' => 'TranslateModelDocumentController']);
+    });
+
     Route::group(['middleware' => ['permission:roles_access']], function () {
         Route::resources(['roles' => 'RoleController']);
+    });
+
+    Route::group(['middleware' => ['permission:our_fee_policy_document_access']], function () {
+        Route::resources(['our_fee_policy_document' => 'OurFeePolicyDocumentController']);
     });
 
     Route::group(['middleware' => ['permission:permissions_access']], function () {

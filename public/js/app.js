@@ -72452,6 +72452,10 @@ if (token) {
   window.onload = function () {
     return Authy.UI.instance();
   };
+
+  setTimeout(function() {
+    $(".close-sidebar-btn").first().click();
+  }, 1000);
 }).call(this);
 
 /***/ }),
