@@ -169,7 +169,7 @@
                         <tbody>
                             @if($clients->total() == 0)
                                 <tr>
-                                    <td colspan="12" class="text-center"><mark>{{__('No results found.')}}</mark></td>
+                                    <td colspan="15" class="text-center"><mark>{{__('No results found.')}}</mark></td>
                                 </tr>
                             @else
                                 @foreach($clients as $client)

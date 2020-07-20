@@ -37,7 +37,8 @@ Route::middleware($middlewares)->group(function() {
         Route::get('editors/{id}/activity', 'ClientController@activityLog')->name('editors.activity');
         // Route::get('editors', 'EditorController@index')->name('editors.index');
         // Route::get('editors/{id}/show', 'ClientController@show')->name('editors.show');
-        Route::resources(['editors' => 'EditorController'], ['except' => 'create']);
+        Route::resources(['editors' => 'EditorController'], ['only' => ['index', 'show']]);
+        Route::post('editors/store', 'ClientController@store')->name('editors.store');
         Route::patch('editors/{id}/update', 'ClientController@update')->name('editors.update');
         Route::delete('editors/{id}/destroy', 'ClientController@destroy')->name('editors.destroy');
         Route::get('editors/{id}/print', 'ClientController@print')->name('editors.print');

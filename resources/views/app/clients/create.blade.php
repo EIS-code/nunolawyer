@@ -21,7 +21,7 @@
     <div class="content">
         <div class="card bg-white">
             <div class="card-body">
-                <form method="POST" action="{{ route('clients.store') }}" enctype='multipart/form-data'>
+                <form method="POST" action="{{ route(($isEditors ? 'editors.store' : 'clients.store')) }}" enctype='multipart/form-data'>
                     @csrf
                     <div class="form-group row">
                         <div class="col-md-6">
