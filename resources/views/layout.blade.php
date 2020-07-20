@@ -105,7 +105,7 @@
                         </li>
                         <li>
                             <a href="{{ route('follow_up.index') }}" class="{{ (request()->is('follow_up*') ? 'mm-active' : '') }}">
-                                <i class="metismenu-icon pe-7s-pen"></i>
+                                <i class="metismenu-icon pe-7s-note"></i>
                                 {{ __('Follow Up') }}
                             </a>
                         </li>
