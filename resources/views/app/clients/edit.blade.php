@@ -11,7 +11,7 @@
             <div class="d-flex">
                 <div class="breadcrumb">
                     <a href="{{route('dashboard')}}" class="breadcrumb-item"><i class="metismenu-icon pe-7s-home" style="margin-top: 3px;"></i>&nbsp;{{__('Dashboard')}}</a>
-                    <a href="{{route('clients.index')}}" class="breadcrumb-item">{{ ($isEditors ? __('Editors') : __('Clients')) }}</a>
+                    <a href="{{ route(($isEditors ? 'editors.index' : 'clients.index')) }}" class="breadcrumb-item">{{ ($isEditors ? __('Editors') : __('Clients')) }}</a>
                     <span class="breadcrumb-item active">{{ ($isEditors ? __('Edit Editor') : __('Edit Client')) }}</span>
                     <span class="breadcrumb-item active">{{$client->first_name . ' ' . $client->last_name}}</span>
                 </div>

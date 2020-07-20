@@ -64,10 +64,10 @@ class ClientRoleSeeder extends Seeder
             ['name' => 'poa_view', 'display_name' => 'POA view', 'group_name' => 'POA', 'group_slug' => 'poa', 'guard_name' => 'web'],
             ['name' => 'poa_download', 'display_name' => 'POA download', 'group_name' => 'POA', 'group_slug' => 'poa', 'guard_name' => 'web'],
 
-            ['name' => 'account_access', 'display_name' => 'Account access', 'group_name' => 'Account', 'group_slug' => 'poa', 'guard_name' => 'web'],
+            ['name' => 'account_access', 'display_name' => 'Account access', 'group_name' => 'Account', 'group_slug' => 'account', 'guard_name' => 'web'],
 
-            ['name' => 'follow_up_access', 'display_name' => 'Follow up access', 'group_name' => 'FollowUp', 'group_slug' => 'poa', 'guard_name' => 'web'],
-            ['name' => 'follow_up_show', 'display_name' => 'Follow up show', 'group_name' => 'FollowUp', 'group_slug' => 'poa', 'guard_name' => 'web'],
+            ['name' => 'follow_up_access', 'display_name' => 'Follow up access', 'group_name' => 'FollowUp', 'group_slug' => 'FollowUp', 'guard_name' => 'web'],
+            ['name' => 'follow_up_show', 'display_name' => 'Follow up show', 'group_name' => 'FollowUp', 'group_slug' => 'FollowUp', 'guard_name' => 'web'],
 
             ['name' => 'translate_model_document_access', 'display_name' => 'Translate Model Document access', 'group_name' => 'TMD', 'group_slug' => 'tmd', 'guard_name' => 'web'],
             ['name' => 'translate_model_document_create', 'display_name' => 'Translate Model Document Create', 'group_name' => 'TMD', 'group_slug' => 'tmd', 'guard_name' => 'web'],

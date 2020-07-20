@@ -82,7 +82,8 @@ class ClientController extends Controller
                             $query->where('first_name','LIKE',"%$s%")
                                   ->orWhere('last_name','LIKE',"%$s%")
                                   ->orWhere(DB::raw('concat(first_name, " ", last_name)'),'LIKE',"%$s%")
-                                  ->orWhere('email','LIKE',"%$s%");
+                                  ->orWhere('email','LIKE',"%$s%")
+                                  ->orWhere('contact','LIKE',"%$s%");
                         });
             }
 
