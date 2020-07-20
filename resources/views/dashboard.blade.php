@@ -26,7 +26,7 @@
                         <!--div class="widget-subheading"></div-->
                     </div>
                     <div class="widget-content-right">
-                        <div class="widget-numbers text-white"><span>{{ __('1896') }}</span></div>
+                        <div class="widget-numbers text-white"><span>{{ $totalClients }}</span></div>
                     </div>
                 </div>
             </div>
@@ -35,11 +35,11 @@
             <div class="card mb-3 widget-content bg-arielle-smile">
                 <div class="widget-content-wrapper text-white">
                     <div class="widget-content-left">
-                        <div class="widget-heading">{{ __('Profits') }}</div>
-                        <div class="widget-subheading">{{ __('Total Clients Profit') }}</div>
+                        <div class="widget-heading">{{ __('Total Editors') }}</div>
+                        <!--div class="widget-subheading">{{ __('Total Clients Profit') }}</div-->
                     </div>
                     <div class="widget-content-right">
-                        <div class="widget-numbers text-white"><span>{{ __('$ 568') }}</span></div>
+                        <div class="widget-numbers text-white"><span>{{ $totalEditors }}</span></div>
                     </div>
                 </div>
             </div>
@@ -48,11 +48,11 @@
             <div class="card mb-3 widget-content bg-grow-early">
                 <div class="widget-content-wrapper text-white">
                     <div class="widget-content-left">
-                        <div class="widget-heading">{{ __('Followers') }}</div>
-                        <div class="widget-subheading">{{ __('People Interested') }}</div>
+                        <div class="widget-heading">{{ __('Translate Model Document') }}</div>
+                        <div class="widget-subheading">{{ __('Total Active Client Count') }}</div>
                     </div>
                     <div class="widget-content-right">
-                        <div class="widget-numbers text-white"><span>{{ __('46%') }}</span></div>
+                        <div class="widget-numbers text-white"><span>{{ $totalTranslateModelDocuments }}</span></div>
                     </div>
                 </div>
             </div>

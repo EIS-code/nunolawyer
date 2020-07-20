@@ -115,7 +115,7 @@ class EditorController extends Controller
             return $this->exportCSV();
         }
 
-        $clients = $clients->paginate(1);
+        $clients = $clients->paginate(20);
 
         return view('app.editors.list', ['clients' => $clients, 'term' => $request, 'request' => $request, 'clientModel' => $clientModel, 'isFiltered' => $isFiltered]);
     }
