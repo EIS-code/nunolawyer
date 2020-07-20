@@ -168,4 +168,9 @@ class Client extends Authenticatable implements MustVerifyEmail, Auditable
     {
         return $this->hasMany('App\ClientTermsAndCondition', 'client_id', 'id')->where('is_removed', self::$notRemoved);
     }
+
+    public function translateModelDocuments()
+    {
+        return $this->hasMany('App\TranslateModelDocument', 'client_id', 'id')->where('is_removed', self::$notRemoved);
+    }
 }

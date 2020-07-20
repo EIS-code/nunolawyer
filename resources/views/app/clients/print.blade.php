@@ -160,6 +160,56 @@
                         @endforeach
                     </tbody>
                 </table>
+                <table class="table table-bordered">
+                    <thead>
+                        <tr class="fee-header">
+                            <th style="width:10%">{{ __('SN') }}</th>
+                            <th>{{ __('Client Documents') }}</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach ($client->clientDocuments as $index => $clientDocument)
+                            <tr>
+                                <td>{{ $index + 1 }}</td>
+                                <td>
+                                    @if (!empty($clientDocument))
+                                        <a href="{{ $clientDocument->file }}" target="__blank">
+                                            {{ __('View') }}
+                                        </a>
+
+                                    @else
+                                        <mark>{{ __('No file!') }}</mark>
+                                    @endif
+                                </td>
+                            </tr>
+                        @endforeach
+                    </tbody>
+                </table>
+                <table class="table table-bordered">
+                    <thead>
+                        <tr class="fee-header">
+                            <th style="width:10%">{{ __('SN') }}</th>
+                            <th>{{ __('Translate Documents') }}</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach ($client->translateModelDocuments as $index => $translateModelDocument)
+                            <tr>
+                                <td>{{ $index + 1 }}</td>
+                                <td>
+                                    @if (!empty($translateModelDocument))
+                                        <a href="{{ $translateModelDocument->file }}" target="__blank">
+                                            {{ __('View') }}
+                                        </a>
+
+                                    @else
+                                        <mark>{{ __('No file!') }}</mark>
+                                    @endif
+                                </td>
+                            </tr>
+                        @endforeach
+                    </tbody>
+                </table>
                 <br>
                 -----------------<br>
                 {{ __('Client Signature') }}<br>
