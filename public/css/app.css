@@ -10961,3 +10961,15 @@ a.text-dark:focus {
 .remove-link {
   text-decoration: none;
 }
+
+.logo-badge {
+    color: #e6e6e6;
+    font-size: 80px;
+    font-weight: 800;
+    letter-spacing: -10px;
+    margin-bottom: 0;
+}
+
+.logo-badge img {
+  background: no-repeat;
+}

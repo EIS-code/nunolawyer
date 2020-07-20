@@ -90,7 +90,7 @@ class Client extends Authenticatable implements MustVerifyEmail, Auditable
 
     public function isSuperAdmin()
     {
-        return $this->is_superadmin === 1 ? true : false;
+        return $this->is_superadmin == '1' ? true : false;
     }
 
     public static function getTableName()

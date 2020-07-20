@@ -57,15 +57,43 @@
                 </div>
             </div>
         </div>
-        <div class="d-xl-none d-lg-block col-md-6 col-xl-4">
+    </div>
+    <div class="row">
+        <div class="col-md-6 col-xl-4">
             <div class="card mb-3 widget-content bg-premium-dark">
                 <div class="widget-content-wrapper text-white">
                     <div class="widget-content-left">
-                        <div class="widget-heading">{{ __('Products Sold') }}</div>
-                        <div class="widget-subheading">{{ __('Revenue streams') }}</div>
+                        <div class="widget-heading">{{ __('POA') }}</div>
+                        <div class="widget-subheading">{{ __('Total Active Client Count') }}</div>
                     </div>
                     <div class="widget-content-right">
-                        <div class="widget-numbers text-warning"><span>{{ __('$14M') }}</span></div>
+                        <div class="widget-numbers text-white"><span>{{ $totalPoaAgreement }}</span></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6 col-xl-4">
+            <div class="card mb-3 widget-content bg-midnight-bloom">
+                <div class="widget-content-wrapper text-white">
+                    <div class="widget-content-left">
+                        <div class="widget-heading">{{ __('Article / Purpose') }}</div>
+                        <div class="widget-subheading">{{ __('Total Active Client Count') }}</div>
+                    </div>
+                    <div class="widget-content-right">
+                        <div class="widget-numbers text-white"><span>{{ $totalPurposeArticle }}</span></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6 col-xl-4">
+            <div class="card mb-3 widget-content bg-vicious-stance">
+                <div class="widget-content-wrapper text-white">
+                    <div class="widget-content-left">
+                        <div class="widget-heading">{{ __('Our fee / policy document') }}</div>
+                        <div class="widget-subheading">{{ __('Total Active Client Count') }}</div>
+                    </div>
+                    <div class="widget-content-right">
+                        <div class="widget-numbers text-white"><span>{{ $totalOurFeePolicyDocument }}</span></div>
                     </div>
                 </div>
             </div>

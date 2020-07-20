@@ -471,7 +471,7 @@
                         </div>
                     </div>
 
-                    <div class="form-group row" id="row-tc">
+                    <div class="form-group row {{ ($isEditors ? 'd-none' : '') }}" id="row-tc">
                         <div class="col-md-2">{{ __('Terms and Condition') }}</div>
 
                         <div class="col-md-10">

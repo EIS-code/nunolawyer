@@ -91,10 +91,10 @@
                             @endif
                         </div>
                     </div>
-                    <!--div class="form-group row">
-                        <div class="col-md-2">{{ __('Password') }}<span style="color: red;">*</span></div>
-                        <div class="col-md-8">
-                            <input id="password" type="password" class="form-control{{ $errors->has('password') ? ' is-invalid' : '' }}" name="password" required>
+                    <div class="form-group row">
+                        <div class="col-md-6">
+                            <label>{{ __('Password') }}<span style="color: red;"> * {{ __("Leave blank if don't want to update") }}</span></label>
+                            <input id="password" type="password" class="form-control{{ $errors->has('password') ? ' is-invalid' : '' }}" name="password">
 
                             @if ($errors->has('password'))
                                 <span class="invalid-feedback" role="alert">
@@ -102,13 +102,11 @@
                                 </span>
                             @endif
                         </div>
-                    </div>
-                    <div class="form-group row">
-                        <div class="col-md-2">{{ __('Confirm Password') }}<span style="color: red;">*</span></div>
-                        <div class="col-md-8">
-                            <input id="password-confirm" type="password" class="form-control" name="password_confirmation" required>
+                        <div class="col-md-6">
+                            <label>{{ __('Confirm Password') }}</label>
+                            <input id="password-confirm" type="password" class="form-control" name="password_confirmation">
                         </div>
-                    </div-->
+                    </div>
                     <div class="form-group row">
                         <div class="col-md-6">
                             <label>{{ __('Contact') }}</label>
@@ -572,7 +570,7 @@
                         </div>
                     </div>
 
-                    <div class="form-group row" id="row-tc">
+                    <div class="form-group row {{ ($isEditors ? 'd-none' : '') }}" id="row-tc">
                         @php
                             $clientTermsAndConditions = $client->clientTermsAndConditions->toArray();
 

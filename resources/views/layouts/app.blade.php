@@ -7,7 +7,13 @@
     <!-- CSRF Token -->
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
-    <title>{{ config('app.name', 'Nunolawyer') }}</title>
+    @auth
+        <title>{{ auth()->user()->first_name . ' ' . auth()->user()->last_name }}</title>
+    @else
+        <title>{{ config('app.name', 'Nunolawyer') }}</title>
+    @endauth
+
+    <link rel="shortcut icon" href="{{ asset('images/favicon.png') }}" type="image/png" />
 
     <!-- Scripts -->
     <script defer src="{{ asset('js/app.js') }}" defer></script>

@@ -8,6 +8,10 @@ use App\Client;
 use App\Role;
 use App\ModelHasRoles;
 use App\TranslateModelDocument;
+use App\PoaAgreement;
+use App\PurposeArticle;
+use App\ClientPurposeArticle;
+use App\OurFeePolicyDocument;
 
 class DashboardController extends Controller
 {
@@ -72,6 +76,36 @@ class DashboardController extends Controller
             $totalTranslateModelDocuments = $translateModelDocument->count();
         }
 
-        return view('dashboard', ['totalClients' => $totalClients, 'totalEditors' => $totalEditors, 'totalTranslateModelDocuments' => $totalTranslateModelDocuments]);
+        $poaAgreement       = PoaAgreement::query();
+        $totalPoaAgreement  = 0;
+        $poaAgreement       = $poaAgreement->where('is_removed', BaseModel::$notRemoved)->get();
+        if (!empty($poaAgreement) && !$poaAgreement->isEmpty()) {
+            $totalPoaAgreement = $poaAgreement->count();
+        }
+
+        $purposeArticle       = PurposeArticle::query();
+        $totalPurposeArticle  = 0;
+        $purposeArticle       = $purposeArticle->where(PurposeArticle::getTableName() . '.is_removed', BaseModel::$notRemoved)
+                                               ->join(ClientPurposeArticle::getTableName(), PurposeArticle::getTableName() . '.id', '=', ClientPurposeArticle::getTableName() . '.purpose_article_id')
+                                               ->join(Client::getTableName(), ClientPurposeArticle::getTableName() . '.client_id', '=', Client::getTableName() . '.id')
+                                               ->where(ClientPurposeArticle::getTableName() . '.is_removed', BaseModel::$notRemoved)
+                                               ->where(Client::getTableName() . '.is_removed', BaseModel::$notRemoved)
+                                               ->groupBy(PurposeArticle::getTableName() . '.id')
+                                               ->get();
+        if (!empty($purposeArticle) && !$purposeArticle->isEmpty()) {
+            $totalPurposeArticle = $purposeArticle->count();
+        }
+
+        $ourFeePolicyDocument       = OurFeePolicyDocument::query();
+        $totalOurFeePolicyDocument  = 0;
+        $ourFeePolicyDocument       = $ourFeePolicyDocument->where('is_removed', BaseModel::$notRemoved)->get();
+        if (!empty($ourFeePolicyDocument) && !$ourFeePolicyDocument->isEmpty()) {
+            $totalOurFeePolicyDocument = $ourFeePolicyDocument->count();
+        }
+
+        return view('dashboard', [
+            'totalClients' => $totalClients, 'totalEditors' => $totalEditors, 'totalTranslateModelDocuments' => $totalTranslateModelDocuments,
+            'totalPoaAgreement' => $totalPoaAgreement, 'totalPurposeArticle' => $totalPurposeArticle, 'totalOurFeePolicyDocument' => $totalOurFeePolicyDocument
+        ]);
     }
 }
