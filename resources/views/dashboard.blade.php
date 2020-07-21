@@ -1,6 +1,21 @@
 @extends('layout')
 
 @section('sub_content')
+    <div>
+        @if (session('success'))
+            <div class="content alert alert-success" role="alert">
+                {{ session('success') }}
+            </div>
+            <br />
+        @endif
+
+        @if (session('error'))
+            <div class="content alert alert-danger" role="alert">
+                {{ session('error') }}
+            </div>
+            <br />
+        @endif
+    </div>
     <div class="app-page-title">
         <div class="page-title-wrapper">
             <div class="page-title-heading">

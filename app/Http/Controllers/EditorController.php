@@ -107,7 +107,8 @@ class EditorController extends Controller
                     $join->on(ModelHasRoles::getTableName() . '.role_id', '=', Role::getTableName() . '.id');
                 })
                 ->whereRaw('lower(' . Role::getTableName() . '.name) = "editor"')
-                ->where(Client::getTableName() . '.is_removed', BaseModel::$notRemoved);
+                ->where(Client::getTableName() . '.is_removed', BaseModel::$notRemoved)
+                ->where(Client::getTableName() . '.id', '!=', \Auth::user()->id);
 
         if ($isExport) {
             $this->editorExport->collection = $clients->get();

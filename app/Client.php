@@ -75,6 +75,10 @@ class Client extends Authenticatable implements MustVerifyEmail, Auditable
         self::WORK_DONE_ALL => 'Work done all'
     ];
 
+    public static $roleAdmin   = 'admin';
+    public static $roleClients = 'client';
+    public static $roleEditors = 'editor';
+
     public static $isEditors = false;
 
     /*public function __construct()
@@ -90,7 +94,28 @@ class Client extends Authenticatable implements MustVerifyEmail, Auditable
 
     public function isSuperAdmin()
     {
-        return $this->is_superadmin == '1' ? true : false;
+        return ($this->is_superadmin == '1' && $this->hasRole(self::$roleAdmin)) ? true : false;
+    }
+
+    public function getCurentRoleName()
+    {
+        $getRoleNames = $this->getRoleNames();
+
+        if (!empty($getRoleNames) && !$getRoleNames->isEmpty()) {
+            return $getRoleNames->first();
+        }
+
+        return NULL;
+    }
+
+    public function isEditors(): bool
+    {
+        return ($this->getCurentRoleName() == self::$roleEditors);
+    }
+
+    public function isClients(): bool
+    {
+        return ($this->getCurentRoleName() == self::$roleClients);
     }
 
     public static function getTableName()

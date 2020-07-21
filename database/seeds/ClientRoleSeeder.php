@@ -87,6 +87,10 @@ class ClientRoleSeeder extends Seeder
             ['name' => 'our_fee_policy_document_edit', 'display_name' => 'Our Fee Policy Document Edit', 'group_name' => 'OurFeePolicy', 'group_slug' => 'our_fee_policy_document', 'guard_name' => 'web'],
             ['name' => 'our_fee_policy_document_delete', 'display_name' => 'Our Fee Policy Document Delete', 'group_name' => 'OurFeePolicy', 'group_slug' => 'our_fee_policy_document', 'guard_name' => 'web'],
 
+            /*['name' => 'editors_profile_access', 'display_name' => 'Editor profile', 'group_name' => 'EditorsProfile', 'group_slug' => 'editors_profile', 'guard_name' => 'web'],
+            ['name' => 'clients_profile_access', 'display_name' => 'Client profile', 'group_name' => 'ClientsProfile', 'group_slug' => 'clients_profile', 'guard_name' => 'web'],
+            ['name' => 'admin_profile_access', 'display_name' => 'Admin profile', 'group_name' => 'AdminProfile', 'group_slug' => 'admin_profile', 'guard_name' => 'web'],*/
+
             ['name' => 'roles_access', 'display_name' => 'Access', 'group_name' => 'Roles', 'group_slug' => 'roles', 'guard_name' => 'web'],
             ['name' => 'roles_create', 'display_name' => 'Create', 'group_name' => 'Roles', 'group_slug' => 'roles', 'guard_name' => 'web'],
             ['name' => 'roles_show', 'display_name' => 'Show', 'group_name' => 'Roles', 'group_slug' => 'roles', 'guard_name' => 'web'],

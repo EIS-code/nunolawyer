@@ -2,18 +2,12 @@
 
 @section('sub_content')
 
-    @php
-        $isEditors = $client::$isEditors;
-    @endphp
-
     <div class="page-header">
         <div class="breadcrumb-line">
             <div class="d-flex">
                 <div class="breadcrumb">
-                    <a href="{{route('dashboard')}}" class="breadcrumb-item"><i class="metismenu-icon pe-7s-home" style="margin-top: 3px;"></i>&nbsp;{{__('Dashboard')}}</a>
-                    <a href="{{ route(($isEditors ? 'editors.index' : 'clients.index')) }}" class="breadcrumb-item">{{ ($isEditors ? __('Editors') : __('Clients')) }}</a>
-                    <span class="breadcrumb-item active">{{ ($isEditors ? __('Edit Editor') : __('Edit Client')) }}</span>
-                    <span class="breadcrumb-item active">{{$client->first_name . ' ' . $client->last_name}}</span>
+                    <a href="{{ route('dashboard') }}" class="breadcrumb-item"><i class="metismenu-icon pe-7s-home" style="margin-top: 3px;"></i>&nbsp;{{__('Dashboard')}}</a>
+                    <span class="breadcrumb-item active">{{ $user->first_name . ' ' . $user->last_name }}</span>
                 </div>
             </div>
         </div>
@@ -22,13 +16,13 @@
     <div class="content">
         <div class="card bg-white">
             <div class="card-body">
-                <form method="POST" action="{{ route(($isEditors ? 'editors.update' : 'clients.update'), $client->id) }}" enctype='multipart/form-data'>
+                <form method="POST" action="{{ route(($isEditors ? 'editors.update' : 'clients.update'), $user->id) }}" enctype='multipart/form-data'>
                     @method('PATCH')
                     @csrf
                     <div class="form-group row">
                         <div class="col-md-6">
                             <label>{{ __('Registration Date') }}<span style="color: red;">*</span></label>
-                            <input id="registration_date" type="date" class="form-control{{ $errors->has('registration_date') ? ' is-invalid' : '' }}" name="registration_date" value="{{ date('Y-m-d', strtotime($client->registration_date)) }}" required autofocus>
+                            <input id="registration_date" type="date" class="form-control{{ $errors->has('registration_date') ? ' is-invalid' : '' }}" name="registration_date" value="{{ date('Y-m-d', strtotime($user->registration_date)) }}" required autofocus>
 
                             @if ($errors->has('registration_date'))
                                 <span class="invalid-feedback" role="alert">
@@ -38,7 +32,7 @@
                         </div>
                         <div class="col-md-6">
                             <label>{{ __('E-Mail') }}<span style="color: red;">*</span></label>
-                            <input id="email" type="email" class="form-control{{ $errors->has('email') ? ' is-invalid' : '' }}" name="email" value="{{ $client->email }}" required>
+                            <input id="email" type="email" class="form-control{{ $errors->has('email') ? ' is-invalid' : '' }}" name="email" value="{{ $user->email }}" required>
 
                             @if ($errors->has('email'))
                                 <span class="invalid-feedback" role="alert">
@@ -50,7 +44,7 @@
                     <div class="form-group row">
                         <div class="col-md-6">
                             <label>{{ __('First Name') }}<span style="color: red;">*</span></label>
-                            <input id="first_name" type="text" class="form-control{{ $errors->has('first_name') ? ' is-invalid' : '' }}" name="first_name" value="{{ $client->first_name }}" required autofocus>
+                            <input id="first_name" type="text" class="form-control{{ $errors->has('first_name') ? ' is-invalid' : '' }}" name="first_name" value="{{ $user->first_name }}" required autofocus>
 
                             @if ($errors->has('first_name'))
                                 <span class="invalid-feedback" role="alert">
@@ -60,7 +54,7 @@
                         </div>
                         <div class="col-md-6">
                             <label>{{ __('Last Name') }}<span style="color: red;">*</span></label>
-                            <input id="last_name" type="text" class="form-control{{ $errors->has('last_name') ? ' is-invalid' : '' }}" name="last_name" value="{{ $client->last_name }}">
+                            <input id="last_name" type="text" class="form-control{{ $errors->has('last_name') ? ' is-invalid' : '' }}" name="last_name" value="{{ $user->last_name }}">
 
                             @if ($errors->has('last_name'))
                                 <span class="invalid-feedback" role="alert">
@@ -72,7 +66,7 @@
                     <div class="form-group row">
                         <div class="col-md-6">
                             <label>{{ __('Secondary E-Mail') }}</label>
-                            <input id="secondary_email" type="email" class="form-control{{ $errors->has('secondary_email') ? ' is-invalid' : '' }}" name="secondary_email" value="{{ $client->secondary_email }}">
+                            <input id="secondary_email" type="email" class="form-control{{ $errors->has('secondary_email') ? ' is-invalid' : '' }}" name="secondary_email" value="{{ $user->secondary_email }}">
 
                             @if ($errors->has('secondary_email'))
                                 <span class="invalid-feedback" role="alert">
@@ -82,7 +76,7 @@
                         </div>
                         <div class="col-md-6">
                             <label>{{ __('Date of birth') }}</label>
-                            <input id="dob" type="date" class="form-control{{ $errors->has('dob') ? ' is-invalid' : '' }}" name="dob" value="{{ $client->dob }}">
+                            <input id="dob" type="date" class="form-control{{ $errors->has('dob') ? ' is-invalid' : '' }}" name="dob" value="{{ $user->dob }}">
 
                             @if ($errors->has('dob'))
                                 <span class="invalid-feedback" role="alert">
@@ -110,7 +104,7 @@
                     <div class="form-group row">
                         <div class="col-md-6">
                             <label>{{ __('Contact') }}</label>
-                            <input id="contact" type="number" class="form-control{{ $errors->has('contact') ? ' is-invalid' : '' }}" name="contact" value="{{ $client->contact }}">
+                            <input id="contact" type="number" class="form-control{{ $errors->has('contact') ? ' is-invalid' : '' }}" name="contact" value="{{ $user->contact }}">
 
                             @if ($errors->has('contact'))
                                 <span class="invalid-feedback" role="alert">
@@ -120,7 +114,7 @@
                         </div>
                         <div class="col-md-6">
                             <label>{{ __('Passport Number') }}</label>
-                            <input id="passport_number" type="text" class="form-control{{ $errors->has('passport_number') ? ' is-invalid' : '' }}" name="passport_number" value="{{ $client->passport_number }}">
+                            <input id="passport_number" type="text" class="form-control{{ $errors->has('passport_number') ? ' is-invalid' : '' }}" name="passport_number" value="{{ $user->passport_number }}">
 
                             @if ($errors->has('passport_number'))
                                 <span class="invalid-feedback" role="alert">
@@ -132,7 +126,7 @@
                     <div class="form-group row">
                         <div class="col-md-6">
                             <label>{{ __('Process Address') }}</label>
-                            <input id="process_address" type="text" class="form-control{{ $errors->has('process_address') ? ' is-invalid' : '' }}" name="process_address" value="{{ $client->process_address }}">
+                            <input id="process_address" type="text" class="form-control{{ $errors->has('process_address') ? ' is-invalid' : '' }}" name="process_address" value="{{ $user->process_address }}">
 
                             @if ($errors->has('process_address'))
                                 <span class="invalid-feedback" role="alert">
@@ -142,7 +136,7 @@
                         </div>
                         <div class="col-md-6">
                             <label>{{ __('Nationality') }}</label>
-                            <input id="nationality" type="text" class="form-control{{ $errors->has('nationality') ? ' is-invalid' : '' }}" name="nationality" value="{{ $client->nationality }}">
+                            <input id="nationality" type="text" class="form-control{{ $errors->has('nationality') ? ' is-invalid' : '' }}" name="nationality" value="{{ $user->nationality }}">
 
                             @if ($errors->has('nationality'))
                                 <span class="invalid-feedback" role="alert">
@@ -154,9 +148,9 @@
 
                     <div class="form-group row">
                         @php
-                            $clientPurposeArticles = $client->clientPurposeArticles;
-                            $lastInsertedId        = $clientPurposeArticles->where('is_last_inserted', '1')->first();
-                            $purposeArticleIds     = $clientPurposeArticles->pluck('purpose_article_id')->toArray();
+                            $userPurposeArticles = $user->clientPurposeArticles;
+                            $lastInsertedId        = $userPurposeArticles->where('is_last_inserted', '1')->first();
+                            $purposeArticleIds     = $userPurposeArticles->pluck('purpose_article_id')->toArray();
                         @endphp
 
                         <div class="col-md-2">{{ __('Purpose and Article') }}</div>
@@ -180,10 +174,10 @@
 
                     <div class="form-group row" id="row-pa">
                         @php
-                            $clientConditions = $client->clientConditions->toArray();
+                            $userConditions = $user->clientConditions->toArray();
 
-                            if (empty($clientConditions)) {
-                                $clientConditions[] = [
+                            if (empty($userConditions)) {
+                                $userConditions[] = [
                                     'id'        => '',
                                     'date'      => '',
                                     'condition' => ''
@@ -194,7 +188,7 @@
                         <div class="col-md-2">{{ __('Client Condition / Work To Do') }}</div>
 
                         <div class="col-md-10">
-                            @foreach ($clientConditions as $index => $clientCondition)
+                            @foreach ($userConditions as $index => $userCondition)
                                 <div class="row" id="{{ ($index == 0 ? 'main-pa' : '') }}">
                                     <div class="col-md-12">
                                         <table class="table table-respopnsive table-bordered">
@@ -209,7 +203,7 @@
                                                 <tr>
                                                     <td >{{ $index + 1 }}</td>
                                                     <td>
-                                                        <input type="date" class="form-control{{ $errors->has('condition_dates.' . $index) ? ' is-invalid' : '' }}" name="condition_dates[]" value="{{ old('condition_dates.' . $index, (!empty($clientCondition['date']) ? date('Y-m-d', strtotime($clientCondition['date'])) : '')) }}">
+                                                        <input type="date" class="form-control{{ $errors->has('condition_dates.' . $index) ? ' is-invalid' : '' }}" name="condition_dates[]" value="{{ old('condition_dates.' . $index, (!empty($userCondition['date']) ? date('Y-m-d', strtotime($userCondition['date'])) : '')) }}">
 
                                                         @if ($errors->has('condition_dates.' . $index))
                                                             <span class="invalid-feedback" role="alert">
@@ -218,7 +212,7 @@
                                                         @endif
                                                     </td>
                                                     <td>
-                                                        <textarea class="form-control{{ $errors->has('conditions.' . $index) ? ' is-invalid' : '' }}" rows="2" cols="5" name="conditions[]">{{ old('conditions.' . $index, $clientCondition['condition']) }}</textarea>
+                                                        <textarea class="form-control{{ $errors->has('conditions.' . $index) ? ' is-invalid' : '' }}" rows="2" cols="5" name="conditions[]">{{ old('conditions.' . $index, $userCondition['condition']) }}</textarea>
 
                                                         @if ($errors->has('conditions.' . $index))
                                                             <span class="invalid-feedback" role="alert">
@@ -229,7 +223,7 @@
                                                     <td>
                                                         <i class="{{ ($index == 0 ? 'fa fa-plus' : 'fa fa-trash') }}" id="{{ ($index == 0 ? 'plus-pa' : 'minus-pa') }}" style="cursor: pointer;"></i>
                                                     </td>
-                                                    <input type="hidden" name="id_client_conditions[]" value="{{ $clientCondition['id'] }}" />
+                                                    <input type="hidden" name="id_client_conditions[]" value="{{ $userCondition['id'] }}" />
                                                 </tr>
                                             </tbody>
                                         </table>
@@ -244,10 +238,10 @@
 
                     <div class="form-group row" id="row-cf">
                         @php
-                            $clientFees = $client->clientFees->toArray();
+                            $userFees = $user->clientFees->toArray();
 
-                            if (empty($clientFees)) {
-                                $clientFees[] = [
+                            if (empty($userFees)) {
+                                $userFees[] = [
                                     'id'                      => '',
                                     'date'                    => '',
                                     'proposed_lawyer_fee'     => '',
@@ -263,7 +257,7 @@
                         <div class="col-md-2">{{ __('Client Fee') }}</div>
 
                         <div class="col-md-10">
-                            @foreach ($clientFees as $index => $clientFee)
+                            @foreach ($userFees as $index => $userFee)
                                 <div class="row" id="{{ ($index == 0 ? 'main-cf' : '') }}">
                                     <div class="col-md-12 table-respopnsive text-nowrap">
                                         <table class="table table-bordered" width="100%;">
@@ -282,7 +276,7 @@
                                                 <tr>
                                                     <td rowspan="4">{{ $index + 1 }}</td>
                                                     <td>
-                                                        <input type="date" class="form-control{{ $errors->has('fee_dates.' . $index) ? ' is-invalid' : '' }}" name="fee_dates[]" value="{{ old('fee_dates.' . $index, (!empty($clientFee['date']) ? date('Y-m-d', strtotime($clientFee['date'])) : '')) }}">
+                                                        <input type="date" class="form-control{{ $errors->has('fee_dates.' . $index) ? ' is-invalid' : '' }}" name="fee_dates[]" value="{{ old('fee_dates.' . $index, (!empty($userFee['date']) ? date('Y-m-d', strtotime($userFee['date'])) : '')) }}">
 
                                                         @if ($errors->has('fee_dates.' . $index))
                                                             <span class="invalid-feedback" role="alert">
@@ -291,7 +285,7 @@
                                                         @endif
                                                     </td>
                                                     <td>
-                                                        <input type="text" class="form-control{{ $errors->has('total_proposed_lawyer_fee.' . $index) ? ' is-invalid' : '' }}" name="total_proposed_lawyer_fee[]" value="{{ old('total_proposed_lawyer_fee.' . $index, $clientFee['proposed_lawyer_fee']) }}">
+                                                        <input type="text" class="form-control{{ $errors->has('total_proposed_lawyer_fee.' . $index) ? ' is-invalid' : '' }}" name="total_proposed_lawyer_fee[]" value="{{ old('total_proposed_lawyer_fee.' . $index, $userFee['proposed_lawyer_fee']) }}">
 
                                                         @if ($errors->has('total_proposed_lawyer_fee.' . $index))
                                                             <span class="invalid-feedback" role="alert">
@@ -300,7 +294,7 @@
                                                         @endif
                                                     </td>
                                                     <td>
-                                                        <input type="number" class="form-control{{ $errors->has('received_lawyer_fee.' . $index) ? ' is-invalid' : '' }}" name="received_lawyer_fee[]" value="{{ old('received_lawyer_fee.' . $index, $clientFee['received_lawyer_fee']) }}">
+                                                        <input type="number" class="form-control{{ $errors->has('received_lawyer_fee.' . $index) ? ' is-invalid' : '' }}" name="received_lawyer_fee[]" value="{{ old('received_lawyer_fee.' . $index, $userFee['received_lawyer_fee']) }}">
 
                                                         @if ($errors->has('received_lawyer_fee.' . $index))
                                                             <span class="invalid-feedback" role="alert">
@@ -309,7 +303,7 @@
                                                         @endif
                                                     </td>
                                                     <td>
-                                                        <input type="number" class="form-control{{ $errors->has('missing_lawyer_fee.' . $index) ? ' is-invalid' : '' }}" name="missing_lawyer_fee[]" value="{{ old('missing_lawyer_fee.' . $index, $clientFee['missing_lawyer_fee']) }}">
+                                                        <input type="number" class="form-control{{ $errors->has('missing_lawyer_fee.' . $index) ? ' is-invalid' : '' }}" name="missing_lawyer_fee[]" value="{{ old('missing_lawyer_fee.' . $index, $userFee['missing_lawyer_fee']) }}">
 
                                                         @if ($errors->has('missing_lawyer_fee.' . $index))
                                                             <span class="invalid-feedback" role="alert">
@@ -328,7 +322,7 @@
                                                     <th rowspan="2"></th>
                                                 <tr>
                                                     <td>
-                                                        <input type="text" class="form-control{{ $errors->has('total_proposed_government_fee.' . $index) ? ' is-invalid' : '' }}" name="total_proposed_government_fee[]" value="{{ old('total_proposed_government_fee.' . $index, $clientFee['proposed_government_fee']) }}">
+                                                        <input type="text" class="form-control{{ $errors->has('total_proposed_government_fee.' . $index) ? ' is-invalid' : '' }}" name="total_proposed_government_fee[]" value="{{ old('total_proposed_government_fee.' . $index, $userFee['proposed_government_fee']) }}">
 
                                                         @if ($errors->has('total_proposed_government_fee.' . $index))
                                                             <span class="invalid-feedback" role="alert">
@@ -337,7 +331,7 @@
                                                         @endif
                                                     </td>
                                                     <td>
-                                                        <input type="number" class="form-control{{ $errors->has('received_government_fee.' . $index) ? ' is-invalid' : '' }}" name="received_government_fee[]" value="{{ old('received_government_fee.' . $index, $clientFee['received_government_fee']) }}">
+                                                        <input type="number" class="form-control{{ $errors->has('received_government_fee.' . $index) ? ' is-invalid' : '' }}" name="received_government_fee[]" value="{{ old('received_government_fee.' . $index, $userFee['received_government_fee']) }}">
 
                                                         @if ($errors->has('received_government_fee.' . $index))
                                                             <span class="invalid-feedback" role="alert">
@@ -346,7 +340,7 @@
                                                         @endif
                                                     </td>
                                                     <td>
-                                                        <input type="number" class="form-control{{ $errors->has('missing_government_fee.' . $index) ? ' is-invalid' : '' }}" name="missing_government_fee[]" value="{{ old('missing_government_fee.' . $index, $clientFee['missing_government_fee']) }}">
+                                                        <input type="number" class="form-control{{ $errors->has('missing_government_fee.' . $index) ? ' is-invalid' : '' }}" name="missing_government_fee[]" value="{{ old('missing_government_fee.' . $index, $userFee['missing_government_fee']) }}">
 
                                                         @if ($errors->has('missing_government_fee.' . $index))
                                                             <span class="invalid-feedback" role="alert">
@@ -354,7 +348,7 @@
                                                             </span>
                                                         @endif
                                                     </td>
-                                                    <input type="hidden" name="id_client_fees[]" value="{{ $clientFee['id'] }}" />
+                                                    <input type="hidden" name="id_client_fees[]" value="{{ $userFee['id'] }}" />
                                                 </tr>
                                             </tbody>
                                         </table>
@@ -369,10 +363,10 @@
 
                     <div class="form-group row" id="row-pr">
                         @php
-                            $clientEmailProgressReports = $client->clientEmailProgressReports->toArray();
+                            $userEmailProgressReports = $user->clientEmailProgressReports->toArray();
 
-                            if (empty($clientEmailProgressReports)) {
-                                $clientEmailProgressReports[] = [
+                            if (empty($userEmailProgressReports)) {
+                                $userEmailProgressReports[] = [
                                     'id'              => '',
                                     'date'            => '',
                                     'progress_report' => '',
@@ -384,7 +378,7 @@
                         <div class="col-md-2">{{ __('Progress Report To The Client (By Email)') }}</div>
 
                         <div class="col-md-10">
-                            @foreach ($clientEmailProgressReports as $index => $clientEmailProgressReport)
+                            @foreach ($userEmailProgressReports as $index => $userEmailProgressReport)
                                 <div class="row" id="{{ ($index == 0 ? 'main-pr' : '') }}">
                                     <div class="table-respopnsive col-md-12">
                                         <table class="table table-bordered">
@@ -400,7 +394,7 @@
                                                 <tr>
                                                     <td >{{ $index + 1 }}</td>
                                                     <td>
-                                                        <input type="date" class="form-control{{ $errors->has('progress_report_dates.' . $index) ? ' is-invalid' : '' }}" name="progress_report_dates[]" value="{{ old('progress_report_dates.' . $index, (!empty($clientEmailProgressReport['date']) ? date('Y-m-d', strtotime($clientEmailProgressReport['date'])) : '')) }}">
+                                                        <input type="date" class="form-control{{ $errors->has('progress_report_dates.' . $index) ? ' is-invalid' : '' }}" name="progress_report_dates[]" value="{{ old('progress_report_dates.' . $index, (!empty($userEmailProgressReport['date']) ? date('Y-m-d', strtotime($userEmailProgressReport['date'])) : '')) }}">
 
                                                         @if ($errors->has('progress_report_dates.' . $index))
                                                             <span class="invalid-feedback" role="alert">
@@ -409,7 +403,7 @@
                                                         @endif
                                                     </td>
                                                     <td>
-                                                        <textarea class="form-control{{ $errors->has('progress_reports.' . $index) ? ' is-invalid' : '' }}" rows="2" cols="5" name="progress_reports[]">{{ old('progress_reports.' . $index, $clientEmailProgressReport['progress_report']) }}</textarea>
+                                                        <textarea class="form-control{{ $errors->has('progress_reports.' . $index) ? ' is-invalid' : '' }}" rows="2" cols="5" name="progress_reports[]">{{ old('progress_reports.' . $index, $userEmailProgressReport['progress_report']) }}</textarea>
 
                                                         @if ($errors->has('progress_reports.' . $index))
                                                             <span class="invalid-feedback" role="alert">
@@ -418,8 +412,8 @@
                                                         @endif
                                                     </td>
                                                     <td>
-                                                        @if (!empty($clientEmailProgressReport['file']))
-                                                            <a href="{{ $clientEmailProgressReport['file'] }}" target="_blank">{{ __('View') }}</a><br />
+                                                        @if (!empty($userEmailProgressReport['file']))
+                                                            <a href="{{ $userEmailProgressReport['file'] }}" target="_blank">{{ __('View') }}</a><br />
                                                         @endif
                                                         <input type="file" class="{{ $errors->has('progress_report_files.' . $index) ? ' is-invalid' : '' }}" name="progress_report_files[]" />
 
@@ -438,8 +432,8 @@
                                     </div>
                                 </div>
                             @endforeach
-                            @foreach ($clientEmailProgressReports as $index => $clientEmailProgressReport)
-                                <input type="hidden" name="id_client_email_progress_reports[]" value="{{ $clientEmailProgressReport['id'] }}" />
+                            @foreach ($userEmailProgressReports as $index => $userEmailProgressReport)
+                                <input type="hidden" name="id_client_email_progress_reports[]" value="{{ $userEmailProgressReport['id'] }}" />
                             @endforeach
 
                             <div id="cloned-pr"></div>
@@ -447,78 +441,76 @@
                         </div>
                     </div>
 
-                    @if ($loggedInId == $client->id || $client->isSuperAdmin())
-                        <div class="form-group row" id="row-ci">
-                            @php
-                                $clientPrivateInformations = $client->clientPrivateInformations->toArray();
+                    <div class="form-group row" id="row-ci">
+                        @php
+                            $userPrivateInformations = $user->clientPrivateInformations->toArray();
 
-                                if (empty($clientPrivateInformations)) {
-                                    $clientPrivateInformations[] = [
-                                        'id'                  => '',
-                                        'date'                => '',
-                                        'private_information' => ''
-                                    ];
-                                }
-                            @endphp
+                            if (empty($userPrivateInformations)) {
+                                $userPrivateInformations[] = [
+                                    'id'                  => '',
+                                    'date'                => '',
+                                    'private_information' => ''
+                                ];
+                            }
+                        @endphp
 
-                            <div class="col-md-2">{{ __('Client Private Information') }}</div>
+                        <div class="col-md-2">{{ __('Client Private Information') }}</div>
 
-                            <div class="col-md-10">
-                                @foreach ($clientPrivateInformations as $index => $clientPrivateInformation)
-                                    <div class="row" id="{{ ($index == 0 ? 'main-ci' : '') }}">
-                                        <div class="col-md-12">
-                                            <table class="table table-respopnsive table-bordered">
-                                                <thead>
-                                                    <th width="1%">#</th>
-                                                    <th width="20%">{{ __('Date') }}</th>
-                                                    <th width="79%">{{ __('Client Private Information') }}</th>
-                                                    <th></th>
-                                                </thead>
+                        <div class="col-md-10">
+                            @foreach ($userPrivateInformations as $index => $userPrivateInformation)
+                                <div class="row" id="{{ ($index == 0 ? 'main-ci' : '') }}">
+                                    <div class="col-md-12">
+                                        <table class="table table-respopnsive table-bordered">
+                                            <thead>
+                                                <th width="1%">#</th>
+                                                <th width="20%">{{ __('Date') }}</th>
+                                                <th width="79%">{{ __('Client Private Information') }}</th>
+                                                <th></th>
+                                            </thead>
 
-                                                <tbody>
-                                                    <tr>
-                                                        <td >{{ $index + 1 }}</td>
-                                                        <td>
-                                                            <input type="date" class="form-control{{ $errors->has('client_private_dates.' . $index) ? ' is-invalid' : '' }}" name="client_private_dates[]" value="{{ old('client_private_dates.' . $index, (!empty($clientPrivateInformation['date']) ? date('Y-m-d', strtotime($clientPrivateInformation['date'])) : '')) }}">
+                                            <tbody>
+                                                <tr>
+                                                    <td >{{ $index + 1 }}</td>
+                                                    <td>
+                                                        <input type="date" class="form-control{{ $errors->has('client_private_dates.' . $index) ? ' is-invalid' : '' }}" name="client_private_dates[]" value="{{ old('client_private_dates.' . $index, (!empty($userPrivateInformation['date']) ? date('Y-m-d', strtotime($userPrivateInformation['date'])) : '')) }}">
 
-                                                            @if ($errors->has('client_private_dates.' . $index))
-                                                                <span class="invalid-feedback" role="alert">
-                                                                    <strong>{{ $errors->first('client_private_dates.' . $index) }}</strong>
-                                                                </span>
-                                                            @endif
-                                                        </td>
-                                                        <td>
-                                                            <textarea class="form-control{{ $errors->has('client_private_informations.' . $index) ? ' is-invalid' : '' }}" rows="2" cols="5" name="client_private_informations[]">{{ old('client_private_informations.' . $index, $clientPrivateInformation['private_information']) }}</textarea>
+                                                        @if ($errors->has('client_private_dates.' . $index))
+                                                            <span class="invalid-feedback" role="alert">
+                                                                <strong>{{ $errors->first('client_private_dates.' . $index) }}</strong>
+                                                            </span>
+                                                        @endif
+                                                    </td>
+                                                    <td>
+                                                        <textarea class="form-control{{ $errors->has('client_private_informations.' . $index) ? ' is-invalid' : '' }}" rows="2" cols="5" name="client_private_informations[]">{{ old('client_private_informations.' . $index, $userPrivateInformation['private_information']) }}</textarea>
 
-                                                            @if ($errors->has('client_private_informations.' . $index))
-                                                                <span class="invalid-feedback" role="alert">
-                                                                    <strong>{{ $errors->first('client_private_informations.' . $index) }}</strong>
-                                                                </span>
-                                                            @endif
-                                                        </td>
-                                                        <td>
-                                                            <i class="{{ ($index == 0 ? 'fa fa-plus' : 'fa fa-trash') }}" id="{{ ($index == 0 ? 'plus-ci' : 'minus-ci') }}" style="cursor: pointer;"></i>
-                                                        </td>
-                                                        <input type="hidden" name="id_client_private_informations[]" value="{{ $clientPrivateInformation['id'] }}" />
-                                                    </tr>
-                                                </tbody>
-                                            </table>
-                                        </div>
+                                                        @if ($errors->has('client_private_informations.' . $index))
+                                                            <span class="invalid-feedback" role="alert">
+                                                                <strong>{{ $errors->first('client_private_informations.' . $index) }}</strong>
+                                                            </span>
+                                                        @endif
+                                                    </td>
+                                                    <td>
+                                                        <i class="{{ ($index == 0 ? 'fa fa-plus' : 'fa fa-trash') }}" id="{{ ($index == 0 ? 'plus-ci' : 'minus-ci') }}" style="cursor: pointer;"></i>
+                                                    </td>
+                                                    <input type="hidden" name="id_client_private_informations[]" value="{{ $userPrivateInformation['id'] }}" />
+                                                </tr>
+                                            </tbody>
+                                        </table>
                                     </div>
-                                @endforeach
+                                </div>
+                            @endforeach
 
-                                <div id="cloned-ci"></div>
+                            <div id="cloned-ci"></div>
 
-                            </div>
                         </div>
-                    @endif
+                    </div>
 
                     <div class="form-group row" id="row-cd">
                         @php
-                            $clientDocuments = $client->clientDocuments->toArray();
+                            $userDocuments = $user->clientDocuments->toArray();
 
-                            if (empty($clientDocuments)) {
-                                $clientDocuments[] = [
+                            if (empty($userDocuments)) {
+                                $userDocuments[] = [
                                     'id'   => '',
                                     'file' => ''
                                 ];
@@ -528,7 +520,7 @@
                         <div class="col-md-2">{{ __('Client Documents') }}</div>
 
                         <div class="col-md-10">
-                            @foreach ($clientDocuments as $index => $clientDocument)
+                            @foreach ($userDocuments as $index => $userDocument)
                                 <div class="row" id="{{ ($index == 0 ? 'main-cd' : '') }}">
                                     <div class="col-md-12">
                                         <table class="table table-respopnsive table-bordered">
@@ -542,8 +534,8 @@
                                                 <tr>
                                                     <td >{{ $index + 1 }}</td>
                                                     <td>
-                                                        @if (!empty($clientDocument['file']))
-                                                            <a href="{{ $clientDocument['file'] }}" target="_blank">{{ __('View') }}</a><br />
+                                                        @if (!empty($userDocument['file']))
+                                                            <a href="{{ $userDocument['file'] }}" target="_blank">{{ __('View') }}</a><br />
                                                         @endif
                                                         <input type="file" class="form-control{{ $errors->has('client_documents.' . $index) ? ' is-invalid' : '' }}" name="client_documents[]" value="{{ old('client_documents.' . $index) }}">
 
@@ -556,15 +548,15 @@
                                                     <td>
                                                         <i class="{{ ($index == 0 ? 'fa fa-plus' : 'fa fa-trash') }}" id="{{ ($index == 0 ? 'plus-cd' : 'minus-cd') }}" style="cursor: pointer;"></i>
                                                     </td>
-                                                    <input type="hidden" name="id_client_documents[]" value="{{ $clientDocument['id'] }}" />
+                                                    <input type="hidden" name="id_client_documents[]" value="{{ $userDocument['id'] }}" />
                                                 </tr>
                                             </tbody>
                                         </table>
                                     </div>
                                 </div>
                             @endforeach
-                            @foreach ($clientDocuments as $index => $clientDocument)
-                                <input type="hidden" name="id_client_documents_old[{{ $clientDocument['id'] }}]" value="{{ $clientDocument['id'] }}" />
+                            @foreach ($userDocuments as $index => $userDocument)
+                                <input type="hidden" name="id_client_documents_old[{{ $userDocument['id'] }}]" value="{{ $userDocument['id'] }}" />
                             @endforeach
 
                             <div id="cloned-cd"></div>
@@ -574,10 +566,10 @@
 
                     <div class="form-group row {{ ($isEditors ? 'd-none' : '') }}" id="row-tc">
                         @php
-                            $clientTermsAndConditions = $client->clientTermsAndConditions->toArray();
+                            $userTermsAndConditions = $user->clientTermsAndConditions->toArray();
 
-                            if (empty($clientTermsAndConditions)) {
-                                $clientTermsAndConditions[] = [
+                            if (empty($userTermsAndConditions)) {
+                                $userTermsAndConditions[] = [
                                     'id'                   => '',
                                     'terms_and_conditions' => ''
                                 ];
@@ -595,7 +587,7 @@
                                     </tr>
                                 </thead>
                             </table>
-                            @foreach ($clientTermsAndConditions as $index => $clientTermsAndCondition)
+                            @foreach ($userTermsAndConditions as $index => $userTermsAndCondition)
                                 <div class="row" id="{{ ($index == 0 ? 'main-tc' : '') }}">
                                     <div class="col-md-12">
                                         <table class="table table-respopnsive table-bordered" style="margin-bottom: 0;">
@@ -609,7 +601,7 @@
                                                 <tr>
                                                     <td >{{ $index + 1 }}</td>
                                                     <td>
-                                                        <textarea class="form-control{{ $errors->has('terms_and_conditions.' . $index) ? ' is-invalid' : '' }}" rows="2" cols="5" name="terms_and_conditions[]">{{ old('terms_and_conditions.' . $index, $clientTermsAndCondition['terms_and_conditions']) }}</textarea>
+                                                        <textarea class="form-control{{ $errors->has('terms_and_conditions.' . $index) ? ' is-invalid' : '' }}" rows="2" cols="5" name="terms_and_conditions[]">{{ old('terms_and_conditions.' . $index, $userTermsAndCondition['terms_and_conditions']) }}</textarea>
 
                                                         @if ($errors->has('terms_and_conditions.' . $index))
                                                             <span class="invalid-feedback" role="alert">
@@ -620,7 +612,7 @@
                                                     <td>
                                                         <i class="{{ ($index == 0 ? 'fa fa-plus' : '') }}" id="{{ ($index == 0 ? 'plus-tc' : 'minus-tc') }}" style="cursor: pointer;"></i>
                                                     </td>
-                                                    <input type="hidden" name="id_client_terms_and_conditions[]" value="{{ $clientTermsAndCondition['id'] }}" />
+                                                    <input type="hidden" name="id_client_terms_and_conditions[]" value="{{ $userTermsAndCondition['id'] }}" />
                                                 </tr>
                                             </tbody>
                                         </table>
@@ -636,7 +628,7 @@
                     <div class="form-group row">
                         <div class="col-md-2">{{ __('Role') }}</div>
                         <div class="col-md-3">
-                            @if($client->isSuperAdmin())
+                            @if($user->isSuperAdmin())
                                 <span class="badge badge-lg badge-secondary text-white">
                                     {{ __('admin') }}
                                 </span>
@@ -648,7 +640,7 @@
                                         @elseif (!$isEditors && $role->id != '2')
                                             @continue
                                         @endif
-                                        <option value="{{$role->id}}" @if($client->hasRole($role)) selected @endif>{{$role->name}}</option>
+                                        <option value="{{$role->id}}" @if($user->hasRole($role)) selected @endif>{{$role->name}}</option>
                                     @endforeach
                                 </select>
                                 <span class="badge badge-lg badge-secondary text-white">
@@ -665,9 +657,9 @@
                     <div class="form-group row">
                         <div class="col-md-2">{{ __('Work Status') }}</div>
                         <div class="col-md-6">
-                            @foreach ($client::$workStatus as $value => $text)
+                            @foreach ($user::$workStatus as $value => $text)
                                 <label>
-                                    <input type="radio" id="status-{{ strtolower(str_ireplace(' ', '-', $text)) }}" name="work_status" value="{{ $value }}" @if (old('work_status', $client->getAttributes()['work_status']) == $value) checked="true"' @endif />&nbsp;{{ $text }}
+                                    <input type="radio" id="status-{{ strtolower(str_ireplace(' ', '-', $text)) }}" name="work_status" value="{{ $value }}" @if (old('work_status', $user->getAttributes()['work_status']) == $value) checked="true"' @endif />&nbsp;{{ $text }}
                                 </label>&nbsp;
                             @endforeach
 
@@ -680,13 +672,13 @@
                     </div>
 
                     @php
-                        $isShow = (old('work_status', $client->getAttributes()['work_status']) == '1');
+                        $isShow = (old('work_status', $user->getAttributes()['work_status']) == '1');
                     @endphp
                     <div class="div-to-follow {{ ($isShow ? '' : 'd-none') }}">
                         <div class="form-group row">
                             <div class="col-md-2">{{ __('Assign Date') }}<span style="color: red;">*</span></div>
                             <div class="col-md-3">
-                                <input id="assign_date" type="date" class="form-control{{ $errors->has('assign_date') ? ' is-invalid' : '' }}" name="assign_date" value="{{ (!empty($client->assign_date) ? date('Y-m-d', strtotime($client->assign_date)) : NULL) }}">
+                                <input id="assign_date" type="date" class="form-control{{ $errors->has('assign_date') ? ' is-invalid' : '' }}" name="assign_date" value="{{ (!empty($user->assign_date) ? date('Y-m-d', strtotime($user->assign_date)) : NULL) }}">
 
                                 @if ($errors->has('assign_date'))
                                     <span class="invalid-feedback" role="alert">
@@ -722,7 +714,7 @@
                             <button type="submit" class="btn btn-primary">
                                 {{ __('Save') }}
                             </button>
-                            <a href="{{route('clients.show', $client->id)}}" class="btn btn-danger">
+                            <a href="{{route('clients.show', $user->id)}}" class="btn btn-danger">
                                 {{ __('Cancel') }}
                             </a>
                         </div>

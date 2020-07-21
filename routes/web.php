@@ -24,14 +24,20 @@ if (setting('auth.email_verification')) {
 
 Route::middleware($middlewares)->group(function() {
     Route::group(['middleware' => ['permission:clients_access']], function () {
+        Route::get('clients/profile', 'ClientController@profile')->name('clients.profile');
         Route::resources(['clients' => 'ClientController']);
         Route::get('clients/{id}/ban', 'ClientController@banClient')->name('clients.ban');
         Route::get('clients/{id}/activity', 'ClientController@activityLog')->name('clients.activity');
         Route::get('clients/{id}/print', 'ClientController@print')->name('clients.print');
     });
 
+    Route::group(['middleware' => ['permission:admin_profile_access']], function () {
+        Route::get('admin/profile', 'ClientController@profile')->name('admin.profile');
+    });
+
     Route::group(['middleware' => ['permission:editors_access']], function () {
         Route::get('editors/create', 'ClientController@create')->name('editors.create');
+        Route::get('editors/profile', 'ClientController@profile')->name('editors.profile');
         Route::get('editors/{id}/edit', 'ClientController@edit')->name('editors.edit');
         Route::get('editors/{id}', 'ClientController@show')->name('editors.show');
         Route::get('editors/{id}/activity', 'ClientController@activityLog')->name('editors.activity');

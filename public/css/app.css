@@ -10973,3 +10973,7 @@ a.text-dark:focus {
 .logo-badge img {
   background: no-repeat;
 }
+
+.tooltip {
+  pointer-events: none;
+}

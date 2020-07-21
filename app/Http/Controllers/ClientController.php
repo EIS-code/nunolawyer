@@ -45,6 +45,7 @@ class ClientController extends Controller
             $this->middleware(['permission:editors_delete'])->only('destroy');
             $this->middleware(['permission:editors_ban'])->only(['banEditor','activateEditor']);
             $this->middleware(['permission:editors_activity'])->only('activityLog');
+            $this->middleware(['permission:editors_profile_access'])->only(['profile']);
         } else {
             $this->middleware(['permission:clients_create'])->only(['create','store']);
             $this->middleware(['permission:clients_show'])->only('show');
@@ -52,6 +53,7 @@ class ClientController extends Controller
             $this->middleware(['permission:clients_delete'])->only('destroy');
             $this->middleware(['permission:clients_ban'])->only(['banClient','activateClient']);
             $this->middleware(['permission:clients_activity'])->only('activityLog');
+            $this->middleware(['permission:clients_profile_access'])->only(['profile']);
         }
     }
 
@@ -173,7 +175,8 @@ class ClientController extends Controller
                     $join->on(ModelHasRoles::getTableName() . '.role_id', '=', Role::getTableName() . '.id');
                 })
                 ->whereRaw('lower(' . Role::getTableName() . '.name) = "client"')
-                ->where(Client::getTableName() . '.is_removed', BaseModel::$notRemoved);
+                ->where(Client::getTableName() . '.is_removed', BaseModel::$notRemoved)
+                ->where(Client::getTableName() . '.id', '!=', \Auth::user()->id);
 
         if ($isExport) {
             $this->clientExport->collection = $clients->get();
@@ -657,7 +660,8 @@ class ClientController extends Controller
      */
     public function edit($id)
     {
-        $client = Client::find($id);
+        $client     = Client::find($id);
+        $loggedInId = \Auth::user()->id;
 
         if ($client) {
             $roles           = Role::orderBy('id', 'ASC')->get();
@@ -671,7 +675,7 @@ class ClientController extends Controller
                 $assignTo = $editorRoles->users;
             }
 
-            return view('app.clients.edit', ['client' => $client, 'roles' => $roles, 'assignTo' => $assignTo, 'purposeArticles' => $purposeArticles, 'assignedTo' => $assignedTo]);
+            return view('app.clients.edit', ['client' => $client, 'roles' => $roles, 'assignTo' => $assignTo, 'purposeArticles' => $purposeArticles, 'assignedTo' => $assignedTo, 'loggedInId' => $loggedInId]);
         } else {
             if ($this->isEditors) {
                 return redirect('editors')->with('error',__("Editor not found!"));
@@ -979,5 +983,26 @@ class ClientController extends Controller
         $client = $clientModel->find($id);
 
         return view('app.clients.print', ['client' => $client]);
+    }
+
+    public function profile()
+    {
+        $user = \Auth::user();
+
+        if (!empty($user)) {
+            $purposeArticles = PurposeArticle::where('is_removed', PurposeArticle::$notRemoved)->get();
+            $assignTo        = [];
+            $purposeArticles = PurposeArticle::where('is_removed', PurposeArticle::$notRemoved)->get();
+            $assignedTo      = FollowUp::where('is_removed', PurposeArticle::$notRemoved)->where('client_id', $user->id)->get();
+            $assignedTo      = (!empty($assignedTo) && !$assignedTo->isEmpty()) ? $assignedTo->pluck('follow_by')->toArray() : [];
+
+            if (!empty($editorRoles)) {
+                $assignTo = $editorRoles->users;
+            }
+
+            return view('app.profiles.edit', ['user' => $user, 'isEditors' => $user->isEditors(), 'purposeArticles' => $purposeArticles, 'assignTo' => $assignTo, 'assignedTo' => $assignedTo]);
+        }
+
+        return redirect('/')->with('error', __("Not found!"));
     }
 }

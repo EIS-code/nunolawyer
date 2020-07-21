@@ -83,6 +83,16 @@
                                                 <div tabindex="-1" role="menu" aria-hidden="true" class="dropdown-menu dropdown-menu-right">
                                                     <!--a class="dropdown-item" href="{{ route('clients.create') }}">{{ __('Register') }}</a>
                                                     <div tabindex="-1" class="dropdown-divider"></div-->
+                                                    @if (auth()->user()->isSuperAdmin())
+                                                        <!--a class="dropdown-item" href="{{ route('admin.profile') }}">
+                                                            {{ __('My Profile') }}
+                                                        </a-->
+                                                    @else
+                                                    @endif
+                                                    <a class="dropdown-item" target="__blank" href="{{ route((auth()->user()->isEditors() ? 'editors.edit' : 'clients.edit'), auth()->user()->id) }}">
+                                                        {{ __('My Profile') }}
+                                                    </a>
+
                                                     <a class="dropdown-item" href="{{ route('logout') }}"
                                                        onclick="event.preventDefault();
                                                                      document.getElementById('logout-form').submit();">
