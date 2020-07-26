@@ -16,6 +16,7 @@ class PoaAgreement extends BaseModel implements Auditable
     public static $storageFolderName = 'poa';
 
     protected $fillable = [
+        'title',
         'text',
         'file',
         'is_removed',

@@ -13,6 +13,7 @@ class FollowUp extends BaseModel implements Auditable
     use \OwenIt\Auditing\Auditable;
 
     protected $fillable = [
+        'date',
         'follow_by',
         'follow_from',
         'client_id',
@@ -22,6 +23,7 @@ class FollowUp extends BaseModel implements Auditable
     public static function validators(array $data, $returnBoolsOnly = false)
     {
         $validator = Validator::make($data, [
+            'date'        => ['date_format:Y-m-d'],
             'follow_by'   => ['required', 'integer', 'exists:' . Client::getTableName() . ',id'],
             'follow_from' => ['required', 'integer', 'exists:' . Client::getTableName() . ',id'],
             'client_id'   => ['required', 'integer', 'exists:' . Client::getTableName() . ',id'],
@@ -45,6 +47,15 @@ class FollowUp extends BaseModel implements Auditable
     }
 
     public function getCreatedByAttribute($value)
+    {
+        if (!empty($value)) {
+            return date('Y-m-d', strtotime($value));
+        }
+
+        return $value;
+    }
+
+    public function getDateAttribute($value)
     {
         if (!empty($value)) {
             return date('Y-m-d', strtotime($value));

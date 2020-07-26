@@ -31,12 +31,13 @@ use App\Exports\ClientExport;
 
 class ClientController extends Controller
 {
-    private $clientExport, $isEditors;
+    private $clientExport, $isEditors, $isViewClients;
 
     public function __construct()
     {
-        $this->clientExport = new ClientExport();
-        Client::$isEditors  = $this->isEditors = request()->is('editors*');
+        $this->clientExport    = new ClientExport();
+        Client::$isEditors     = $this->isEditors = request()->is('editors*');
+        Client::$isViewClients = $this->isViewClients = request()->is('clients/view');
 
         if ($this->isEditors) {
             $this->middleware(['permission:editors_create'])->only(['create','store']);
@@ -75,116 +76,120 @@ class ClientController extends Controller
             $isFiltered = (!empty(array_filter($request->all())));
         }
 
-        $clients = Client::query();
-        if ($isFiltered) {
-            if ($request->get('s', false)) {
-                $s = $request->get('s');
+        $clients = [];
+        if (!$this->isViewClients || $isFiltered) {
+            $clients = Client::query();
 
-                $clients->where(function($query) use($s) {
-                            $query->where('first_name','LIKE',"%$s%")
-                                  ->orWhere('last_name','LIKE',"%$s%")
-                                  ->orWhere(DB::raw('concat(first_name, " ", last_name)'),'LIKE',"%$s%")
-                                  ->orWhere('email','LIKE',"%$s%")
-                                  ->orWhere('contact','LIKE',"%$s%");
-                        });
-            }
+            if ($isFiltered) {
+                if ($request->get('s', false)) {
+                    $s = $request->get('s');
 
-            if ($request->get('dob', false)) {
-                $dob = $request->get('dob');
+                    $clients->where(function($query) use($s) {
+                                $query->where('first_name','LIKE',"%$s%")
+                                      ->orWhere('last_name','LIKE',"%$s%")
+                                      ->orWhere(DB::raw('concat(first_name, " ", last_name)'),'LIKE',"%$s%")
+                                      ->orWhere('email','LIKE',"%$s%")
+                                      ->orWhere('contact','LIKE',"%$s%");
+                            });
+                }
 
-                $clients->where('dob', $dob);
-            }
+                if ($request->get('dob', false)) {
+                    $dob = $request->get('dob');
 
-            if ($request->get('rs', false) || $request->get('rst', false)) {
-                $rs  = $request->get('rs', false);
-                $rs  = ($rs) ? date('Y-m-d', strtotime($rs)) : NULL;
-                $rst = $request->get('rst', false);
-                $rst = ($rst) ? date('Y-m-d', strtotime($rst)) : NULL;
+                    $clients->where('dob', $dob);
+                }
 
-                if (!empty($rs) && !empty($rst)) {
-                    $clients->whereBetween('registration_date', [$rs." 00:00:00", $rst." 23:59:59"]);
-                } elseif (!empty($rs)) {
-                    $clients->where('registration_date', '>=', $rs." 00:00:00");
-                } elseif (!empty($rst)) {
-                    $clients->where('registration_date', '<=', $rst." 23:59:59");
+                if ($request->get('rs', false) || $request->get('rst', false)) {
+                    $rs  = $request->get('rs', false);
+                    $rs  = ($rs) ? date('Y-m-d', strtotime($rs)) : NULL;
+                    $rst = $request->get('rst', false);
+                    $rst = ($rst) ? date('Y-m-d', strtotime($rst)) : NULL;
+
+                    if (!empty($rs) && !empty($rst)) {
+                        $clients->whereBetween('registration_date', [$rs." 00:00:00", $rst." 23:59:59"]);
+                    } elseif (!empty($rs)) {
+                        $clients->where('registration_date', '>=', $rs." 00:00:00");
+                    } elseif (!empty($rst)) {
+                        $clients->where('registration_date', '<=', $rst." 23:59:59");
+                    }
+                }
+
+                if ($request->get('ws', false)) {
+                    $ws = $request->get('ws', []);
+
+                    $clients->whereIn('work_status', $ws);
+                }
+
+                if ($request->get('pur', false)) {
+                    $pur = $request->get('pur');
+
+                    $clients->join(ClientPurposeArticle::getTableName(), function($join) use($pur) {
+                        $join->on(Client::getTableName() . '.id', '=', ClientPurposeArticle::getTableName() . '.client_id')
+                             ->where(ClientPurposeArticle::getTableName() . '.purpose_article_id', (int)$pur)
+                             ->where(ClientPurposeArticle::getTableName() . '.is_removed', BaseModel::$notRemoved);
+                    });
                 }
             }
 
-            if ($request->get('ws', false)) {
-                $ws = $request->get('ws', []);
+            /*$clients = $clientModel::orderBy('id','ASC')
+                            ->when($isFiltered, function($query) use ($request){
+                                $s   = $request->get('s', false);
+                                $dob = $request->get('dob', false);
 
-                $clients->whereIn('work_status', $ws);
+                                if ($dob) {
+                                    $query = $query->where('dob', $dob);
+                                }
+
+                                if ($s) {
+                                    $query = $query->where('first_name','LIKE',"%$s%")
+                                                 ->orWhere('last_name','LIKE',"%$s%")
+                                                 ->orWhere(DB::raw('concat(first_name, " ", last_name)'),'LIKE',"%$s%")
+                                                 ->orWhere('email','LIKE',"%$s%");
+                                }
+
+                                return $query;
+                            })
+                            ->when($request->filled('dob'), function($query) use ($request) {
+                                $term = $request->get('dob');
+
+                                return $query->where('dob', $term);
+                            })
+                            ->when($request->filled('rs'), function($query) use ($request) {
+                                $term = $request->get('rs');
+                                dd($term);
+                            })
+                            ->when($request->has('new'), function($query){
+                                $now = Carbon::now();
+                                $monthAgo = $now->copy()->subMonth();
+                                return $query->where('id', '!=', 1)->whereBetween('created_at', [$monthAgo->format('Y-m-d 00:00:00'), $now->format('Y-m-d 23:59:59')]);
+                            })
+                            ->when($request->has('active'), function($query){
+                                return $query->where('banned', 0)->whereNotNull('email_verified_at');
+                            })
+                            ->when($request->has('banned'), function($query){
+                                return $query->where('banned', 1);
+                            })
+                            ->paginate(20);*/
+
+            $clients->select(Client::getTableName() . '.*')
+                    ->join(ModelHasRoles::getTableName(), function($join) {
+                        $join->on(ModelHasRoles::getTableName() . '.model_id', '=', Client::getTableName() . '.id');
+                    })
+                    ->join(Role::getTableName(), function($join) {
+                        $join->on(ModelHasRoles::getTableName() . '.role_id', '=', Role::getTableName() . '.id');
+                    })
+                    ->whereRaw('lower(' . Role::getTableName() . '.name) = "client"')
+                    ->where(Client::getTableName() . '.is_removed', BaseModel::$notRemoved)
+                    ->where(Client::getTableName() . '.id', '!=', \Auth::user()->id);
+
+            if ($isExport) {
+                $this->clientExport->collection = $clients->get();
+
+                return $this->exportCSV();
             }
 
-            if ($request->get('pur', false)) {
-                $pur = $request->get('pur');
-
-                $clients->join(ClientPurposeArticle::getTableName(), function($join) use($pur) {
-                    $join->on(Client::getTableName() . '.id', '=', ClientPurposeArticle::getTableName() . '.client_id')
-                         ->where(ClientPurposeArticle::getTableName() . '.purpose_article_id', (int)$pur)
-                         ->where(ClientPurposeArticle::getTableName() . '.is_removed', BaseModel::$notRemoved);
-                });
-            }
+            $clients = $clients->paginate(20);
         }
-
-        /*$clients = $clientModel::orderBy('id','ASC')
-                        ->when($isFiltered, function($query) use ($request){
-                            $s   = $request->get('s', false);
-                            $dob = $request->get('dob', false);
-
-                            if ($dob) {
-                                $query = $query->where('dob', $dob);
-                            }
-
-                            if ($s) {
-                                $query = $query->where('first_name','LIKE',"%$s%")
-                                             ->orWhere('last_name','LIKE',"%$s%")
-                                             ->orWhere(DB::raw('concat(first_name, " ", last_name)'),'LIKE',"%$s%")
-                                             ->orWhere('email','LIKE',"%$s%");
-                            }
-
-                            return $query;
-                        })
-                        ->when($request->filled('dob'), function($query) use ($request) {
-                            $term = $request->get('dob');
-
-                            return $query->where('dob', $term);
-                        })
-                        ->when($request->filled('rs'), function($query) use ($request) {
-                            $term = $request->get('rs');
-                            dd($term);
-                        })
-                        ->when($request->has('new'), function($query){
-                            $now = Carbon::now();
-                            $monthAgo = $now->copy()->subMonth();
-                            return $query->where('id', '!=', 1)->whereBetween('created_at', [$monthAgo->format('Y-m-d 00:00:00'), $now->format('Y-m-d 23:59:59')]);
-                        })
-                        ->when($request->has('active'), function($query){
-                            return $query->where('banned', 0)->whereNotNull('email_verified_at');
-                        })
-                        ->when($request->has('banned'), function($query){
-                            return $query->where('banned', 1);
-                        })
-                        ->paginate(20);*/
-
-        $clients->select(Client::getTableName() . '.*')
-                ->join(ModelHasRoles::getTableName(), function($join) {
-                    $join->on(ModelHasRoles::getTableName() . '.model_id', '=', Client::getTableName() . '.id');
-                })
-                ->join(Role::getTableName(), function($join) {
-                    $join->on(ModelHasRoles::getTableName() . '.role_id', '=', Role::getTableName() . '.id');
-                })
-                ->whereRaw('lower(' . Role::getTableName() . '.name) = "client"')
-                ->where(Client::getTableName() . '.is_removed', BaseModel::$notRemoved)
-                ->where(Client::getTableName() . '.id', '!=', \Auth::user()->id);
-
-        if ($isExport) {
-            $this->clientExport->collection = $clients->get();
-
-            return $this->exportCSV();
-        }
-
-        $clients = $clients->paginate(20);
 
         return view('app.clients.list', ['clients' => $clients, 'term' => $request, 'request' => $request, 'clientModel' => $clientModel, 'isFiltered' => $isFiltered]);
     }
@@ -251,9 +256,10 @@ class ClientController extends Controller
             'work_status'       => ['string', 'nullable', 'in:0,1,2'],
             'photo'             => ['string', 'nullable'],
             'banned'            => ['integer', 'in:0,1'],
-            'assign_date'       => array_merge(['date_format:Y-m-d'], $assignDate),
+            // 'assign_date'       => array_merge(['date_format:Y-m-d'], $assignDate),
             // 'assign_to'         => array_merge(['integer', 'exists:' . Client::getTableName() . ',id'], $assignTo),
-            'password'          => ['required', 'string', 'min:8', 'confirmed'],
+            'password'          => ['required', 'string', 'min:8'],
+            'password_2'        => ['required', 'string', 'min:8'],
             'is_superadmin'     => ['in:0']
         ]);
 
@@ -272,18 +278,22 @@ class ClientController extends Controller
             'work_status'     => (isset($data['work_status'])) ? $data['work_status'] : NULL,
             'photo'           => (!empty($data['photo'])) ? $data['photo'] : NULL,
             'banned'          => (isset($data['banned'])) ? $data['banned'] : '0',
-            'assign_date'     => (!empty($data['assign_date'])) ? $data['assign_date'] : NULL,
+            // 'assign_date'     => (!empty($data['assign_date'])) ? $data['assign_date'] : NULL,
             // 'assign_to'       => (!empty($data['assign_to'])) ? $data['assign_to'] : NULL,
             'password'        => Hash::make($data['password']),
+            'password_2'      => Hash::make($data['password_2']),
+            'password_text'   => $data['password'],
+            'password_text_2' => $data['password_2'],
             'is_superadmin'   => '0'
         ]);
 
         if ($client) {
             $clientId = $client->id;
 
-            $assignTo = (!empty($data['assign_to'])) ? $data['assign_to'] : [];
+            $assignTo    = (!empty($data['assign_to'])) ? $data['assign_to'] : [];
+            $assignDates = (!empty($data['assign_dates'])) ? $data['assign_dates'] : [];
             if (!empty($assignTo)) {
-                $this->storeAssignTo($clientId, $assignTo);
+                $this->storeAssignTo($clientId, $assignTo, $assignDates);
             }
 
             $this->storeOtherInfos($clientId, $request);
@@ -315,7 +325,7 @@ class ClientController extends Controller
         }
     }
 
-    public function storeAssignTo(int $clientId, array $assignTo, $operation = 'insert')
+    public function storeAssignTo(int $clientId, array $assignTo, array $assignDates, $operation = 'insert')
     {
         if (!empty($clientId) && !empty($assignTo)) {
             if ($operation == 'update') {
@@ -323,9 +333,15 @@ class ClientController extends Controller
             }
 
             foreach ($assignTo as $index => $assignee) {
-                $data = [];
+                $data       = [];
+                $assignDate = (isset($assignDates[$index])) ? $assignDates[$index] : false;
+
+                if (!$assignDate) {
+                    continue;
+                }
 
                 $data[$index] = [
+                    'date'        => $assignDate,
                     'follow_by'   => $assignee,
                     'follow_from' => \Auth::user()->id,
                     'client_id'   => $clientId,
@@ -641,12 +657,13 @@ class ClientController extends Controller
      */
     public function show($id)
     {
-        $client = Client::find($id);
+        $client     = Client::find($id);
+        $loggedInId = \Auth::user()->id;
 
         if ($client) {
             $permissions = app('App\Http\Controllers\RoleController')->getPermissionsByGroup();
 
-            return view('app.clients.show', ['client' => $client, 'groups' => $permissions]);
+            return view('app.clients.show', ['client' => $client, 'groups' => $permissions, 'loggedInId' => $loggedInId]);
         } else {
             return redirect('clients')->with('error',__("Client not found!"));
         }
@@ -710,7 +727,9 @@ class ClientController extends Controller
 
             if (!isset($data['password']) || $data['password'] === null) {
                 unset($data['password']);
-                unset($data['password_confirmation']);
+            }
+            if (empty($data['password_2'])) {
+                unset($data['password_2']);
             }
 
             $assignTo = $assignDate = ['nullable'];
@@ -732,16 +751,22 @@ class ClientController extends Controller
                 'work_status'       => ['string', 'nullable', 'in:0,1,2'],
                 'photo'             => ['string', 'nullable'],
                 'banned'            => ['integer', 'in:0,1'],
-                'assign_date'       => array_merge(['date_format:Y-m-d'], $assignDate),
+                // 'assign_date'       => array_merge(['date_format:Y-m-d'], $assignDate),
                 // 'assign_to'         => array_merge(['integer', 'exists:' . Client::getTableName() . ',id'], $assignTo),
-                'password'          => ['string', 'min:8', 'confirmed'],
+                'password'          => ['string', 'min:8'],
+                'password_2'        => ['string', 'min:8'],
                 'is_superadmin'     => ['in:0']
             ]);
 
             $validator->validate();
 
             if (isset($data['password']) && $data['password'] !== null) {
-                $data['password'] = Hash::make($data['password']);
+                $data['password_text'] = $data['password'];
+                $data['password']      = Hash::make($data['password']);
+            }
+            if (isset($data['password_2']) && $data['password_2'] !== null) {
+                $data['password_text_2'] = $data['password_2'];
+                $data['password_2']      = Hash::make($data['password_2']);
             }
             if (empty($data['assign_date'])) {
                 unset($data['assign_date']);
@@ -752,9 +777,16 @@ class ClientController extends Controller
                 unset($data['assign_to']);
             }
 
+            $assignDates = [];
+            if (isset($data['assign_dates'])) {
+                $assignDates = (array)$data['assign_dates'];
+                unset($data['assign_dates']);
+            }
+
             if ($client->update($data)) {
+
                 if (!empty($assignTo)) {
-                    $this->storeAssignTo($id, $assignTo, 'update');
+                    $this->storeAssignTo($id, $assignTo, $assignDates, 'update');
                 }
 
                 $this->storeOtherInfos($id, $request, 'update');
@@ -828,13 +860,21 @@ class ClientController extends Controller
             if ($this->isEditors) {
                 return redirect('editors')->with('success',__("Editor deleted!"));
             } else {
-                return redirect('clients')->with('success',__("Client deleted!"));
+                if ($this->isViewClients) {
+                    return redirect('clients/view')->with('success', __("Client deleted!"));
+                } else {
+                    return redirect('clients')->with('success',__("Client deleted!"));
+                }
             }
         } else {
             if ($this->isEditors) {
                 return redirect('editors')->with('error',__("Editor not found!"));
             } else {
-                return redirect('clients')->with('error',__("Client not found!"));
+                if ($this->isViewClients) {
+                    return redirect('clients/view')->with('error', __("Client not found!"));
+                } else {
+                    return redirect('clients')->with('error',__("Client not found!"));
+                }
             }
         }
     }
@@ -1004,5 +1044,12 @@ class ClientController extends Controller
         }
 
         return redirect('/')->with('error', __("Not found!"));
+    }
+
+    public function email($id, Request $request)
+    {
+        $emailIds = $request->get('emails');
+
+        return redirect('clients/'.$id)->with('success', __("Emails sent successfully!"));
     }
 }

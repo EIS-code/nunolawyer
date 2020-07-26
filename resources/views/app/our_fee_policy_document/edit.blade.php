@@ -35,6 +35,19 @@
                         </div>
                     </div>
 
+                    <div class="form-group row">
+                        <div class="col-md-12">
+                            <label>{{ __('Text') }}</label>
+                            <textarea id="text" type="text" class="form-control{{ $errors->has('text') ? ' is-invalid' : '' }}" name="text" required autofocus>{{ old('text', $ourFeePolicyDocument->text) }}</textarea>
+
+                            @if ($errors->has('text'))
+                                <span class="invalid-feedback" role="alert">
+                                    <strong>{{ $errors->first('text') }}</strong>
+                                </span>
+                            @endif
+                        </div>
+                    </div>
+
                     <div class="form-group row mb-0">
                         <div class="col-md-6">
                             <button type="submit" class="btn btn-primary">
@@ -49,4 +62,5 @@
             </div>
         </div>
     </div>
+    @include('app.scripts.scripts')
 @endsection

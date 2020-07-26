@@ -43,7 +43,8 @@ class PoaController extends Controller
                 $s = $request->get('s');
 
                 $poaAgreements->where(function($query) use($s) {
-                    $query->where('text','LIKE',"%$s%");
+                    $query->where('title','LIKE',"%$s%")
+                          ->orWhere('text','LIKE',"%$s%");
                 });
             }
         }
@@ -63,14 +64,16 @@ class PoaController extends Controller
         $data = $request->all();
 
         $validator = Validator::make($data, [
-            'text' => ['required', 'string', 'max:255'],
-            'file' => ['nullable']
+            'title' =>['required', 'string', 'max:255'],
+            'text'  => ['nullable', 'string', 'max:255'],
+            'file'  => ['nullable']
         ]);
 
         $validator->validate();
 
         $poaAgreement = PoaAgreement::create([
-            'text' => $data['text']
+            'title' => $data['title'],
+            'text'  => $data['text']
         ]);
 
         $storeFile = false;
@@ -121,7 +124,8 @@ class PoaController extends Controller
             $data = $request->all();
 
             $validator = Validator::make($data, [
-                'text' => ['required', 'string', 'max:255'],
+                'title' =>['required', 'string', 'max:255'],
+                'text' => ['nullable', 'string', 'max:255'],
                 'file' => ['nullable']
             ]);
 

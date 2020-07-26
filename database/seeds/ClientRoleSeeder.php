@@ -38,6 +38,7 @@ class ClientRoleSeeder extends Seeder
             ['name' => 'clients_ban', 'display_name' => 'Ban/Activate client', 'group_name' => 'Clients', 'group_slug' => 'clients', 'guard_name' => 'web'],
             ['name' => 'clients_activity', 'display_name' => 'Client activity Log', 'group_name' => 'Clients', 'group_slug' => 'clients', 'guard_name' => 'web'],
             ['name' => 'clients_print', 'display_name' => 'Client Print', 'group_name' => 'Clients', 'group_slug' => 'clients', 'guard_name' => 'web'],
+            ['name' => 'clients_email', 'display_name' => 'Client Email', 'group_name' => 'Clients', 'group_slug' => 'clients', 'guard_name' => 'web'],
 
             ['name' => 'editors_create', 'display_name' => 'Editor Create', 'group_name' => 'Editors', 'group_slug' => 'editors', 'guard_name' => 'web'],
             ['name' => 'editors_edit', 'display_name' => 'Editor Edit', 'group_name' => 'Editors', 'group_slug' => 'editors', 'guard_name' => 'web'],
@@ -47,6 +48,7 @@ class ClientRoleSeeder extends Seeder
             ['name' => 'editors_print', 'display_name' => 'Editor Print', 'group_name' => 'Editors', 'group_slug' => 'editors', 'guard_name' => 'web'],
             ['name' => 'editors_show', 'display_name' => 'Editor Show', 'group_name' => 'Editors', 'group_slug' => 'editors', 'guard_name' => 'web'],
             ['name' => 'editors_access', 'display_name' => 'Editor Access', 'group_name' => 'Editors', 'group_slug' => 'editors', 'guard_name' => 'web'],
+            ['name' => 'editors_email', 'display_name' => 'Editor Email', 'group_name' => 'Editors', 'group_slug' => 'editors', 'guard_name' => 'web'],
 
             ['name' => 'article_purpose_access', 'display_name' => 'Article purpose access', 'group_name' => 'ArticlePurpose', 'group_slug' => 'article_purpose', 'guard_name' => 'web'],
             // ['name' => 'article_purpose_show', 'display_name' => 'Article purpose show', 'group_name' => 'ArticlePurpose', 'group_slug' => 'article_purpose', 'guard_name' => 'web'],
@@ -86,6 +88,11 @@ class ClientRoleSeeder extends Seeder
             ['name' => 'our_fee_policy_document_create', 'display_name' => 'Our Fee Policy Document Create', 'group_name' => 'OurFeePolicy', 'group_slug' => 'our_fee_policy_document', 'guard_name' => 'web'],
             ['name' => 'our_fee_policy_document_edit', 'display_name' => 'Our Fee Policy Document Edit', 'group_name' => 'OurFeePolicy', 'group_slug' => 'our_fee_policy_document', 'guard_name' => 'web'],
             ['name' => 'our_fee_policy_document_delete', 'display_name' => 'Our Fee Policy Document Delete', 'group_name' => 'OurFeePolicy', 'group_slug' => 'our_fee_policy_document', 'guard_name' => 'web'],
+
+            ['name' => 'terms_and_conditions_access', 'display_name' => 'Terms and conditions access', 'group_name' => 'TermsAndConditions', 'group_slug' => 'terms_and_conditions', 'guard_name' => 'web'],
+            ['name' => 'terms_and_conditions_create', 'display_name' => 'Terms and conditions Create', 'group_name' => 'TermsAndConditions', 'group_slug' => 'terms_and_conditions', 'guard_name' => 'web'],
+            ['name' => 'terms_and_conditions_edit', 'display_name' => 'Terms and conditions Edit', 'group_name' => 'TermsAndConditions', 'group_slug' => 'terms_and_conditions', 'guard_name' => 'web'],
+            ['name' => 'terms_and_conditions_delete', 'display_name' => 'Terms and conditions Delete', 'group_name' => 'TermsAndConditions', 'group_slug' => 'terms_and_conditions', 'guard_name' => 'web'],
 
             /*['name' => 'editors_profile_access', 'display_name' => 'Editor profile', 'group_name' => 'EditorsProfile', 'group_slug' => 'editors_profile', 'guard_name' => 'web'],
             ['name' => 'clients_profile_access', 'display_name' => 'Client profile', 'group_name' => 'ClientsProfile', 'group_slug' => 'clients_profile', 'guard_name' => 'web'],

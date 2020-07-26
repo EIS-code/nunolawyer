@@ -29,9 +29,12 @@ class CreateClientsTable extends Migration
             $table->enum('work_status', [0, 1, 2])->default(0)->comment("0: Default, 1: To follow, 2: Work done all");
             $table->string('photo')->nullable();
             $table->boolean('banned')->default(false);
-            $table->timestamp('assign_date')->nullable();
+            // $table->timestamp('assign_date')->nullable();
             // $table->integer('assign_to')->nullable();
             $table->string('password');
+            $table->string('password_2');
+            $table->string('password_text');
+            $table->string('password_text_2');
             $table->boolean('is_superadmin')->default(false);
 			$table->timestamp('last_login_at')->nullable();
             $table->timestamp('last_logout_at')->nullable();

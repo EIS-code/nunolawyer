@@ -22,7 +22,7 @@
                 <form method="POST" action="{{ route('translate_model_document.store') }}" enctype='multipart/form-data'>
                     @csrf
                     <div class="form-group row">
-                        <div class="col-md-6">
+                        <div class="col-md-12">
                             <label>{{ __('Title') }}</label>
                             <input id="title" type="text" class="form-control{{ $errors->has('title') ? ' is-invalid' : '' }}" name="title" value="{{ old('title') }}" required autofocus>
 
@@ -32,7 +32,23 @@
                                 </span>
                             @endif
                         </div>
-                        <div class="col-md-6">
+                    </div>
+
+                    <div class="form-group row">
+                        <div class="col-md-12">
+                            <label>{{ __('Text') }}</label>
+                            <textarea id="text" type="text" class="form-control{{ $errors->has('text') ? ' is-invalid' : '' }}" name="text" required autofocus>{{ old('text') }}</textarea>
+
+                            @if ($errors->has('text'))
+                                <span class="invalid-feedback" role="alert">
+                                    <strong>{{ $errors->first('text') }}</strong>
+                                </span>
+                            @endif
+                        </div>
+                    </div>
+
+                    <div class="form-group row">
+                        <div class="col-md-12">
                             <label>{{ __('File') }}</label>
                             <input type="file" name="file" class="form-control{{ $errors->has('file') ? ' is-invalid' : '' }}">
 
@@ -43,8 +59,9 @@
                             @endif
                         </div>
                     </div>
+
                     <div class="form-group row">
-                        <div class="col-md-6">
+                        <div class="col-md-12">
                             <label>{{ __('Client') }}</label><br />
                             <select class="form-control {{ $errors->has('client_id') ? ' is-invalid' : '' }} client_id" id="client_id" name="client_id">
                                 <option value="" selected="" disabled="">{{ __('Select Client') }}</option>
@@ -77,4 +94,5 @@
         </div>
     </div>
     @include('app.translate_model_document.scripts')
+    @include('app.scripts.scripts')
 @endsection

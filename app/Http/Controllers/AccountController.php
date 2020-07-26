@@ -6,7 +6,11 @@ use Illuminate\Http\Request;
 use App\Account;
 use App\Exports\AccountExport;
 use App\BaseModel;
+use App\Client;
+use App\Role;
+use App\ModelHasRoles;
 use Maatwebsite\Excel\Facades\Excel;
+use DB;
 
 class AccountController extends Controller
 {
@@ -53,6 +57,35 @@ class AccountController extends Controller
                     $accounts->where('date', '<=', $dtt." 23:59:59");
                 }
             }
+
+            if ($request->get('s', false)) {
+                $s = $request->get('s');
+
+                $accounts->join(Client::getTableName(), function($join) use($s, $accountModel) {
+                    $join->on($accountModel::getTableName() . '.client_id', '=', Client::getTableName() . '.id')
+                         ->where(function($query) use($s) {
+                            $query->where('first_name','LIKE',"%$s%")
+                                  ->orWhere('last_name','LIKE',"%$s%")
+                                  ->orWhere(DB::raw('concat(first_name, " ", last_name)'),'LIKE',"%$s%");
+                         });
+                });
+            }
+
+            if ($request->get('role', false)) {
+                $role = $request->get('role');
+
+                if (!$request->get('s', false)) {
+                    $accounts->join(Client::getTableName(), $accountModel::getTableName() . '.client_id', '=', Client::getTableName() . '.id');
+                }
+
+                $accounts->join(ModelHasRoles::getTableName(), function($join) {
+                    $join->on(ModelHasRoles::getTableName() . '.model_id', '=', Client::getTableName() . '.id');
+                })
+                ->join(Role::getTableName(), function($join) {
+                    $join->on(ModelHasRoles::getTableName() . '.role_id', '=', Role::getTableName() . '.id');
+                })
+                ->whereRaw('lower(' . Role::getTableName() . '.name) = "' . $role . '"');
+            }
         }
 
         $accounts->select($accountModel::getTableName() . '.*')
@@ -68,7 +101,9 @@ class AccountController extends Controller
 
         $accounts = $accounts->paginate(20);
 
-        return view('app.accounts.list', ['accounts' => $accounts, 'term' => $request, 'isFiltered' => $isFiltered]);
+        $roles    = Role::where('id', '!=', Client::$roleAdminId)->orderBy('id', 'ASC')->get();
+
+        return view('app.accounts.list', ['accounts' => $accounts, 'term' => $request, 'isFiltered' => $isFiltered, 'roles' => $roles]);
     }
 
     /**

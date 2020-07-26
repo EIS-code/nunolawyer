@@ -19,6 +19,7 @@ class TranslateModelDocument extends BaseModel implements Auditable
      */
     protected $fillable = [
         'title',
+        'text',
         'file',
         'client_id',
         'is_removed',

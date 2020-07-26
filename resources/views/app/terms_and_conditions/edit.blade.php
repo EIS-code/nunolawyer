@@ -7,24 +7,25 @@
             <div class="d-flex">
                 <div class="breadcrumb">
                     <a href="{{ route('dashboard') }}" class="breadcrumb-item"><i class="metismenu-icon pe-7s-home" style="margin-top: 3px;"></i>&nbsp;{{__('Dashboard')}}</a>
-                    <a href="{{ route('article_purpose.index') }}" class="breadcrumb-item">
-                        {{__('Article Purpose')}}
+                    <a href="{{ route('terms_and_conditions.index') }}" class="breadcrumb-item">
+                        {{__('Terms and Conditions')}}
                     </a>
-                    <span class="breadcrumb-item active">{{__('Add New')}}</span>
+                    <span class="breadcrumb-item active">{{__('Edit')}}</span>
                 </div>
             </div>
         </div>
     </div>
-	
+
     <div class="content">
         <div class="card bg-white">
             <div class="card-body">
-                <form method="POST" action="{{ route('article_purpose.store') }}">
+                <form method="POST" action="{{ route('terms_and_conditions.update', $termsAndCondition->id) }}">
+                    @method('PATCH')
                     @csrf
                     <div class="form-group row">
-                        <div class="col-md-12">
+                        <div class="col-md-6">
                             <label>{{ __('Title') }}</label>
-                            <input id="title" type="text" class="form-control{{ $errors->has('title') ? ' is-invalid' : '' }}" name="title" value="{{ old('title') }}" required autofocus>
+                            <input id="title" type="text" class="form-control{{ $errors->has('title') ? ' is-invalid' : '' }}" name="title" value="{{ $termsAndCondition->title }}"  autofocus>
 
                             @if ($errors->has('title'))
                                 <span class="invalid-feedback" role="alert">
@@ -37,7 +38,7 @@
                     <div class="form-group row">
                         <div class="col-md-12">
                             <label>{{ __('Text') }}</label>
-                            <textarea id="text" type="text" class="form-control{{ $errors->has('text') ? ' is-invalid' : '' }}" name="text" required autofocus>{{ old('text') }}</textarea>
+                            <textarea id="text" type="text" class="form-control{{ $errors->has('text') ? ' is-invalid' : '' }}" name="text" required autofocus>{{ old('text', $termsAndCondition->text) }}</textarea>
 
                             @if ($errors->has('text'))
                                 <span class="invalid-feedback" role="alert">
@@ -50,9 +51,9 @@
                     <div class="form-group row mb-0">
                         <div class="col-md-6">
                             <button type="submit" class="btn btn-primary">
-                                <i class="metismenu-icon pe-7s-diskette"></i> {{ __('Create') }}
+                                {{ __('Save') }}
                             </button>
-                            <a href="{{route('article_purpose.index')}}" class="btn btn-danger">
+                            <a href="{{ route('terms_and_conditions.index') }}" class="btn btn-danger">
                                 {{ __('Cancel') }}
                             </a>
                         </div>

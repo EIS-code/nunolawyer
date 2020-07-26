@@ -45,9 +45,18 @@
                         @can('clients_access')
                             <!--li class="app-sidebar__heading">Clients</li-->
                             <li>
-                                <a href="{{ route('clients.index') }}" class="{{ (request()->is('clients*') ? 'mm-active' : '') }}">
+                                <a href="{{ route('clients.index') }}" class="{{ (request()->is('clients*') && !request()->is('clients/view') ? 'mm-active' : '') }}">
                                     <i class="metismenu-icon pe-7s-users"></i>
                                     {{ __('Add New client') }}
+                                </a>
+                            </li>
+                        @endcan
+                        @can('clients_access')
+                            <!--li class="app-sidebar__heading">Clients</li-->
+                            <li>
+                                <a href="{{ route('clients.view') }}" class="{{ (request()->is('clients/view') ? 'mm-active' : '') }}">
+                                    <i class="metismenu-icon pe-7s-users"></i>
+                                    {{ __('View all clients') }}
                                 </a>
                             </li>
                         @endcan
@@ -103,8 +112,17 @@
                             <!--li class="app-sidebar__heading">{{ __('Our fee / policy document') }}</li-->
                             <li>
                                 <a href="{{ route('our_fee_policy_document.index') }}" class="{{ (request()->is('our_fee_policy_document*') ? 'mm-active' : '') }}">
-                                    <i class="metismenu-icon pe-7s-file"></i>
+                                    <i class="metismenu-icon pe-7s-wallet"></i>
                                     {{ __('Our fee / policy document') }}
+                                </a>
+                            </li>
+                        @endcan
+                        @can('terms_and_conditions_access')
+                            <!--li class="app-sidebar__heading">{{ __('Our fee / policy document') }}</li-->
+                            <li>
+                                <a href="{{ route('terms_and_conditions.index') }}" class="{{ (request()->is('terms_and_conditions*') ? 'mm-active' : '') }}">
+                                    <i class="metismenu-icon pe-7s-info"></i>
+                                    {{ __('Terms and conditions') }}
                                 </a>
                             </li>
                         @endcan
@@ -122,6 +140,14 @@
                                 <a href="{{ route('follow_up.index') }}" class="{{ (request()->is('follow_up*') ? 'mm-active' : '') }}">
                                     <i class="metismenu-icon pe-7s-note"></i>
                                     {{ __('Follow Up') }}
+                                </a>
+                            </li>
+                        @endcan
+                        @can('activitylog_access')
+                            <li>
+                                <a href="{{ route('activitylog.index') }}" class="{{ (request()->is('activitylog*') ? 'mm-active' : '') }}">
+                                    <i class="metismenu-icon pe-7s-pen"></i>
+                                    {{ __('Activity Log') }}
                                 </a>
                             </li>
                         @endcan

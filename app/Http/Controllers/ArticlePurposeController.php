@@ -42,7 +42,8 @@ class ArticlePurposeController extends Controller
                 $s = $request->get('s');
 
                 $articlePurposes->where(function($query) use($s) {
-                    $query->where('title','LIKE',"%$s%");
+                    $query->where('title','LIKE',"%$s%")
+                          ->orWhere('text','LIKE',"%$s%");
                 });
             }
         }
@@ -63,12 +64,14 @@ class ArticlePurposeController extends Controller
 
         $validator = Validator::make($data, [
             'title' => ['required', 'string', 'max:255'],
+            'text'  => ['nullable', 'string', 'max:255']
         ]);
 
         $validator->validate();
 
         $articlePurpose = PurposeArticle::create([
-            'title' => $data['title']
+            'title' => $data['title'],
+            'text'  => $data['text']
         ]);
 
         if ($articlePurpose) {
@@ -98,6 +101,7 @@ class ArticlePurposeController extends Controller
 
             $validator = Validator::make($data, [
                 'title' => ['required', 'string', 'max:255'],
+                'text'  => ['nullable', 'string', 'max:255']
             ]);
 
             $validator->validate();

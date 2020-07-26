@@ -43,7 +43,8 @@ class TranslateModelDocumentController extends Controller
                 $s = $request->get('s');
 
                 $translateModelDocuments->where(function($query) use($s) {
-                    $query->where('title','LIKE',"%$s%");
+                    $query->where('title','LIKE',"%$s%")
+                          ->orWhere('text','LIKE',"%$s%");
                 });
             }
         }
@@ -70,6 +71,7 @@ class TranslateModelDocumentController extends Controller
 
         $validator = Validator::make($data, [
             'title'     => ['required', 'string', 'max:255'],
+            'text'      => ['nullable', 'string', 'max:255'],
             'file'      => ['nullable'],
             'client_id' => ['required', 'integer', 'exists:' . Client::getTableName() . ',id'],
         ]);
@@ -78,6 +80,7 @@ class TranslateModelDocumentController extends Controller
 
         $translateModelDocument = TranslateModelDocument::create([
             'title'     => $data['title'],
+            'text'      => $data['text'],
             'client_id' => $data['client_id']
         ]);
 
@@ -136,6 +139,7 @@ class TranslateModelDocumentController extends Controller
 
             $validator = Validator::make($data, [
                 'title'     => ['required', 'string', 'max:255'],
+                'text'      => ['nullable', 'string', 'max:255'],
                 'file'      => ['nullable'],
                 'client_id' => ['required', 'integer', 'exists:' . Client::getTableName() . ',id'],
             ]);
@@ -190,5 +194,12 @@ class TranslateModelDocumentController extends Controller
         }
 
         return redirect('translate_model_document')->with('error', __("Not found!"));
+    }
+
+    public function email($id, Request $request)
+    {
+        $emailIds = $request->get('emails');
+
+        return redirect('translate_model_document')->with('success', __("Emails sent successfully!"));
     }
 }

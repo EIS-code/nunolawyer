@@ -25,6 +25,8 @@ if (setting('auth.email_verification')) {
 Route::middleware($middlewares)->group(function() {
     Route::group(['middleware' => ['permission:clients_access']], function () {
         Route::get('clients/profile', 'ClientController@profile')->name('clients.profile');
+        Route::post('clients/{id}/email', 'ClientController@email')->name('clients.email');
+        Route::get('clients/view', 'ClientController@index')->name('clients.view');
         Route::resources(['clients' => 'ClientController']);
         Route::get('clients/{id}/ban', 'ClientController@banClient')->name('clients.ban');
         Route::get('clients/{id}/activity', 'ClientController@activityLog')->name('clients.activity');
@@ -48,6 +50,7 @@ Route::middleware($middlewares)->group(function() {
         Route::patch('editors/{id}/update', 'ClientController@update')->name('editors.update');
         Route::delete('editors/{id}/destroy', 'ClientController@destroy')->name('editors.destroy');
         Route::get('editors/{id}/print', 'ClientController@print')->name('editors.print');
+        Route::post('editors/{id}/email', 'ClientController@email')->name('editors.email');
     });
 
     Route::group(['middleware' => ['permission:article_purpose_access']], function () {
@@ -69,6 +72,7 @@ Route::middleware($middlewares)->group(function() {
 
     Route::group(['middleware' => ['permission:translate_model_document_access']], function () {
         Route::resources(['translate_model_document' => 'TranslateModelDocumentController']);
+        Route::post('translate_model_document/{id}/email', 'TranslateModelDocumentController@email')->name('translate_model_document.email');
     });
 
     Route::group(['middleware' => ['permission:roles_access']], function () {
@@ -77,6 +81,10 @@ Route::middleware($middlewares)->group(function() {
 
     Route::group(['middleware' => ['permission:our_fee_policy_document_access']], function () {
         Route::resources(['our_fee_policy_document' => 'OurFeePolicyDocumentController']);
+    });
+
+    Route::group(['middleware' => ['permission:terms_and_conditions_access']], function () {
+        Route::resources(['terms_and_conditions' => 'TermsAndConditionController']);
     });
 
     Route::group(['middleware' => ['permission:permissions_access']], function () {

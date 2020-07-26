@@ -69,12 +69,18 @@
                             <tr>
                                 <th width="1%"></th>
                                 <th width="1%"></th>
-                                <th width="68%">{{ __('Title') }}</th>
+                                <th width="20%">{{ __('Title') }}</th>
+                                <th width="48%">{{ __('Text') }}</th>
                                 @can('translate_model_document_show_file')
-                                    <th width="15%">{{ __('View File') }}</th>
+                                    <th width="10%">{{ __('View File') }}</th>
                                 @endcan
                                 @can('translate_model_document_show_client')
-                                    <th width="15%">{{ __('View Clients') }}</th>
+                                    <th width="10%">{{ __('View Clients') }}</th>
+                                @endcan
+                                @can('clients_email')
+                                    <th width="10%">{{ __('Emails') }}</th>
+                                @elsecan('editors_email')
+                                    <th width="10%">{{ __('Emails') }}</th>
                                 @endcan
                             </tr>
                         </thead>
@@ -86,6 +92,21 @@
                             @else
                                 @foreach($translateModelDocuments as $translateModelDocument)
                                     <tr>
+                                        <td>
+                                            <form action="{{ route('translate_model_document.email', $translateModelDocument->id) }}" method="POST" class="d-none" id="html">
+                                                @csrf
+                                                <div>
+                                                    <br />
+                                                    <div class="form-group row">
+                                                        <div class="col-md-12">
+                                                            <label>{{ __('To') }}<span style="color: red;">* </span></label>
+                                                            <input type="text" name="emails" class="form-control" />
+                                                            <span style="color: red;">(Use comma separator for multiple like : test@gmail.com, test2@gmail.com)</span>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </form>
+                                        </td>
                                         <td width="1">
                                             @can('translate_model_document_edit')
                                                 <a href="{{route('translate_model_document.edit', $translateModelDocument->id)}}" data-toggle="tooltip" data-placement="top" title="{{__('Edit')}}">
@@ -103,6 +124,7 @@
                                             @endcan
                                         </td>
                                         <td>{{ $translateModelDocument->title }}</td>
+                                        <td>{!! $translateModelDocument->text !!}</td>
                                         @can('translate_model_document_show_file')
                                             @if (!empty($translateModelDocument->file))
                                                 <td>
@@ -117,6 +139,19 @@
                                         @can('translate_model_document_show_client')
                                             <td>
                                                 <a href="{{ route('clients.edit', $translateModelDocument->client_id) }}" target="__blank">{{ __('View') }}</a>
+                                            </td>
+                                        @endcan
+                                        @can('clients_email')
+                                            <td>
+                                                <button type="button" class="btn btn-warning btn-round toEmails" data-html="#html">
+                                                    <i class="fa fa-envelope"></i>
+                                                </button>
+                                            </td>
+                                        @elsecan('editors_email')
+                                            <td>
+                                                <button type="button" class="btn btn-warning btn-round toEmails" data-html="#html">
+                                                    <i class="fa fa-envelope"></i>
+                                                </button>
                                             </td>
                                         @endcan
                                     </tr>

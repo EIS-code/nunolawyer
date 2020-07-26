@@ -57,7 +57,7 @@
                                         </td>
 
                                         <td>
-                                            {{ $followUp->created_at }}
+                                            {{ $followUp->date }}
                                         </td>
 
                                         <td>

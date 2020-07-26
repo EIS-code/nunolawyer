@@ -7,7 +7,7 @@
             <div class="d-flex">
                 <div class="breadcrumb">
                     <a href="{{route('dashboard')}}" class="breadcrumb-item"><i class="metismenu-icon pe-7s-home" style="margin-top: 3px;"></i>&nbsp;{{__('Dashboard')}}</a>
-                    <span class="breadcrumb-item active">{{__('Our Fee Policy Document')}}</span>
+                    <span class="breadcrumb-item active">{{__('Terms and Conditions')}}</span>
                 </div>
             </div>
         </div>
@@ -36,7 +36,7 @@
                                 <input type="text" name="s" class="form-control searchInput" placeholder="{{__('Search title')}}" @if(!empty($term->get('s'))) value="{{$term->get('s')}}" @endif>
                                 <div class="input-group-append">
                                      @if($isFiltered == true)
-                                        <a href="{{route('our_fee_policy_document.index')}}" class="btn btn-light">
+                                        <a href="{{route('terms_and_conditions.index')}}" class="btn btn-light">
                                             <i class="fa fa-trash"></i>
                                         </a>
                                     @endif
@@ -51,8 +51,8 @@
                         <div class="page-title pull-right">
                             <label>&nbsp;</label>
                             <div class="heading">
-                                @can('our_fee_policy_document_create')
-                                    <a href="{{route('our_fee_policy_document.create')}}" class="btn btn-primary btn-round"><i class="metismenu-icon pe-7s-user"></i> {{__('Add New')}}</a>
+                                @can('terms_and_conditions_create')
+                                    <a href="{{route('terms_and_conditions.create')}}" class="btn btn-primary btn-round"><i class="metismenu-icon pe-7s-user"></i> {{__('Add New')}}</a>
                                 @endcan
                             </div>
                         </div>
@@ -74,31 +74,31 @@
                             </tr>
                         </thead>
                         <tbody>
-                            @if($ourFeePolicyDocuments->total() == 0)
+                            @if($termsAndConditions->total() == 0)
                                 <tr>
                                     <td colspan="12" class="text-center"><mark>{{__('No results found.')}}</mark></td>
                                 </tr>
                             @else
-                                @foreach($ourFeePolicyDocuments as $ourFeePolicyDocument)
+                                @foreach($termsAndConditions as $termsAndCondition)
                                     <tr>
                                         <td width="1">
-                                            @can('our_fee_policy_document_edit')
-                                                <a href="{{route('our_fee_policy_document.edit', $ourFeePolicyDocument->id)}}" data-toggle="tooltip" data-placement="top" title="{{__('Edit')}}">
+                                            @can('terms_and_conditions_edit')
+                                                <a href="{{route('terms_and_conditions.edit', $termsAndCondition->id)}}" data-toggle="tooltip" data-placement="top" title="{{__('Edit')}}">
                                                     <i class="fa fa-edit"></i>
                                                 </a>
                                             @endcan
                                         </td>
                                         <td width="1">
-                                            @can('our_fee_policy_document_delete')
-                                                <form action="{{ route('our_fee_policy_document.destroy', $ourFeePolicyDocument->id) }}" method="POST">
+                                            @can('terms_and_conditions_delete')
+                                                <form action="{{ route('terms_and_conditions.destroy', $termsAndCondition->id) }}" method="POST">
                                                     @method('DELETE')
                                                     @csrf
                                                     <a href="#" class="deleteBtn" data-confirm-message="{{__("Are you sure you want to delete this ?")}}" data-toggle="tooltip" data-placement="top" title="{{__('Delete')}}"><i class="fa fa-trash"></i></a>
                                                 </form>
                                             @endcan
                                         </td>
-                                        <td>{{ $ourFeePolicyDocument->title }}</td>
-                                        <td>{!! $ourFeePolicyDocument->text !!}</td>
+                                        <td>{{ $termsAndCondition->title }}</td>
+                                        <td>{!! $termsAndCondition->text !!}</td>
                                     </tr>
                                 @endforeach
                             @endif
@@ -107,14 +107,14 @@
 
                     <div class="float-left">
                         @if(!empty($term))
-                            {{ $ourFeePolicyDocuments->appends($term->all())->links() }}
+                            {{ $termsAndConditions->appends($term->all())->links() }}
                         @else
-                            {{ $ourFeePolicyDocuments->links() }}
+                            {{ $termsAndConditions->links() }}
                         @endif
                     </div>
 
                     <div class="float-right text-muted">
-                        {{__('Showing')}} {{ $ourFeePolicyDocuments->firstItem() }} - {{ $ourFeePolicyDocuments->lastItem() }} / {{ $ourFeePolicyDocuments->total() }} ({{__('page')}} {{ $ourFeePolicyDocuments->currentPage() }} )
+                        {{__('Showing')}} {{ $termsAndConditions->firstItem() }} - {{ $termsAndConditions->lastItem() }} / {{ $termsAndConditions->total() }} ({{__('page')}} {{ $termsAndConditions->currentPage() }} )
                     </div>
                 </div>
             </div>

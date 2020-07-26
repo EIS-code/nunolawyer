@@ -5,7 +5,8 @@
         if (document.readyState == 'complete') {
             $(".client_id").select2({
                 placeholder: "{{ __('Select Client') }}",
-                allowClear: true
+                allowClear: true,
+                width: '100%'
             });
         }
     });

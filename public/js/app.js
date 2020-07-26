@@ -71130,6 +71130,28 @@ $(document).ready(function () {
       $("#" + name + "-settings").addClass('d-none');
     }
   });
+  $(".toEmails").on('click', function () {
+    var html = $($(this).data('html')).clone().prop("class", "");
+    var form = $($(this).data('html'));
+
+    bootbox.confirm({
+      message: html,
+      buttons: {
+        confirm: {
+          className: 'btn-primary'
+        },
+        cancel: {
+          className: 'btn-danger'
+        }
+      },
+      locale: window.appLocale,
+      callback: function callback(result) {
+        if (result) {
+          form.submit();
+        }
+      }
+    });
+  });
 });
 
 /***/ }),

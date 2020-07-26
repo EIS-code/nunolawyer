@@ -6,6 +6,7 @@ use App\Role;
 use App\Client;
 use App\ClientPurposeArticle;
 use App\Permission;
+use App\ClientFee;
 
 class AuditMessages 
 {
@@ -54,19 +55,21 @@ class AuditMessages
      * @return string $message
      */
     static private function getMessageForCreated($audit){
-        $message = "";
+        $message     = "";
+        $createdUser = Client::find($audit->user_id);
 
         if($audit->auditable_type == "App\Client"){
             $auditale_user = Client::find($audit->auditable_id);
+
             if($auditale_user){
-                $message = __("Created a new user named")." : ".$auditale_user->first_name . ' ' . $auditale_user->last_name;
+                $message = __("Created a new {$auditale_user->getCurentRoleName()} by ({$createdUser->first_name} {$createdUser->last_name}) named")." : ".$auditale_user->first_name . ' ' . $auditale_user->last_name;
             } else {
-                $message = __("Created a new user that no longer exists.");
+                $message = __("Created a new client/editor that no longer exists.");
             }
         } elseif($audit->auditable_type == "App\ClientPurposeArticle") {
             $auditale = ClientPurposeArticle::with('purposeArticle')->find($audit->auditable_id);
             if ($auditale) {
-                $message = __("Created a new purpose article named")." : ".$auditale->purposeArticle->title;
+                $message = __("Created a new purpose article by ({$createdUser->first_name} {$createdUser->last_name}) named")." : ".$auditale->purposeArticle->title;
             } else {
                 $message = __("Created a new purpose article that no longer exists.");
             }
@@ -84,6 +87,14 @@ class AuditMessages
             } else {
                 $message = __("Created a new permission that no longer exists.");
             }
+        } elseif ($audit->auditable_type == "App\ClientFee") {
+            $auditable_fee = ClientFee::find($audit->auditable_id);
+
+            if ($auditable_fee) {
+                $message = __("Created a new fee by ({$createdUser->first_name} {$createdUser->last_name})");
+            } else {
+                $message = __("Created a new fee that no longer exists.");
+            }
         }
 
         return $message;
@@ -96,7 +107,8 @@ class AuditMessages
      * @return string $message
      */
     static private function getMessageForUpdated($audit){
-        $message = "";
+        $message     = "";
+        $createdUser = Client::find($audit->user_id);
 
         if($audit->auditable_type == "App\Client"){
             if(isset($audit->old_values['banned'])){
@@ -117,9 +129,9 @@ class AuditMessages
             } else {
                 $auditale_user = Client::find($audit->auditable_id);
                 if($auditale_user){
-                    $message = __("Changed client information for")." : ".$auditale_user->first_name . ' ' . $auditale_user->last_name;
+                    $message = __("Changed client information by ({$createdUser->first_name} {$createdUser->last_name}) for")." : ".$auditale_user->first_name . ' ' . $auditale_user->last_name;
                 } else {
-                    $message = __("Changed client information for a client that no longer exists.");
+                    $message = __("Changed client information for a client/editor that no longer exists.");
                 }
             }
         } elseif($audit->auditable_type == "App\Role"){

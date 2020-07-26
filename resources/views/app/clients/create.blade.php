@@ -35,12 +35,12 @@
                             @endif
                         </div>
                         <div class="col-md-6">
-                            <label>{{ __('E-Mail') }}<span style="color: red;">*</span></label>
-                            <input id="email" type="email" class="form-control{{ $errors->has('email') ? ' is-invalid' : '' }}" name="email" value="{{ old('email') }}" required>
+                            <label>{{ __('Date of birth') }}</label>
+                            <input id="dob" type="date" class="form-control{{ $errors->has('dob') ? ' is-invalid' : '' }}" name="dob" value="{{ old('dob') }}">
 
-                            @if ($errors->has('email'))
+                            @if ($errors->has('dob'))
                                 <span class="invalid-feedback" role="alert">
-                                    <strong>{{ $errors->first('email') }}</strong>
+                                    <strong>{{ $errors->first('dob') }}</strong>
                                 </span>
                             @endif
                         </div>
@@ -69,6 +69,16 @@
                     </div>
                     <div class="form-group row">
                         <div class="col-md-6">
+                            <label>{{ __('E-Mail') }}<span style="color: red;">*</span></label>
+                            <input id="email" type="email" class="form-control{{ $errors->has('email') ? ' is-invalid' : '' }}" name="email" value="{{ old('email') }}" required>
+
+                            @if ($errors->has('email'))
+                                <span class="invalid-feedback" role="alert">
+                                    <strong>{{ $errors->first('email') }}</strong>
+                                </span>
+                            @endif
+                        </div>
+                        <div class="col-md-6">
                             <label>{{ __('Secondary E-Mail') }}</label>
                             <input id="secondary_email" type="email" class="form-control{{ $errors->has('secondary_email') ? ' is-invalid' : '' }}" name="secondary_email" value="{{ old('secondary_email') }}">
 
@@ -78,21 +88,14 @@
                                 </span>
                             @endif
                         </div>
-                        <div class="col-md-6">
-                            <label>{{ __('Date of birth') }}</label>
-                            <input id="dob" type="date" class="form-control{{ $errors->has('dob') ? ' is-invalid' : '' }}" name="dob" value="{{ old('dob') }}">
-
-                            @if ($errors->has('dob'))
-                                <span class="invalid-feedback" role="alert">
-                                    <strong>{{ $errors->first('dob') }}</strong>
-                                </span>
-                            @endif
-                        </div>
                     </div>
                     <div class="form-group row">
                         <div class="col-md-6">
                             <label>{{ __('Password') }}<span style="color: red;">*</span></label>
-                            <input id="password" type="password" class="form-control{{ $errors->has('password') ? ' is-invalid' : '' }}" name="password" required>
+                            <div class="inner-addon right-addon">
+                                <i class="fa fa-eye togglePassword" id=""></i>
+                                <input id="password" type="password" class="form-control{{ $errors->has('password') ? ' is-invalid' : '' }}" name="password" required>
+                            </div>
 
                             @if ($errors->has('password'))
                                 <span class="invalid-feedback" role="alert">
@@ -101,8 +104,39 @@
                             @endif
                         </div>
                         <div class="col-md-6">
-                            <label>{{ __('Confirm Password') }}<span style="color: red;">*</span></label>
-                            <input id="password-confirm" type="password" class="form-control" name="password_confirmation" required>
+                            <label>{{ __('Password 2') }}<span style="color: red;">*</span></label>
+                            <div class="inner-addon right-addon">
+                                <i class="fa fa-eye togglePassword" id=""></i>
+                                <input id="password-2" type="password" class="form-control" name="password_2" required>
+                            </div>
+
+                            @if ($errors->has('password_2'))
+                                <span class="invalid-feedback" role="alert">
+                                    <strong>{{ $errors->first('password_2') }}</strong>
+                                </span>
+                            @endif
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <div class="col-md-6">
+                            <label>{{ __('Nationality') }}</label>
+                            <input id="nationality" type="text" class="form-control{{ $errors->has('nationality') ? ' is-invalid' : '' }}" name="nationality" value="{{ old('nationality') }}">
+
+                            @if ($errors->has('nationality'))
+                                <span class="invalid-feedback" role="alert">
+                                    <strong>{{ $errors->first('nationality') }}</strong>
+                                </span>
+                            @endif
+                        </div>
+                        <div class="col-md-6">
+                            <label>{{ __('Process Address') }}</label>
+                            <input id="process_address" type="text" class="form-control{{ $errors->has('process_address') ? ' is-invalid' : '' }}" name="process_address" value="{{ old('process_address') }}">
+
+                            @if ($errors->has('process_address'))
+                                <span class="invalid-feedback" role="alert">
+                                    <strong>{{ $errors->first('process_address') }}</strong>
+                                </span>
+                            @endif
                         </div>
                     </div>
                     <div class="form-group row">
@@ -127,28 +161,6 @@
                             @endif
                         </div>
                     </div>
-                    <div class="form-group row">
-                        <div class="col-md-6">
-                            <label>{{ __('Process Address') }}</label>
-                            <input id="process_address" type="text" class="form-control{{ $errors->has('process_address') ? ' is-invalid' : '' }}" name="process_address" value="{{ old('process_address') }}">
-
-                            @if ($errors->has('process_address'))
-                                <span class="invalid-feedback" role="alert">
-                                    <strong>{{ $errors->first('process_address') }}</strong>
-                                </span>
-                            @endif
-                        </div>
-                        <div class="col-md-6">
-                            <label>{{ __('Nationality') }}</label>
-                            <input id="nationality" type="text" class="form-control{{ $errors->has('nationality') ? ' is-invalid' : '' }}" name="nationality" value="{{ old('nationality') }}">
-
-                            @if ($errors->has('nationality'))
-                                <span class="invalid-feedback" role="alert">
-                                    <strong>{{ $errors->first('nationality') }}</strong>
-                                </span>
-                            @endif
-                        </div>
-                    </div>
 
                     <div class="form-group row">
                         <div class="col-md-2">{{ __('Purpose and Article') }}</div>
@@ -167,55 +179,6 @@
                                     <strong>{{ $errors->first('purpose_articles') }}</strong>
                                 </span>
                             @endif
-                        </div>
-                    </div>
-
-                    <div class="form-group row" id="row-pa">
-                        <div class="col-md-2">{{ __('Client Condition / Work To Do') }}</div>
-
-                        <div class="col-md-10">
-                            <div class="row" id="main-pa">
-                                <div class="col-md-12">
-                                    <table class="table table-respopnsive table-bordered">
-                                        <thead>
-                                            <th width="1%">#</th>
-                                            <th width="20%">{{ __('Date') }}</th>
-                                            <th width="79%">{{ __('Client Condition') }}</th>
-                                            <th></th>
-                                        </thead>
-
-                                        <tbody>
-                                            <tr>
-                                                <td >1</td>
-                                                <td>
-                                                    <input type="date" class="form-control{{ $errors->has('condition_dates.0') ? ' is-invalid' : '' }}" name="condition_dates[]" value="{{ old('condition_dates.0') }}">
-
-                                                    @if ($errors->has('condition_dates.0'))
-                                                        <span class="invalid-feedback" role="alert">
-                                                            <strong>{{ $errors->first('condition_dates.0') }}</strong>
-                                                        </span>
-                                                    @endif
-                                                </td>
-                                                <td>
-                                                    <textarea class="form-control{{ $errors->has('conditions.0') ? ' is-invalid' : '' }}" rows="2" cols="5" name="conditions[]">{{ old('conditions.0') }}</textarea>
-
-                                                    @if ($errors->has('conditions.0'))
-                                                        <span class="invalid-feedback" role="alert">
-                                                            <strong>{{ $errors->first('conditions.0') }}</strong>
-                                                        </span>
-                                                    @endif
-                                                </td>
-                                                <td>
-                                                    <i class="fa fa-plus" id="plus-pa" style="cursor: pointer;"></i>
-                                                </td>
-                                            </tr>
-                                        </tbody>
-                                    </table>
-                                </div>
-                            </div>
-
-                            <div id="cloned-pa"></div>
-
                         </div>
                     </div>
 
@@ -324,18 +287,17 @@
                         </div>
                     </div>
 
-                    <div class="form-group row" id="row-pr">
-                        <div class="col-md-2">{{ __('Progress Report To The Client (By Email)') }}</div>
+                    <div class="form-group row" id="row-pa">
+                        <div class="col-md-2">{{ __('Client Condition / Work To Do') }}</div>
 
                         <div class="col-md-10">
-                            <div class="row" id="main-pr">
-                                <div class="table-respopnsive col-md-12">
-                                    <table class="table table-bordered">
+                            <div class="row" id="main-pa">
+                                <div class="col-md-12">
+                                    <table class="table table-respopnsive table-bordered">
                                         <thead>
                                             <th width="1%">#</th>
                                             <th width="20%">{{ __('Date') }}</th>
-                                            <th width="69%">{{ __('Progress Report') }}</th>
-                                            <th width="10%">{{ __('File') }}</th>
+                                            <th width="79%">{{ __('Client Condition') }}</th>
                                             <th></th>
                                         </thead>
 
@@ -343,34 +305,25 @@
                                             <tr>
                                                 <td >1</td>
                                                 <td>
-                                                    <input type="date" class="form-control{{ $errors->has('progress_report_dates.0') ? ' is-invalid' : '' }}" name="progress_report_dates[]" value="{{ old('progress_report_dates.0') }}">
+                                                    <input type="date" class="form-control{{ $errors->has('condition_dates.0') ? ' is-invalid' : '' }}" name="condition_dates[]" value="{{ old('condition_dates.0') }}">
 
-                                                    @if ($errors->has('progress_report_dates.0'))
+                                                    @if ($errors->has('condition_dates.0'))
                                                         <span class="invalid-feedback" role="alert">
-                                                            <strong>{{ $errors->first('progress_report_dates.0') }}</strong>
+                                                            <strong>{{ $errors->first('condition_dates.0') }}</strong>
                                                         </span>
                                                     @endif
                                                 </td>
                                                 <td>
-                                                    <textarea class="form-control{{ $errors->has('progress_reports.0') ? ' is-invalid' : '' }}" rows="2" cols="5" name="progress_reports[]">{{ old('progress_reports.0') }}</textarea>
+                                                    <textarea class="form-control{{ $errors->has('conditions.0') ? ' is-invalid' : '' }}" rows="2" cols="5" name="conditions[]">{{ old('conditions.0') }}</textarea>
 
-                                                    @if ($errors->has('progress_reports.0'))
+                                                    @if ($errors->has('conditions.0'))
                                                         <span class="invalid-feedback" role="alert">
-                                                            <strong>{{ $errors->first('progress_reports.0') }}</strong>
+                                                            <strong>{{ $errors->first('conditions.0') }}</strong>
                                                         </span>
                                                     @endif
                                                 </td>
                                                 <td>
-                                                    <input type="file" class="{{ $errors->has('progress_report_files.0') ? ' is-invalid' : '' }}" name="progress_report_files[]" />
-
-                                                    @if ($errors->has('progress_report_files.0'))
-                                                        <span class="invalid-feedback" role="alert">
-                                                            <strong>{{ $errors->first('progress_report_files.0') }}</strong>
-                                                        </span>
-                                                    @endif
-                                                </td>
-                                                <td>
-                                                    <i class="fa fa-plus" id="plus-pr" style="cursor: pointer;"></i>
+                                                    <i class="fa fa-plus" id="plus-pa" style="cursor: pointer;"></i>
                                                 </td>
                                             </tr>
                                         </tbody>
@@ -378,7 +331,7 @@
                                 </div>
                             </div>
 
-                            <div id="cloned-pr"></div>
+                            <div id="cloned-pa"></div>
 
                         </div>
                     </div>
@@ -467,6 +420,65 @@
                             </div>
 
                             <div id="cloned-cd"></div>
+
+                        </div>
+                    </div>
+
+                    <div class="form-group row" id="row-pr">
+                        <div class="col-md-2">{{ __('Progress Report To The Client (By Email)') }}</div>
+
+                        <div class="col-md-10">
+                            <div class="row" id="main-pr">
+                                <div class="table-respopnsive col-md-12">
+                                    <table class="table table-bordered">
+                                        <thead>
+                                            <th width="1%">#</th>
+                                            <th width="20%">{{ __('Date') }}</th>
+                                            <th width="69%">{{ __('Progress Report') }}</th>
+                                            <th width="10%">{{ __('File') }}</th>
+                                            <th></th>
+                                        </thead>
+
+                                        <tbody>
+                                            <tr>
+                                                <td >1</td>
+                                                <td>
+                                                    <input type="date" class="form-control{{ $errors->has('progress_report_dates.0') ? ' is-invalid' : '' }}" name="progress_report_dates[]" value="{{ old('progress_report_dates.0') }}">
+
+                                                    @if ($errors->has('progress_report_dates.0'))
+                                                        <span class="invalid-feedback" role="alert">
+                                                            <strong>{{ $errors->first('progress_report_dates.0') }}</strong>
+                                                        </span>
+                                                    @endif
+                                                </td>
+                                                <td>
+                                                    <textarea class="form-control{{ $errors->has('progress_reports.0') ? ' is-invalid' : '' }}" rows="2" cols="5" name="progress_reports[]">{{ old('progress_reports.0') }}</textarea>
+
+                                                    @if ($errors->has('progress_reports.0'))
+                                                        <span class="invalid-feedback" role="alert">
+                                                            <strong>{{ $errors->first('progress_reports.0') }}</strong>
+                                                        </span>
+                                                    @endif
+                                                </td>
+                                                <td>
+                                                    <input type="file" class="{{ $errors->has('progress_report_files.0') ? ' is-invalid' : '' }}" name="progress_report_files[]" />
+
+                                                    @if ($errors->has('progress_report_files.0'))
+                                                        <span class="invalid-feedback" role="alert">
+                                                            <strong>{{ $errors->first('progress_report_files.0') }}</strong>
+                                                        </span>
+                                                    @endif
+                                                </td>
+                                                <td>
+                                                    <i class="fa fa-plus" id="plus-pr" style="cursor: pointer;"></i>
+                                                </td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+
+                            <div id="cloned-pr"></div>
 
                         </div>
                     </div>
@@ -563,37 +575,61 @@
                         </div>
                     </div>
 
-                    <div class="div-to-follow {{ (old('work_status') == '1' ? '' : 'd-none') }}">
-                        <div class="form-group row">
-                            <div class="col-md-2">{{ __('Assign Date') }}<span style="color: red;">*</span></div>
-                            <div class="col-md-3">
-                                <input id="assign_date" type="date" class="form-control{{ $errors->has('assign_date') ? ' is-invalid' : '' }}" name="assign_date" value="{{ old('assign_date') }}">
+                    <div class="form-group row div-to-follow {{ (old('work_status') == '1' ? '' : 'd-none') }}" id="row-sas">
+                        <div class="col-md-2">{{ __('Assign') }}<span style="color: red;">*</span></div>
 
-                                @if ($errors->has('assign_date'))
-                                    <span class="invalid-feedback" role="alert">
-                                        <strong>{{ $errors->first('assign_date') }}</strong>
-                                    </span>
-                                @endif
+                        <div class="col-md-10">
+                            <div class="row" id="main-sas">
+                                <div class="col-md-12">
+                                    <table class="table table-respopnsive table-bordered" style="margin-bottom: 0;">
+                                        <thead>
+                                            <tr>
+                                                <th width="1%">#</th>
+                                                <th width="10%">{{ __('Date') }}</th>
+                                                <th width="88%">{{ __('To') }}</th>
+                                                <th></th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr>
+                                                <td>
+                                                    1
+                                                </td>
+                                                <td>
+                                                    <input id="assign_dates" type="date" class="form-control{{ $errors->has('assign_dates.0') ? ' is-invalid' : '' }}" name="assign_dates[]" value="{{ old('assign_dates.0') }}">
+
+                                                    @if ($errors->has('assign_dates.0'))
+                                                        <span class="invalid-feedback" role="alert">
+                                                            <strong>{{ $errors->first('assign_dates.0') }}</strong>
+                                                        </span>
+                                                    @endif
+                                                </td>
+                                                <td>
+                                                    <select id="assign_to" class="form-control {{ $errors->has('assign_to.0') ? ' is-invalid' : '' }} " name="assign_to[]" >
+                                                        <option value="">{{ __('Select') }}</option>
+
+                                                        @foreach ($assignTo as $index => $assign)
+                                                            <option value="{{ $assign->id }}" {{ (old('assign_to.0') == $assign->id ? 'selected' : '') }}>{{ $assign->first_name . ' ' . $assign->last_name }}</option>
+                                                        @endforeach
+                                                    </select>
+
+                                                    @if ($errors->has('assign_to.0'))
+                                                        <span class="invalid-feedback" role="alert">
+                                                            <strong>{{ $errors->first('assign_to.0') }}</strong>
+                                                        </span>
+                                                    @endif
+                                                </td>
+                                                <td>
+                                                    <i class="fa fa-plus" id="plus-sas" style="cursor: pointer;"></i>
+                                                </td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
                             </div>
-                        </div>
 
-                        <div class="form-group row">
-                            <div class="col-md-2">{{ __('Assign To') }}<span style="color: red;">*</span></div>
-                            <div class="col-md-3">
-                                <select id="assign_to" multiple="true" class="form-control {{ $errors->has('assign_to.0') ? ' is-invalid' : '' }} assign_to" name="assign_to[]" >
-                                    <!--option value="">{{ __('Select') }}</option-->
+                            <div id="cloned-sas"></div>
 
-                                    @foreach ($assignTo as $index => $assign)
-                                        <option value="{{ $assign->id }}" {{ (old('assign_to.' . $index) == $assign->id ? 'selected' : '') }}>{{ $assign->first_name . ' ' . $assign->last_name }}</option>
-                                    @endforeach
-                                </select>
-
-                                @if ($errors->has('assign_to.0'))
-                                    <span class="invalid-feedback" role="alert">
-                                        <strong>{{ $errors->first('assign_to.0') }}</strong>
-                                    </span>
-                                @endif
-                            </div>
                         </div>
                     </div>
 

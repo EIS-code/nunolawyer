@@ -66,10 +66,10 @@
                                         </td>
                                         <td>
                                             @if(isset($audit->user))
-                                                @if(auth()->user()->can('users_show'))
-                                                    <a href="{{route('users.activity', $audit->user->id)}}" data-toggle="tooltip" data-placement="top" title="{{__('Go to user\'s activity log')}}">{{$audit->user->first_name . ' ' . $audit->user->last_name}}</a>
+                                                @if(auth()->user()->can('clients_show'))
+                                                    <a href="{{route('clients.activity', $audit->user->id)}}" data-toggle="tooltip" data-placement="top" title="{{__('Go to client\'s activity log')}}">{{$audit->user->first_name . ' ' . $audit->user->last_name}}</a>
                                                 @else
-                                                    {{$audit->user->first_name . ' ' . $audit->user->last_name}}
+                                                    {{ $audit->user->first_name . ' ' . $audit->user->last_name }}
                                                 @endif
                                             @endif
                                         </td>

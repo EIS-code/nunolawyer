@@ -52,6 +52,22 @@
                                     </div>
                                 </div>
                                 <br />
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <label>{{__('Name')}}</label>
+                                        <input type="text" name="s" class="form-control searchInput" placeholder="{{__('Search  by name, mobile or email')}}" @if(!empty($term->get('s'))) value="{{$term->get('s')}}" @endif>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <label>{{__('Role')}}</label>
+                                        <select name="role" class="form-control">
+                                            <option value="">{{ __('Select') }}</option>
+                                            @foreach ($roles as $role)
+                                                <option value="{{ $role->name }}" {{ ($term->get('role') == $role->name ? 'selected' : '') }}>{{ $role->name }}</option>
+                                            @endforeach
+                                        </select>
+                                    </div>
+                                </div>
+                                <br />
 
                                 <div class="input-group-append">
                                      @if($isFiltered == true)

@@ -12,6 +12,7 @@ use App\PoaAgreement;
 use App\PurposeArticle;
 use App\ClientPurposeArticle;
 use App\OurFeePolicyDocument;
+use App\TermsAndCondition;
 
 class DashboardController extends Controller
 {
@@ -103,9 +104,16 @@ class DashboardController extends Controller
             $totalOurFeePolicyDocument = $ourFeePolicyDocument->count();
         }
 
+        $termsAndCondition       = TermsAndCondition::query();
+        $totalTermsAndCondition  = 0;
+        $termsAndCondition       = $termsAndCondition->where('is_removed', BaseModel::$notRemoved)->get();
+        if (!empty($termsAndCondition) && !$termsAndCondition->isEmpty()) {
+            $totalTermsAndCondition = $termsAndCondition->count();
+        }
+
         return view('dashboard', [
             'totalClients' => $totalClients, 'totalEditors' => $totalEditors, 'totalTranslateModelDocuments' => $totalTranslateModelDocuments,
-            'totalPoaAgreement' => $totalPoaAgreement, 'totalPurposeArticle' => $totalPurposeArticle, 'totalOurFeePolicyDocument' => $totalOurFeePolicyDocument
+            'totalPoaAgreement' => $totalPoaAgreement, 'totalPurposeArticle' => $totalPurposeArticle, 'totalOurFeePolicyDocument' => $totalOurFeePolicyDocument, 'totalTermsAndCondition' => $totalTermsAndCondition
         ]);
     }
 }

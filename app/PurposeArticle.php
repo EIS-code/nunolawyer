@@ -17,6 +17,7 @@ class PurposeArticle extends BaseModel implements Auditable
      */
     protected $fillable = [
         'title',
+        'text',
         'is_removed',
     ];
 

@@ -37,7 +37,37 @@
                 @endcan
             @endif
 
+            @can('clients_print')
+                <a href="{{ route(($isEditors ? 'editors.print' : 'clients.print'), $client->id) }}" target="__blank" class="btn btn-success btn-round"><i class="metismenu-icon pe-7s-print"></i></a>
+            @elsecan('editors_print')
+                <a href="{{ route(($isEditors ? 'editors.print' : 'clients.print'), $client->id) }}" target="__blank" class="btn btn-success btn-round"><i class="metismenu-icon pe-7s-print"></i></a>
+            @endcan
+
+            <form action="{{ route(($isEditors ? 'editors.email' : 'clients.email'), $client->id) }}" method="POST" class="d-none" id="html">
+                @csrf
+                <div>
+                    <br />
+                    <div class="form-group row">
+                        <div class="col-md-12">
+                            <label>{{ __('To') }}<span style="color: red;">* </span></label>
+                            <input type="text" name="emails" class="form-control" />
+                            <span style="color: red;">(Use comma separator for multiple like : test@gmail.com, test2@gmail.com)</span>
+                        </div>
+                    </div>
+                </div>
+            </form>
+            @can('clients_email')
+                <button type="button" class="btn btn-warning btn-round toEmails" data-html="#html">
+                    <i class="fa fa-envelope"></i>
+                </button>
+            @elsecan('editors_email')
+                <button type="button" class="btn btn-warning btn-round toEmails" data-html="#html">
+                    <i class="fa fa-envelope"></i>
+                </button>
+            @endcan
+
             <a href="{{ route(($isEditors ? 'editors.index' : 'clients.index')) }}" class="btn btn-secondary btn-round"><i class="metismenu-icon pe-7s-back"></i> <span class="d-md-inline d-none">{{__('Back To List')}}</span></a>
+
         </div>
     </div>
 </ul>

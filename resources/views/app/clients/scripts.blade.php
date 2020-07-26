@@ -281,33 +281,101 @@
                 }
             }
 
-            // Select2
-            $(".purpose_articles").select2({
-                placeholder: "{{ __('Select purpose / articles') }}",
-                allowClear: true
-            }).on("select2:select", function (e) {
-                $("#last_purpose_articles").val(e.params.data.id);
+            // Assign
+            $(document).on("click", "#plus-sas", function() {
+                let clone     = $("#main-sas").clone()
+                                             .prop("id", "")
+                                             .find("#plus-sas").prop("id", "minus-sas").end()
+                                             .find("#minus-sas").toggleClass("fa-plus").addClass("fa-trash").end()
+                                             .find("input").val("").end()
+                                             .find("textarea").val("").end(),
+                    clonnedSas = $("#cloned-sas");
 
-                let $element = $(e.params.data.element);
+                if (clonnedSas) {
+                    clonnedSas.before(clone);
 
-                if ($element) {
-                    $element.detach();
-                    $(this).append($element);
-                    $(this).trigger("change");
+                    numberingSas();
                 }
-            }).on("select2:unselect", function (e) {
-                $("#last_purpose_articles").val(e.params.data.id);
             });
+            $(document).on("click", "#minus-sas", function() {
+                let self = $(this),
+                    div  = self.closest("div").get(0);
+
+                if (div) {
+                    div.remove();
+
+                    numberingSas();
+                }
+            });
+            function numberingSas() {
+                select2PurposeArticles();
+
+                let div    = $("#row-sas"),
+                    tables = div.find("table");
+
+                if (tables.length > 0) {
+                    var inc = 1;
+                    tables.each(function() {
+                        let self = $(this),
+                            td   = self.find("td:first-child");
+
+                        if (td) {
+                            td.html(inc);
+                            inc++;
+                        }
+                    });
+                }
+            }
+
+            // Select2
+            function select2PurposeArticles()
+            {
+                $(".purpose_articles").select2({
+                    placeholder: "{{ __('Select purpose / articles') }}",
+                    allowClear: true,
+                    width: '100%'
+                }).on("select2:select", function (e) {
+                    $("#last_purpose_articles").val(e.params.data.id);
+
+                    let $element = $(e.params.data.element);
+
+                    if ($element) {
+                        $element.detach();
+                        $(this).append($element);
+                        $(this).trigger("change");
+                    }
+                }).on("select2:unselect", function (e) {
+                    $("#last_purpose_articles").val(e.params.data.id);
+                });
+            }
+            select2PurposeArticles();
 
             $(".work_status").select2({
                 placeholder: "{{ __('Select work status') }}",
-                allowClear: true
+                allowClear: true,
+                width: '100%'
             });
 
             $(".assign_to").select2({
                 placeholder: "{{ __('Select') }}",
-                allowClear: true
+                allowClear: true,
+                width: '100%'
             });
+
+            let togglePassword = $(".togglePassword");
+            if (togglePassword) {
+                togglePassword.on('click', function (e) {
+                    let passwordInput = $(this).next();
+
+                    if (passwordInput) {
+                        if (passwordInput.attr('type') == 'password') {
+                            passwordInput.attr('type', 'text');
+                        } else {
+                            passwordInput.attr('type', 'password');
+                        }
+                    }
+                });
+            }
         }
     });
 </script>

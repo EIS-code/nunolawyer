@@ -40,7 +40,8 @@ class OurFeePolicyDocumentController extends Controller
                 $s = $request->get('s');
 
                 $ourFeePolicyDocuments->where(function($query) use($s) {
-                    $query->where('title','LIKE',"%$s%");
+                    $query->where('title','LIKE',"%$s%")
+                          ->orWhere('text','LIKE',"%$s%");
                 });
             }
         }
@@ -61,12 +62,14 @@ class OurFeePolicyDocumentController extends Controller
 
         $validator = Validator::make($data, [
             'title' => ['required', 'string', 'max:255'],
+            'text'  => ['nullable', 'string', 'max:255']
         ]);
 
         $validator->validate();
 
         $ourFeePolicyDocument = OurFeePolicyDocument::create([
-            'title' => $data['title']
+            'title' => $data['title'],
+            'text'  => $data['text']
         ]);
 
         if ($ourFeePolicyDocument) {
@@ -96,6 +99,7 @@ class OurFeePolicyDocumentController extends Controller
 
             $validator = Validator::make($data, [
                 'title' => ['required', 'string', 'max:255'],
+                'text'  => ['nullable', 'string', 'max:255']
             ]);
 
             $validator->validate();

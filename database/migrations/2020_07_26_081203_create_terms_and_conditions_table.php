@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreatePurposeArticlesTable extends Migration
+class CreateTermsAndConditionsTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,7 +13,7 @@ class CreatePurposeArticlesTable extends Migration
      */
     public function up()
     {
-        Schema::create('purpose_articles', function (Blueprint $table) {
+        Schema::create('terms_and_conditions', function (Blueprint $table) {
             $table->id();
             $table->string('title');
             $table->string('text')->nullable();
@@ -29,6 +29,6 @@ class CreatePurposeArticlesTable extends Migration
      */
     public function down()
     {
-        Schema::drop('purpose_articles');
+        Schema::drop('terms_and_conditions');
     }
 }

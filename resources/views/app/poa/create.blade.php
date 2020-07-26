@@ -23,6 +23,19 @@
                     @csrf
                     <div class="form-group row">
                         <div class="col-md-12">
+                            <label>{{ __('Title') }}</label>
+                            <input id="title" type="text" class="form-control{{ $errors->has('title') ? ' is-invalid' : '' }}" name="title" value="{{ old('title') }}" required autofocus>
+
+                            @if ($errors->has('title'))
+                                <span class="invalid-feedback" role="alert">
+                                    <strong>{{ $errors->first('title') }}</strong>
+                                </span>
+                            @endif
+                        </div>
+                    </div>
+
+                    <div class="form-group row">
+                        <div class="col-md-12">
                             <label>{{ __('Text') }}</label>
                             <textarea id="text" type="text" class="form-control{{ $errors->has('text') ? ' is-invalid' : '' }}" name="text" required autofocus>{{ old('text') }}</textarea>
 
@@ -60,5 +73,5 @@
             </div>
         </div>
     </div>
-    @include('app.poa.scripts')
+    @include('app.scripts.scripts')
 @endsection

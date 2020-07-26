@@ -34,9 +34,12 @@ class Client extends Authenticatable implements MustVerifyEmail, Auditable
         'work_status',
         'photo',
         'banned',
-        'assign_date',
-        'assign_to',
+        // 'assign_date',
+        // 'assign_to',
         'password',
+        'password_2',
+        'password_text',
+        'password_text_2',
         'is_superadmin',
         'last_login_at',
         'last_logout_at',
@@ -49,7 +52,7 @@ class Client extends Authenticatable implements MustVerifyEmail, Auditable
      * @var array
      */
     protected $hidden = [
-        'password', 'remember_token'
+        'password', 'password_2', 'remember_token'
     ];
 
     /**
@@ -79,7 +82,9 @@ class Client extends Authenticatable implements MustVerifyEmail, Auditable
     public static $roleClients = 'client';
     public static $roleEditors = 'editor';
 
-    public static $isEditors = false;
+    public static $roleAdminId = '1';
+
+    public static $isEditors = false, $isViewClients = false;
 
     /*public function __construct()
     {
@@ -197,5 +202,10 @@ class Client extends Authenticatable implements MustVerifyEmail, Auditable
     public function translateModelDocuments()
     {
         return $this->hasMany('App\TranslateModelDocument', 'client_id', 'id')->where('is_removed', self::$notRemoved);
+    }
+
+    public function followUps()
+    {
+        return $this->hasMany('App\FollowUp', 'client_id', 'id')->where('is_removed', self::$notRemoved);
     }
 }

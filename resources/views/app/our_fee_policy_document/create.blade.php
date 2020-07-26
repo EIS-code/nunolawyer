@@ -22,13 +22,26 @@
                 <form method="POST" action="{{ route('our_fee_policy_document.store') }}">
                     @csrf
                     <div class="form-group row">
-                        <div class="col-md-6">
+                        <div class="col-md-12">
                             <label>{{ __('Title') }}</label>
                             <input id="title" type="text" class="form-control{{ $errors->has('title') ? ' is-invalid' : '' }}" name="title" value="{{ old('title') }}" required autofocus>
 
                             @if ($errors->has('title'))
                                 <span class="invalid-feedback" role="alert">
                                     <strong>{{ $errors->first('title') }}</strong>
+                                </span>
+                            @endif
+                        </div>
+                    </div>
+
+                    <div class="form-group row">
+                        <div class="col-md-12">
+                            <label>{{ __('Text') }}</label>
+                            <textarea id="text" type="text" class="form-control{{ $errors->has('text') ? ' is-invalid' : '' }}" name="text" required autofocus>{{ old('text') }}</textarea>
+
+                            @if ($errors->has('text'))
+                                <span class="invalid-feedback" role="alert">
+                                    <strong>{{ $errors->first('text') }}</strong>
                                 </span>
                             @endif
                         </div>
@@ -48,4 +61,5 @@
             </div>
         </div>
     </div>
+    @include('app.scripts.scripts')
 @endsection

@@ -69,7 +69,8 @@
                             <tr>
                                 <th width="1%"></th>
                                 <th width="1%"></th>
-                                <th width="68%">{{ __('Text') }}</th>
+                                <th width="20%">{{ __('Title') }}</th>
+                                <th width="48%">{{ __('Text') }}</th>
                                 @can('poa_view')
                                     <th width="15%">{{ __('View File') }}</th>
                                 @endcan
@@ -102,6 +103,7 @@
                                                 </form>
                                             @endcan
                                         </td>
+                                        <td>{{ $poaAgreement->title }}</td>
                                         <td>{!! $poaAgreement->text !!}</td>
                                         @can('poa_view')
                                             @if (!empty($poaAgreement->file))

@@ -14,15 +14,15 @@
     <body onbeforeprint="beforePrints()" onafterprint="afterPrints()">
         <div class="container">
             <div class="print-only" style="margin-top: 20px;width: 100%;font-size: 22px;">
-                <h1 class="header" style="text-transform: uppercase;">{{ $client->first_name .' '. $client->last_name }}</h1>
+                <h1 class="header" style="text-transform: uppercase;color: blue;">{{ $client->first_name .' '. $client->last_name }}</h1>
                 <table class="user-table table table-bordered">
                     <tbody>
                         <tr>
-                            <td class="table-main">{{ __('Registered Date') }}</td>
-                            <td class="table-contain">
+                            <th class="table-main">{{ __('Registered Date') }}</th>
+                            <th class="table-contain">
                                 {{ date('Y-m-d', strtotime($client->registration_date)) }}
-                            </td>
-                            <td class="table-main">{{ __('Terms and Condition') }}</td>
+                            </th>
+                            <th class="table-main">{{ __('Terms and Condition') }}</th>
                         </tr>
                         <tr>
                             <td class="table-main">{{ __('Name') }}</td>
@@ -46,7 +46,11 @@
                         </tr>
                         <tr>
                             <td class="table-main">{{ __('Email') }}</td>
-                            <td class="table-contain">{{ $client->email }}</td>
+                            <td class="table-contain">
+                                {{ $client->email }} <br /><hr />
+                                {{ __('Password') }}   &nbsp;&nbsp;&nbsp;: <i>{{ $client->password_text }}</i> <br />
+                                {{ __('Password 2') }} : <i>{{ $client->password_text_2 }}</i>
+                            </td>
                         </tr>
                         <tr>
                             <td class="table-main">{{ __('Contact') }}</td>
@@ -57,15 +61,23 @@
                             <td class="table-contain">{{ $client->process_address }}</td>
                         </tr>
                         <tr>
-                            <td class="table-main">{{ __('Purpose/Art.') }}</td>
                             @php
                                 $titles = [];
                                 $client->clientPurposeArticles->map(function($data) use(&$titles) {
                                     $titles[] = $data->purposeArticle->title;
                                 });
                             @endphp
+                            <td class="table-main" rowspan="{{ count($titles) }}">{{ __('Purpose/Art.') }}</td>
                             <td class="table-contain">
-                                {{ implode(' / ', $titles) }}
+                                @if (!empty($titles))
+                                    <table class="table table-bordered">
+                                        @foreach ($titles as $title)
+                                            <tr>
+                                                <td>{{ $title }}</td>
+                                            </tr>
+                                        @endforeach
+                                    </table>
+                                @endif
                             </td>
                         </tr>
                     </tbody>
@@ -145,24 +157,6 @@
                 <table class="table table-bordered">
                     <thead>
                         <tr class="fee-header">
-                            <th style="width:10%">{{ __('Date') }}</th>
-                            <th>{{ __('Progress Report To The Client') }}</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        @foreach ($client->clientEmailProgressReports as $index => $clientEmailProgressReport)
-                            <tr>
-                                <td>{{ date('Y-m-d', strtotime($clientEmailProgressReport->date)) }}</td>
-                                <td>
-                                    <p>{{ $clientEmailProgressReport->progress_report }}</p>
-                                </td>
-                            </tr>
-                        @endforeach
-                    </tbody>
-                </table>
-                <table class="table table-bordered">
-                    <thead>
-                        <tr class="fee-header">
                             <th style="width:10%">{{ __('SN') }}</th>
                             <th>{{ __('Client Documents') }}</th>
                         </tr>
@@ -180,6 +174,24 @@
                                     @else
                                         <mark>{{ __('No file!') }}</mark>
                                     @endif
+                                </td>
+                            </tr>
+                        @endforeach
+                    </tbody>
+                </table>
+                <table class="table table-bordered">
+                    <thead>
+                        <tr class="fee-header">
+                            <th style="width:10%">{{ __('Date') }}</th>
+                            <th>{{ __('Progress Report To The Client') }}</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach ($client->clientEmailProgressReports as $index => $clientEmailProgressReport)
+                            <tr>
+                                <td>{{ date('Y-m-d', strtotime($clientEmailProgressReport->date)) }}</td>
+                                <td>
+                                    <p>{{ $clientEmailProgressReport->progress_report }}</p>
                                 </td>
                             </tr>
                         @endforeach
@@ -213,7 +225,7 @@
                 <br>
                 -----------------<br>
                 {{ __('Client Signature') }}<br>
-                <h1 class="nuno-header" style="padding-top:0px;">
+                <h1 class="nuno-header" style="padding-top:0px;color: blue;">
                     {{ __('Dr. Nuno Ramos Correia') }}<br>
                 </h1>
                 <p class="nuno-details">

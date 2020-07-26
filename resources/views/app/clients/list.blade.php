@@ -120,10 +120,12 @@
                                         <i class="fa fa-file"></i>
                                         {{ __('Export') }}
                                     </button-->
-                                    <button type="submit" name="export" value="{{ __('Export') }}" class="btn btn-success">
-                                        <i class="fa fa-file"></i>
-                                        {{ __('Export') }}
-                                    </button>
+                                    @if(!empty($clients) && $clients->total() > 0)
+                                        <button type="submit" name="export" value="{{ __('Export') }}" class="btn btn-success">
+                                            <i class="fa fa-file"></i>
+                                            {{ __('Export') }}
+                                        </button>
+                                    @endif
                                 </div>
                             </div>
                         </form>
@@ -132,7 +134,9 @@
                         <div class="page-title pull-right">
                             <div class="heading">
                                 @can('clients_create')
-                                    <a href="{{route('clients.create')}}" class="btn btn-primary btn-round"><i class="metismenu-icon pe-7s-user"></i> {{__('Add New Client')}}</a>
+                                    @if (!$clientModel::$isViewClients)
+                                        <a href="{{route('clients.create')}}" class="btn btn-primary btn-round"><i class="metismenu-icon pe-7s-user"></i> {{__('Add New Client')}}</a>
+                                    @endif
                                 @endcan
                             </div>
                         </div>
@@ -167,7 +171,7 @@
                             </tr>
                         </thead>
                         <tbody>
-                            @if($clients->total() == 0)
+                            @if(empty($clients) || $clients->total() == 0)
                                 <tr>
                                     <td colspan="15" class="text-center"><mark>{{__('No results found.')}}</mark></td>
                                 </tr>
@@ -176,7 +180,7 @@
                                     <tr>
                                         <td width="1">
                                             @can('clients_show')
-                                                <a href="{{route('clients.show', $client->id)}}" data-toggle="tooltip" data-placement="top" title="{{__('View Client')}}">
+                                                <a href="{{route('clients.show', $client->id)}}" {{ ($clientModel::$isViewClients ? 'target="__blank"' : '') }} data-toggle="tooltip" data-placement="top" title="{{__('View Client')}}">
                                                     <i class="fa fa-eye"></i>
                                                 </a>
                                             @endcan
@@ -184,7 +188,7 @@
                                         <td width="1">
                                             @if(!$client->isSuperAdmin())
                                                 @can('clients_edit')
-                                                    <a href="{{route('clients.edit', $client->id)}}" data-toggle="tooltip" data-placement="top" title="{{__('Edit Client')}}">
+                                                    <a href="{{route('clients.edit', $client->id)}}" {{ ($clientModel::$isViewClients ? 'target="__blank"' : '') }} data-toggle="tooltip" data-placement="top" title="{{__('Edit Client')}}">
                                                         <i class="fa fa-edit"></i>
                                                     </a>
                                                 @endcan
@@ -193,7 +197,7 @@
                                         <td width="1">
                                             @if(!$client->isSuperAdmin())
                                                 @can('clients_delete')
-                                                    <form action="{{ route('clients.destroy', $client->id) }}" method="POST">
+                                                    <form action="{{ route('clients.destroy', $client->id) }}" {{ ($clientModel::$isViewClients ? 'target="__blank"' : '') }} method="POST">
                                                         @method('DELETE')
                                                         @csrf
                                                         <a href="#" class="deleteBtn" data-confirm-message="{{__("Are you sure you want to delete this client?")}}" data-toggle="tooltip" data-placement="top" title="{{__('Delete Client')}}"><i class="fa fa-trash"></i></a>
@@ -232,15 +236,17 @@
                     </table>
 
                     <div class="float-left">
-                        @if(!empty($term))
+                        @if(!empty($term) && !empty($clients))
                             {{ $clients->appends($term->all())->links() }}
-                        @else
+                        @elseif (!empty($clients))
                             {{ $clients->links() }}
                         @endif
                     </div>
 
                     <div class="float-right text-muted">
-                        {{__('Showing')}} {{ $clients->firstItem() }} - {{ $clients->lastItem() }} / {{ $clients->total() }} ({{__('page')}} {{ $clients->currentPage() }} )
+                        @if (!empty($clients))
+                            {{__('Showing')}} {{ $clients->firstItem() }} - {{ $clients->lastItem() }} / {{ $clients->total() }} ({{__('page')}} {{ $clients->currentPage() }} )
+                        @endif
                     </div>
                 </div>
             </div>
