@@ -566,7 +566,7 @@
                                     <input type="radio" id="status-{{ strtolower(str_ireplace(' ', '-', $text)) }}" name="work_status" value="{{ $value }}" @if (old('work_status') == $value) checked="true"' @endif />&nbsp;{{ $text }}
                                 </label>&nbsp;
                             @endforeach
-
+ 
                             @if ($errors->has('work_status'))
                                 <span class="invalid-feedback" role="alert">
                                     <strong>{{ $errors->first('work_status') }}</strong>
