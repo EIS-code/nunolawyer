@@ -698,74 +698,75 @@
 
                         <div class="form-group row">
 
-                        @php
-                            $followUps = $client->followUps->toArray();
+                            @php
+                                $followUps = $client->followUps->toArray();
 
-                            if (empty($followUps)) {
-                                $followUps[] = [
-                                    'id'        => '',
-                                    'date'      => '',
-                                    'follow_by' => ''
-                                ];
-                            }
-                        @endphp
+                                if (empty($followUps)) {
+                                    $followUps[] = [
+                                        'id'        => '',
+                                        'date'      => '',
+                                        'follow_by' => ''
+                                    ];
+                                }
+                            @endphp
 
-                        <div class="col-md-2">{{ __('Assign') }}<span style="color: red;">*</span></div>
+                            <div class="col-md-2">{{ __('Assign') }}<span style="color: red;">*</span></div>
 
-                        <div class="col-md-10">
-                            @foreach ($followUps as $index => $followUp)
-                                <div class="row" id="{{ ($index == 0 ? 'main-sas' : '') }}">
-                                    <div class="col-md-12">
-                                        <table class="table table-respopnsive table-bordered" style="margin-bottom: 0;">
-                                            <thead>
-                                                <tr>
-                                                    <th width="1%">#</th>
-                                                    <th width="10%">{{ __('Date') }}</th>
-                                                    <th width="88%">{{ __('To') }}</th>
-                                                    <th></th>
-                                                </tr>
-                                            </thead>
-                                            <tbody>
-                                                <tr>
-                                                    <td>
-                                                        {{ $index + 1 }}
-                                                    </td>
-                                                    <td>
-                                                        <input id="assign_dates" type="date" class="form-control{{ $errors->has('assign_dates.' . $index) ? ' is-invalid' : '' }}" name="assign_dates[]" value="{{ old('assign_dates.' . $index, $followUp['date']) }}">
+                            <div class="col-md-10">
+                                @foreach ($followUps as $index => $followUp)
+                                    <div class="row" id="{{ ($index == 0 ? 'main-sas' : '') }}">
+                                        <div class="col-md-12">
+                                            <table class="table table-respopnsive table-bordered" style="margin-bottom: 0;">
+                                                <thead>
+                                                    <tr>
+                                                        <th width="1%">#</th>
+                                                        <th width="10%">{{ __('Date') }}</th>
+                                                        <th width="88%">{{ __('To') }}</th>
+                                                        <th></th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    <tr>
+                                                        <td>
+                                                            {{ $index + 1 }}
+                                                        </td>
+                                                        <td>
+                                                            <input id="assign_dates" type="date" class="form-control{{ $errors->has('assign_dates.' . $index) ? ' is-invalid' : '' }}" name="assign_dates[]" value="{{ old('assign_dates.' . $index, $followUp['date']) }}">
 
-                                                        @if ($errors->has('assign_dates.' . $index))
-                                                            <span class="invalid-feedback" role="alert">
-                                                                <strong>{{ $errors->first('assign_dates.' . $index) }}</strong>
-                                                            </span>
-                                                        @endif
-                                                    </td>
-                                                    <td>
-                                                        <select id="assign_to" class="form-control {{ $errors->has('assign_to.' . $index) ? ' is-invalid' : '' }} " name="assign_to[]" >
-                                                            <option value="">{{ __('Select') }}</option>
+                                                            @if ($errors->has('assign_dates.' . $index))
+                                                                <span class="invalid-feedback" role="alert">
+                                                                    <strong>{{ $errors->first('assign_dates.' . $index) }}</strong>
+                                                                </span>
+                                                            @endif
+                                                        </td>
+                                                        <td>
+                                                            <select id="assign_to" class="form-control {{ $errors->has('assign_to.' . $index) ? ' is-invalid' : '' }} " name="assign_to[]" >
+                                                                <option value="">{{ __('Select') }}</option>
 
-                                                            @foreach ($assignTo as $index => $assign)
-                                                                <option value="{{ $assign->id }}" {{ (old('assign_to.' . $index, $followUp['follow_by']) == $assign->id ? 'selected' : '') }}>{{ $assign->first_name . ' ' . $assign->last_name }}</option>
-                                                            @endforeach
-                                                        </select>
+                                                                @foreach ($assignTo as $index => $assign)
+                                                                    <option value="{{ $assign->id }}" {{ (old('assign_to.' . $index, $followUp['follow_by']) == $assign->id ? 'selected' : '') }}>{{ $assign->first_name . ' ' . $assign->last_name }}</option>
+                                                                @endforeach
+                                                            </select>
 
-                                                        @if ($errors->has('assign_to.' . $index))
-                                                            <span class="invalid-feedback" role="alert">
-                                                                <strong>{{ $errors->first('assign_to.' . $index) }}</strong>
-                                                            </span>
-                                                        @endif
-                                                    </td>
-                                                    <td>
-                                                        <i class="fa fa-plus" id="{{ ($index == 0 ? 'plus-sas' : 'minus-sas') }}" style="cursor: pointer;"></i>
-                                                    </td>
-                                                </tr>
-                                            </tbody>
-                                        </table>
+                                                            @if ($errors->has('assign_to.' . $index))
+                                                                <span class="invalid-feedback" role="alert">
+                                                                    <strong>{{ $errors->first('assign_to.' . $index) }}</strong>
+                                                                </span>
+                                                            @endif
+                                                        </td>
+                                                        <td>
+                                                            <i class="fa fa-plus" id="{{ ($index == 0 ? 'plus-sas' : 'minus-sas') }}" style="cursor: pointer;"></i>
+                                                        </td>
+                                                    </tr>
+                                                </tbody>
+                                            </table>
+                                        </div>
                                     </div>
-                                </div>
-                            @endforeach
+                                @endforeach
 
-                            <div id="cloned-sas"></div>
+                                <div id="cloned-sas"></div>
 
+                            </div>
                         </div>
                     </div>
 
