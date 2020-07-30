@@ -98,7 +98,7 @@
                                             @endcan
                                         </td>
                                         <td>{{ $termsAndCondition->title }}</td>
-                                        <td>{!! $termsAndCondition->text !!}</td>
+                                        <td>{!! str_limit($termsAndCondition->text, 100, '...') !!}</td>
                                     </tr>
                                 @endforeach
                             @endif

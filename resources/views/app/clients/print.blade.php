@@ -10,6 +10,12 @@
 
         <!-- Bootstrap CSS -->
         <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css">
+
+        <style type="text/css">
+            * {
+                font-size: 20px;
+            }
+        </style>
     </head>
     <body onbeforeprint="beforePrints()" onafterprint="afterPrints()">
         <div class="container">
@@ -54,7 +60,7 @@
                         </tr>
                         <tr>
                             <td class="table-main">{{ __('Contact') }}</td>
-                            <td class="table-contain">{{ $client->contact }}</td>
+                            <td class="table-contain">{{ $client->contact . (!empty($client->secondary_contact) ? ', ' . $client->secondary_contact : '') }}</td>
                         </tr>
                         <tr>
                             <td class="table-main">{{ __('Process Address') }}</td>
@@ -64,7 +70,9 @@
                             @php
                                 $titles = [];
                                 $client->clientPurposeArticles->map(function($data) use(&$titles) {
-                                    $titles[] = $data->purposeArticle->title;
+                                    if (!empty($data->purposeArticle)) {
+                                        $titles[] = $data->purposeArticle->title;
+                                    }
                                 });
                             @endphp
                             <td class="table-main" rowspan="{{ count($titles) }}">{{ __('Purpose/Art.') }}</td>

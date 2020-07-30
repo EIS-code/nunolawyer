@@ -63,8 +63,8 @@ class ArticlePurposeController extends Controller
         $data = $request->all();
 
         $validator = Validator::make($data, [
-            'title' => ['required', 'string', 'max:255'],
-            'text'  => ['nullable', 'string', 'max:255']
+            'title' => ['required', 'string'],
+            'text'  => ['nullable', 'string']
         ]);
 
         $validator->validate();
@@ -100,8 +100,8 @@ class ArticlePurposeController extends Controller
             $data = $request->all();
 
             $validator = Validator::make($data, [
-                'title' => ['required', 'string', 'max:255'],
-                'text'  => ['nullable', 'string', 'max:255']
+                'title' => ['required', 'string'],
+                'text'  => ['nullable', 'string']
             ]);
 
             $validator->validate();

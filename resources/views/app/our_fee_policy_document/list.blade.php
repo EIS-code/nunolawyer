@@ -98,7 +98,7 @@
                                             @endcan
                                         </td>
                                         <td>{{ $ourFeePolicyDocument->title }}</td>
-                                        <td>{!! $ourFeePolicyDocument->text !!}</td>
+                                        <td>{!! str_limit($ourFeePolicyDocument->text, 100, '...') !!}</td>
                                     </tr>
                                 @endforeach
                             @endif

@@ -71,9 +71,9 @@
                                 @endforeach
                             </select>
 
-                            @if ($errors->has('file'))
+                            @if ($errors->has('client_id'))
                                 <span class="invalid-feedback" role="alert">
-                                    <strong>{{ $errors->first('file') }}</strong>
+                                    <strong>{{ $errors->first('client_id') }}</strong>
                                 </span>
                             @endif
                         </div>

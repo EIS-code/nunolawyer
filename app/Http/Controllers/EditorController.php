@@ -108,7 +108,8 @@ class EditorController extends Controller
                 })
                 ->whereRaw('lower(' . Role::getTableName() . '.name) = "editor"')
                 ->where(Client::getTableName() . '.is_removed', BaseModel::$notRemoved)
-                ->where(Client::getTableName() . '.id', '!=', \Auth::user()->id);
+                ->where(Client::getTableName() . '.id', '!=', \Auth::user()->id)
+                ->orderBy(Client::getTableName() . '.id', 'DESC');
 
         if ($isExport) {
             $this->editorExport->collection = $clients->get();

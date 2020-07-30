@@ -264,8 +264,8 @@
                 }
             });
             function numberingTc() {
-                let div    = $("#row-Tc"),
-                    tables = div.find("table");
+                let div    = $("#row-tc"),
+                    tables = div.find("table").not(':first');
 
                 if (tables.length > 0) {
                     var inc = 1;

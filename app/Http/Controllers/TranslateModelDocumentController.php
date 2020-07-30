@@ -70,8 +70,8 @@ class TranslateModelDocumentController extends Controller
         $data = $request->all();
 
         $validator = Validator::make($data, [
-            'title'     => ['required', 'string', 'max:255'],
-            'text'      => ['nullable', 'string', 'max:255'],
+            'title'     => ['required', 'string'],
+            'text'      => ['nullable', 'string'],
             'file'      => ['nullable'],
             'client_id' => ['required', 'integer', 'exists:' . Client::getTableName() . ',id'],
         ]);
@@ -138,8 +138,8 @@ class TranslateModelDocumentController extends Controller
             $data = $request->all();
 
             $validator = Validator::make($data, [
-                'title'     => ['required', 'string', 'max:255'],
-                'text'      => ['nullable', 'string', 'max:255'],
+                'title'     => ['required', 'string'],
+                'text'      => ['nullable', 'string'],
                 'file'      => ['nullable'],
                 'client_id' => ['required', 'integer', 'exists:' . Client::getTableName() . ',id'],
             ]);

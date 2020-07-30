@@ -124,7 +124,7 @@
                                             @endcan
                                         </td>
                                         <td>{{ $translateModelDocument->title }}</td>
-                                        <td>{!! $translateModelDocument->text !!}</td>
+                                        <td>{!! str_limit($translateModelDocument->text, 100, '...') !!}</td>
                                         @can('translate_model_document_show_file')
                                             @if (!empty($translateModelDocument->file))
                                                 <td>

@@ -28,6 +28,7 @@ class Client extends Authenticatable implements MustVerifyEmail, Auditable
         'secondary_email',
         'dob',
         'contact',
+        'secondary_contact',
         'passport_number',
         'process_address',
         'nationality',

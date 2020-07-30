@@ -15,8 +15,8 @@ class CreatePoaAgreementsTable extends Migration
     {
         Schema::create('poa_agreements', function (Blueprint $table) {
             $table->id();
-            $table->string('title');
-            $table->string('text')->nullable();
+            $table->text('title');
+            $table->text('text')->nullable();
 			$table->string('file')->nullable();
 			$table->enum('is_removed', ['0', '1'])->default('0')->comment('0: Nope, 1: Yes');
             $table->timestamps();

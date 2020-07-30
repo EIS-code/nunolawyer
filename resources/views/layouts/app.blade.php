@@ -19,6 +19,7 @@
     <script defer src="{{ asset('js/app.js') }}" defer></script>
     <script defer src="http://maps.google.com/maps/api/js?sensor=true"></script>
     <script defer src="{{ asset('js/main.js') }}"></script>
+    <script defer src="{{ asset('js/custom.js') }}"></script>
     <script defer src="https://cdn.jsdelivr.net/npm/select2@4.1.0-beta.1/dist/js/select2.min.js"></script>
 
     <!-- Styles -->

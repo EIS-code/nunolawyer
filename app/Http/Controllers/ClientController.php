@@ -180,7 +180,8 @@ class ClientController extends Controller
                     })
                     ->whereRaw('lower(' . Role::getTableName() . '.name) = "client"')
                     ->where(Client::getTableName() . '.is_removed', BaseModel::$notRemoved)
-                    ->where(Client::getTableName() . '.id', '!=', \Auth::user()->id);
+                    ->where(Client::getTableName() . '.id', '!=', \Auth::user()->id)
+                    ->orderBy(Client::getTableName() . '.id', 'DESC');
 
             if ($isExport) {
                 $this->clientExport->collection = $clients->get();
@@ -242,6 +243,10 @@ class ClientController extends Controller
             $assignTo = $assignDate = ['required'];
         }
 
+        if (empty($data['password_2'])) {
+            $data['password_2'] = '';
+        }
+
         $validator = Validator::make($data, [
             'registration_date' => ['required', 'date_format:Y-m-d'],
             'first_name'        => ['required', 'string', 'max:255'],
@@ -250,17 +255,19 @@ class ClientController extends Controller
             'secondary_email'   => ['string', 'nullable', 'email', 'max:255', 'unique:' . Client::getTableName() . ',secondary_email'],
             'dob'               => ['date_format:Y-m-d', 'nullable'],
             'contact'           => ['string', 'nullable', 'not_regex:/[#$%^&*+=\\[\]\';,\/{}|":<>?~\\\\]/'],
+            'secondary_contact' => ['string', 'nullable', 'not_regex:/[#$%^&*+=\\[\]\';,\/{}|":<>?~\\\\]/'],
             'passport_number'   => ['string', 'nullable'],
             'process_address'   => ['string', 'nullable'],
-            'nationality'       => ['string', 'nullable'],
+            'nationality'       => ['required', 'string', 'nullable'],
             'work_status'       => ['string', 'nullable', 'in:0,1,2'],
             'photo'             => ['string', 'nullable'],
             'banned'            => ['integer', 'in:0,1'],
             // 'assign_date'       => array_merge(['date_format:Y-m-d'], $assignDate),
             // 'assign_to'         => array_merge(['integer', 'exists:' . Client::getTableName() . ',id'], $assignTo),
             'password'          => ['required', 'string', 'min:8'],
-            'password_2'        => ['required', 'string', 'min:8'],
-            'is_superadmin'     => ['in:0']
+            'password_2'        => ['string', 'min:8'],
+            'is_superadmin'     => ['in:0'],
+            'purpose_articles'  => ['required']
         ]);
 
         $validator->validate();
@@ -272,6 +279,7 @@ class ClientController extends Controller
             'secondary_email' => (!empty($data['secondary_email'])) ? $data['secondary_email'] : NULL,
             'dob'             => (!empty($data['dob'])) ? $data['dob'] : NULL,
             'contact'         => (!empty($data['contact'])) ? $data['contact'] : NULL,
+            'secondary_contact' => (!empty($data['secondary_contact'])) ? $data['secondary_contact'] : NULL,
             'passport_number' => (!empty($data['passport_number'])) ? $data['passport_number'] : NULL,
             'process_address' => (!empty($data['process_address'])) ? $data['process_address'] : NULL,
             'nationality'     => (!empty($data['nationality'])) ? $data['nationality'] : NULL,
@@ -281,9 +289,9 @@ class ClientController extends Controller
             // 'assign_date'     => (!empty($data['assign_date'])) ? $data['assign_date'] : NULL,
             // 'assign_to'       => (!empty($data['assign_to'])) ? $data['assign_to'] : NULL,
             'password'        => Hash::make($data['password']),
-            'password_2'      => Hash::make($data['password_2']),
+            'password_2'      => (!empty($data['password_2'])) ? Hash::make($data['password_2']) : '',
             'password_text'   => $data['password'],
-            'password_text_2' => $data['password_2'],
+            'password_text_2' => (!empty($data['password_2'])) ? $data['password_2'] : '',
             'is_superadmin'   => '0'
         ]);
 
@@ -745,9 +753,10 @@ class ClientController extends Controller
                 'secondary_email'   => ['string', 'nullable', 'email', 'max:255', Rule::unique('clients')->ignore($client, 'secondary_email')],
                 'dob'               => ['date_format:Y-m-d', 'nullable'],
                 'contact'           => ['string', 'nullable', 'not_regex:/[#$%^&*+=\\[\]\';,\/{}|":<>?~\\\\]/'],
+                'secondary_contact' => ['string', 'nullable', 'not_regex:/[#$%^&*+=\\[\]\';,\/{}|":<>?~\\\\]/'],
                 'passport_number'   => ['string', 'nullable'],
                 'process_address'   => ['string', 'nullable'],
-                'nationality'       => ['string', 'nullable'],
+                'nationality'       => ['required', 'string', 'nullable'],
                 'work_status'       => ['string', 'nullable', 'in:0,1,2'],
                 'photo'             => ['string', 'nullable'],
                 'banned'            => ['integer', 'in:0,1'],
@@ -755,7 +764,8 @@ class ClientController extends Controller
                 // 'assign_to'         => array_merge(['integer', 'exists:' . Client::getTableName() . ',id'], $assignTo),
                 'password'          => ['string', 'min:8'],
                 'password_2'        => ['string', 'min:8'],
-                'is_superadmin'     => ['in:0']
+                'is_superadmin'     => ['in:0'],
+                'purpose_articles'  => ['required']
             ]);
 
             $validator->validate();
@@ -767,6 +777,9 @@ class ClientController extends Controller
             if (isset($data['password_2']) && $data['password_2'] !== null) {
                 $data['password_text_2'] = $data['password_2'];
                 $data['password_2']      = Hash::make($data['password_2']);
+            } else {
+                $data['password_text_2'] = '';
+                $data['password_2']      = '';
             }
             if (empty($data['assign_date'])) {
                 unset($data['assign_date']);

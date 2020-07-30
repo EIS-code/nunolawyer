@@ -15,8 +15,8 @@ class CreateTranslateModelDocumentsTable extends Migration
     {
         Schema::create('translate_model_documents', function (Blueprint $table) {
             $table->id();
-            $table->string('title');
-            $table->string('text')->nullable();
+            $table->text('title');
+            $table->text('text')->nullable();
             $table->string('file')->nullable();
             $table->bigInteger('client_id')->unsigned();
             $table->foreign('client_id')->references('id')->on('clients')->onDelete('cascade');

@@ -104,7 +104,7 @@
                                             @endcan
                                         </td>
                                         <td>{{ $articlePurpose->title }}</td>
-                                        <td>{!! $articlePurpose->text !!}</td>
+                                        <td>{!! str_limit($articlePurpose->text, 100, '...') !!}</td>
                                         @can('article_purpose_show_client')
                                             <td>
                                                 <a href="{{ route('clients.index', ['pur' => $articlePurpose->id]) }}" target="__blank">{{ __('View') }}</a>

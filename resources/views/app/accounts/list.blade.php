@@ -113,7 +113,15 @@
                                     <tr>
                                         <td>{{ $account->created_by }}</td>
                                         <td>{{ $account->date }}</td>
-                                        <td>{{ $account->client_id }}</td>
+                                        <td>
+                                            @can('editors_edit')
+                                                <a href="{{route('editors.edit', $account->getAttributes()['client_id'])}}" data-toggle="tooltip" data-placement="top" title="{{__('Edit Editor')}}" target="__blank">
+                                                    {{ $account->client_id }}
+                                                </a>
+                                            @else
+                                                {{ $account->client_id }}
+                                            @endcan
+                                        </td>
                                         <td>{{ $account->received_amount }}</td>
                                         <td>{{ $account->purpose_article_id }}</td>
                                     </tr>

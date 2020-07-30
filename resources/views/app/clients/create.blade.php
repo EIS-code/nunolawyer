@@ -95,32 +95,30 @@
                             <div class="inner-addon right-addon">
                                 <i class="fa fa-eye togglePassword" id=""></i>
                                 <input id="password" type="password" class="form-control{{ $errors->has('password') ? ' is-invalid' : '' }}" name="password" required>
+                                @if ($errors->has('password'))
+                                    <span class="invalid-feedback" role="alert">
+                                        <strong>{{ $errors->first('password') }}</strong>
+                                    </span>
+                                @endif
                             </div>
-
-                            @if ($errors->has('password'))
-                                <span class="invalid-feedback" role="alert">
-                                    <strong>{{ $errors->first('password') }}</strong>
-                                </span>
-                            @endif
                         </div>
                         <div class="col-md-6">
-                            <label>{{ __('Password 2') }}<span style="color: red;">*</span></label>
+                            <label>{{ __('Password 2') }}</label>
                             <div class="inner-addon right-addon">
                                 <i class="fa fa-eye togglePassword" id=""></i>
-                                <input id="password-2" type="password" class="form-control" name="password_2" required>
+                                <input id="password-2" type="password" class="form-control{{ $errors->has('password_2') ? ' is-invalid' : '' }}" name="password_2">
+                                @if ($errors->has('password_2'))
+                                    <span class="invalid-feedback" role="alert">
+                                        <strong>{{ $errors->first('password_2') }}</strong>
+                                    </span>
+                                @endif
                             </div>
-
-                            @if ($errors->has('password_2'))
-                                <span class="invalid-feedback" role="alert">
-                                    <strong>{{ $errors->first('password_2') }}</strong>
-                                </span>
-                            @endif
                         </div>
                     </div>
                     <div class="form-group row">
                         <div class="col-md-6">
-                            <label>{{ __('Nationality') }}</label>
-                            <input id="nationality" type="text" class="form-control{{ $errors->has('nationality') ? ' is-invalid' : '' }}" name="nationality" value="{{ old('nationality') }}">
+                            <label>{{ __('Nationality') }}<span style="color: red;">*</span></label>
+                            <input id="nationality" type="text" class="form-control{{ $errors->has('nationality') ? ' is-invalid' : '' }}" name="nationality" value="{{ old('nationality') }}" required>
 
                             @if ($errors->has('nationality'))
                                 <span class="invalid-feedback" role="alert">
@@ -141,14 +139,29 @@
                     </div>
                     <div class="form-group row">
                         <div class="col-md-6">
-                            <label>{{ __('Contact') }}</label>
-                            <input id="contact" type="number" class="form-control{{ $errors->has('contact') ? ' is-invalid' : '' }}" name="contact" value="{{ old('contact') }}">
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <label>{{ __('Contact') }}</label>
+                                    <input id="contact" type="number" class="form-control{{ $errors->has('contact') ? ' is-invalid' : '' }}" name="contact" value="{{ old('contact') }}">
 
-                            @if ($errors->has('contact'))
-                                <span class="invalid-feedback" role="alert">
-                                    <strong>{{ $errors->first('contact') }}</strong>
-                                </span>
-                            @endif
+                                    @if ($errors->has('contact'))
+                                        <span class="invalid-feedback" role="alert">
+                                            <strong>{{ $errors->first('contact') }}</strong>
+                                        </span>
+                                    @endif
+                                </div>
+
+                                <div class="col-md-6">
+                                    <label>{{ __('Secondary Contact') }}</label>
+                                    <input id="secondary_contact" type="number" class="form-control{{ $errors->has('secondary_contact') ? ' is-invalid' : '' }}" name="secondary_contact" value="{{ old('secondary_contact') }}">
+
+                                    @if ($errors->has('secondary_contact'))
+                                        <span class="invalid-feedback" role="alert">
+                                            <strong>{{ $errors->first('secondary_contact') }}</strong>
+                                        </span>
+                                    @endif
+                                </div>
+                            </div>
                         </div>
                         <div class="col-md-6">
                             <label>{{ __('Passport Number') }}</label>
@@ -165,7 +178,7 @@
                     <div class="form-group row">
                         <div class="col-md-2">{{ __('Purpose and Article') }}</div>
                         <div class="col-md-10">
-                            <select class="form-control{{ $errors->has('purpose_articles') ? ' is-invalid' : '' }} purpose_articles" name="purpose_articles[]" multiple="true">
+                            <select class="form-control{{ $errors->has('purpose_articles') ? ' is-invalid' : '' }} purpose_articles" name="purpose_articles[]" multiple="true" required="true">
                                 <!--option value="" {{ (empty(old('purpose_articles')) ? 'selected="true"' : '') }}>{{ __('Select') }}</option-->
 
                                 @foreach ($purposeArticles as $purposeArticle)
@@ -192,10 +205,13 @@
                                         <thead>
                                             <tr>
                                                 <th style="width: 1%">#</th>
-                                                <th style="width: 10%">{{ __('Date') }}</th>
-                                                <th style="width: 15%">{{ __('Total Proposed - Lawyer Fee') }}</th>
-                                                <th style="width: 15%">{{ __('Received -Lawyer Fee') }}</th>
-                                                <th style="width: 15%">{{ __('Missing- Lawyer Fee') }}</th>
+                                                <th style="width: 14%">{{ __('Date') }}</th>
+                                                <th style="width: 10%">{{ __('Total Proposed - ') }}<br />{{ __('Lawyer Fee') }}</th>
+                                                <th style="width: 10%">{{ __('Received - ') }}<br />{{ __('Lawyer Fee') }}</th>
+                                                <th style="width: 10%">{{ __('Missing - ') }}<br />{{ __('Lawyer Fee') }}</th>
+                                                <th style="width: 10%">{{ __('Total Proposed - ') }}<br />{{ __('Gov Fee') }}</th>
+                                                <th style="width: 10%">{{ __('Received - ') }}<br />{{ __('Gov Fee') }}</th>
+                                                <th style="width: 10%">{{ __('Missing - ') }}<br />{{ __('Gov Fee') }}</th>
                                                 <th style="width: 1%"></th>
                                             </tr>
                                         </thead>
@@ -239,15 +255,43 @@
                                                         </span>
                                                     @endif
                                                 </td>
+                                                <td>
+                                                    <input type="text" class="form-control{{ $errors->has('total_proposed_government_fee.0') ? ' is-invalid' : '' }}" name="total_proposed_government_fee[]" value="{{ old('total_proposed_government_fee.0') }}">
+
+                                                    @if ($errors->has('total_proposed_government_fee.0'))
+                                                        <span class="invalid-feedback" role="alert">
+                                                            <strong>{{ $errors->first('total_proposed_government_fee.0') }}</strong>
+                                                        </span>
+                                                    @endif
+                                                </td>
+                                                <td>
+                                                    <input type="number" class="form-control{{ $errors->has('received_government_fee.0') ? ' is-invalid' : '' }}" name="received_government_fee[]" value="{{ old('received_government_fee.0') }}">
+
+                                                    @if ($errors->has('received_government_fee.0'))
+                                                        <span class="invalid-feedback" role="alert">
+                                                            <strong>{{ $errors->first('received_government_fee.0') }}</strong>
+                                                        </span>
+                                                    @endif
+                                                </td>
+                                                <td>
+                                                    <input type="number" class="form-control{{ $errors->has('missing_government_fee.0') ? ' is-invalid' : '' }}" name="missing_government_fee[]" value="{{ old('missing_government_fee.0') }}">
+
+                                                    @if ($errors->has('missing_government_fee.0'))
+                                                        <span class="invalid-feedback" role="alert">
+                                                            <strong>{{ $errors->first('missing_government_fee.0') }}</strong>
+                                                        </span>
+                                                    @endif
+                                                </td>
                                                 <td  rowspan="4">
                                                     <i class="fa fa-plus" id="plus-cf" style="cursor: pointer;"></i>
                                                 </td>
                                             </tr>
-                                            <tr>
+                                            <!--tr>
                                                 <th style="width: 15%">{{ __('Total Proposed-Gov Fee') }}</th>
                                                 <th style="width: 15%">{{ __('Received-Gov Fee') }}</th>
                                                 <th style="width: 15%">{{ __('Missing-Gov Fee') }}</th>
                                                 <th rowspan="2"></th>
+                                            </tr>
                                             <tr>
                                                 <td>
                                                     <input type="text" class="form-control{{ $errors->has('total_proposed_government_fee.0') ? ' is-invalid' : '' }}" name="total_proposed_government_fee[]" value="{{ old('total_proposed_government_fee.0') }}">
@@ -276,7 +320,7 @@
                                                         </span>
                                                     @endif
                                                 </td>
-                                            </tr>
+                                            </tr-->
                                         </tbody>
                                     </table>
                                 </div>
@@ -559,9 +603,6 @@
                             <!--label><input type="radio" id="status-default" name="work_status" value="0" @if (old('work_status') == '0' || old('work_status') == '') checked="true" @endif />&nbsp;{{ __('Default') }}</label>
                             <label><input type="radio" id="status-to-follow" name="work_status" value="1" @if (old('work_status') == '1') checked="true" @endif />&nbsp;{{ __('To Follow') }}</label-->
                             @foreach ($clientModel::$workStatus as $value => $text)
-                                @if ($value == '2')
-                                    @php continue; @endphp
-                                @endif
                                 <label>
                                     <input type="radio" id="status-{{ strtolower(str_ireplace(' ', '-', $text)) }}" name="work_status" value="{{ $value }}" @if (old('work_status') == $value) checked="true"' @endif />&nbsp;{{ $text }}
                                 </label>&nbsp;

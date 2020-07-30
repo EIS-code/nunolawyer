@@ -53,7 +53,7 @@ class ClientEmailProgressReport extends BaseModel implements Auditable
             return $value;
         }
 
-        $storageFolderName = (str_ireplace("\\", "/", $this->storageFolderName));
-        return Storage::disk($this->fileSystem)->url('client' . '\\' . $this->client_id . '\\'. $storageFolderName . $value);
+        $storageFolderName = (str_ireplace("\\", "/", self::$storageFolderName));
+        return Storage::disk(self::$fileSystem)->url('client' . '\\' . $this->client_id . '\\'. $storageFolderName . '/' . $value);
     }
 }

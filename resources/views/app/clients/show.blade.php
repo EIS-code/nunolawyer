@@ -44,6 +44,12 @@
                             </div>
                         </div>
                         <div class="form-group row">
+                            <div class="col-md-2">{{ __('DOB') }}</div>
+                            <div class="col-md-8">
+                                {{ $client->dob }}
+                            </div>
+                        </div>
+                        <div class="form-group row">
                             <div class="col-md-2">{{ __('First Name') }}</div>
                             <div class="col-md-8">
                                 {{ $client->first_name }}
@@ -80,24 +86,6 @@
                             </div>
                         </div>
                         <div class="form-group row">
-                            <div class="col-md-2">{{ __('DOB') }}</div>
-                            <div class="col-md-8">
-                                {{ $client->dob }}
-                            </div>
-                        </div>
-                        <div class="form-group row">
-                            <div class="col-md-2">{{ __('Contact') }}</div>
-                            <div class="col-md-8">
-                                {{ $client->contact }}
-                            </div>
-                        </div>
-                        <div class="form-group row">
-                            <div class="col-md-2">{{ __('Passport Number') }}</div>
-                            <div class="col-md-3">
-                                {{ $client->passport_number }}
-                            </div>
-                        </div>
-                        <div class="form-group row">
                             <div class="col-md-2">{{ __('Process Address') }}</div>
                             <div class="col-md-8">
                                 {{ $client->process_address }}
@@ -110,12 +98,32 @@
                             </div>
                         </div>
                         <div class="form-group row">
+                            <div class="col-md-2">{{ __('Contact') }}</div>
+                            <div class="col-md-8">
+                                {{ $client->contact }}
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <div class="col-md-2">{{ __('Secondary Contact') }}</div>
+                            <div class="col-md-8">
+                                {{ $client->secondary_contact }}
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <div class="col-md-2">{{ __('Passport Number') }}</div>
+                            <div class="col-md-3">
+                                {{ $client->passport_number }}
+                            </div>
+                        </div>
+                        <div class="form-group row">
                             <div class="col-md-2">{{ __('Purpose and Article') }}</div>
                             <div class="col-md-8">
                                 @php
                                     $titles = [];
                                     $client->clientPurposeArticles->map(function($data) use(&$titles) {
-                                        $titles[] = $data->purposeArticle->title;
+                                        if (!empty($data->purposeArticle)) {
+                                            $titles[] = $data->purposeArticle->title;
+                                        }
                                     });
                                 @endphp
                                 {{ implode(", ", $titles) }}

@@ -104,7 +104,7 @@
                                             @endcan
                                         </td>
                                         <td>{{ $poaAgreement->title }}</td>
-                                        <td>{!! $poaAgreement->text !!}</td>
+                                        <td>{!! str_limit($poaAgreement->text, 100, '...') !!}</td>
                                         @can('poa_view')
                                             @if (!empty($poaAgreement->file))
                                                 <td>
