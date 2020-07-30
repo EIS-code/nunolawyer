@@ -69,7 +69,7 @@ class AuditMessages
         } elseif($audit->auditable_type == "App\ClientPurposeArticle") {
             $auditale = ClientPurposeArticle::with('purposeArticle')->find($audit->auditable_id);
             if ($auditale) {
-                $message = __("Created a new purpose article by ({$createdUser->first_name} {$createdUser->last_name}) named")." : ".$auditale->purposeArticle->title;
+                $message = __("Created a new purpose article by ({$createdUser->first_name} {$createdUser->last_name}) named")." : ".(!empty($auditale->purposeArticle)) ? $auditale->purposeArticle->title : '';
             } else {
                 $message = __("Created a new purpose article that no longer exists.");
             }
