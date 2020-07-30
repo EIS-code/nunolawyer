@@ -119,7 +119,7 @@
                             <div class="col-md-2">{{ __('Purpose and Article') }}</div>
                             <div class="col-md-8">
                                 @php
-                                    $titles = [];
+                                    $titles = []; 
                                     $client->clientPurposeArticles->map(function($data) use(&$titles) {
                                         if (!empty($data->purposeArticle)) {
                                             $titles[] = $data->purposeArticle->title;
