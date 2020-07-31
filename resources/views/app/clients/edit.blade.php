@@ -129,18 +129,6 @@
                             @endif
                         </div>
                         <div class="col-md-6">
-                            <label>{{ __('Nationality') }}<span style="color: red;"> *</span></label>
-                            <input id="nationality" type="text" class="form-control{{ $errors->has('nationality') ? ' is-invalid' : '' }}" name="nationality" value="{{ $client->nationality }}" required="true">
-
-                            @if ($errors->has('nationality'))
-                                <span class="invalid-feedback" role="alert">
-                                    <strong>{{ $errors->first('nationality') }}</strong>
-                                </span>
-                            @endif
-                        </div>
-                    </div>
-                    <div class="form-group row">
-                        <div class="col-md-6">
                             <div class="row">
                                 <div class="col-md-6">
                                     <label>{{ __('Contact') }}</label>
@@ -165,6 +153,8 @@
                                 </div>
                             </div>
                         </div>
+                    </div>
+                    <div class="form-group row">
                         <div class="col-md-6">
                             <label>{{ __('Passport Number') }}</label>
                             <input id="passport_number" type="text" class="form-control{{ $errors->has('passport_number') ? ' is-invalid' : '' }}" name="passport_number" value="{{ $client->passport_number }}">
@@ -172,6 +162,16 @@
                             @if ($errors->has('passport_number'))
                                 <span class="invalid-feedback" role="alert">
                                     <strong>{{ $errors->first('passport_number') }}</strong>
+                                </span>
+                            @endif
+                        </div>
+                        <div class="col-md-6">
+                            <label>{{ __('Nationality') }}<span style="color: red;"> *</span></label>
+                            <input id="nationality" type="text" class="form-control{{ $errors->has('nationality') ? ' is-invalid' : '' }}" name="nationality" value="{{ $client->nationality }}" required="true">
+
+                            @if ($errors->has('nationality'))
+                                <span class="invalid-feedback" role="alert">
+                                    <strong>{{ $errors->first('nationality') }}</strong>
                                 </span>
                             @endif
                         </div>

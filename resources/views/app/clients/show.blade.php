@@ -92,12 +92,6 @@
                             </div>
                         </div>
                         <div class="form-group row">
-                            <div class="col-md-2">{{ __('Nationality') }}</div>
-                            <div class="col-md-8">
-                                {{ $client->nationality }}
-                            </div>
-                        </div>
-                        <div class="form-group row">
                             <div class="col-md-2">{{ __('Contact') }}</div>
                             <div class="col-md-8">
                                 {{ $client->contact }}
@@ -113,6 +107,12 @@
                             <div class="col-md-2">{{ __('Passport Number') }}</div>
                             <div class="col-md-3">
                                 {{ $client->passport_number }}
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <div class="col-md-2">{{ __('Nationality') }}</div>
+                            <div class="col-md-8">
+                                {{ $client->nationality }}
                             </div>
                         </div>
                         <div class="form-group row">
