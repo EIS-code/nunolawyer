@@ -202,4 +202,19 @@ class TranslateModelDocumentController extends Controller
 
         return redirect('translate_model_document')->with('success', __("Emails sent successfully!"));
     }
+
+    public function download(int $id)
+    {
+        $translateModelDocument = TranslateModelDocument::find($id);
+
+        if (!empty($translateModelDocument)) {
+            $fileUrl = $translateModelDocument->getFileUrl();
+
+            if (!empty($fileUrl)) {
+                return response()->download($fileUrl);
+            }
+        }
+
+        return redirect('translate_model_document')->with('error', 'File not found!');
+    }
 }

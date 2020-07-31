@@ -37,7 +37,7 @@
         <div class="col-md-2 text-center">
             <a href="@can('clients_create') {{ route('clients.create') }} @else javascript:void(0) @endcan" style="text-decoration: none;">
                 <div style="flex-direction: column;" class="card mb-3 widget-content bg-white-bloom">
-                    <div class="widget-content text-black">
+                    <div class="">
                         <div class="row">
                             <div class="col-md-12">
                                 <i class="metismenu-icon pe-7s-users" style="font-size: 50px;"></i>
@@ -55,7 +55,7 @@
         <div class="col-md-2 text-center">
             <a href="@can('clients_access') {{ route('clients.view') }} @else javascript:void(0) @endcan" style="text-decoration: none;">
                 <div style="flex-direction: column;" class="card mb-3 widget-content bg-white-bloom">
-                    <div class="widget-content text-black">
+                    <div class="">
                         <div class="row">
                             <div class="col-md-12">
                                 <i class="metismenu-icon pe-7s-search" style="font-size: 50px;"></i>
@@ -73,7 +73,7 @@
         <div class="col-md-2 text-center">
             <a href="@can('clients_access') {{ route('clients.index') }} @else javascript:void(0) @endcan" style="text-decoration: none;">
                 <div style="flex-direction: column;" class="card mb-3 widget-content bg-white-bloom">
-                    <div class="widget-content text-black">
+                    <div class="">
                         <div class="row">
                             <div class="col-md-12">
                                 <i class="fa fa-users" style="font-size: 50px;"></i>
@@ -91,7 +91,7 @@
         <div class="col-md-2 text-center">
             <a href="@can('editors_create') {{ route('editors.create') }} @else javascript:void(0) @endcan" style="text-decoration: none;">
                 <div style="flex-direction: column;" class="card mb-3 widget-content bg-white-bloom">
-                    <div class="widget-content text-black">
+                    <div class="">
                         <div class="row">
                             <div class="col-md-12">
                                 <i class="metismenu-icon pe-7s-users" style="font-size: 50px;"></i>
@@ -109,7 +109,7 @@
         <div class="col-md-2 text-center">
             <a href="@can('editors_access') {{ route('editors.index') }} @else javascript:void(0) @endcan" style="text-decoration: none;">
                 <div style="flex-direction: column;" class="card mb-3 widget-content bg-white-bloom">
-                    <div class="widget-content text-black">
+                    <div class="">
                         <div class="row">
                             <div class="col-md-12">
                                 <i class="fa fa-users" style="font-size: 50px;"></i>
@@ -130,7 +130,7 @@
         <div class="col-md-2 text-center">
             <a href="@can('article_purpose_access') {{ route('article_purpose.index') }} @else javascript:void(0) @endcan" style="text-decoration: none;">
                 <div style="flex-direction: column;" class="card mb-3 widget-content bg-white-bloom">
-                    <div class="widget-content text-black">
+                    <div class="">
                         <div class="row">
                             <div class="col-md-12">
                                 <i class="metismenu-icon pe-7s-notebook" style="font-size: 50px;"></i>
@@ -138,7 +138,7 @@
                         </div>
                         <div class="row">
                             <div class="col-md-12">
-                                {{ __('Article / Purpose') }}<br />&nbsp;
+                                {{ __('Article / Purpose') }}
                             </div>
                         </div>
                     </div>
@@ -148,7 +148,7 @@
         <div class="col-md-2 text-center">
             <a href="@can('poa_access') {{ route('poa.index') }} @else javascript:void(0) @endcan" style="text-decoration: none;">
                 <div style="flex-direction: column;" class="card mb-3 widget-content bg-white-bloom">
-                    <div class="widget-content text-black">
+                    <div class="">
                         <div class="row">
                             <div class="col-md-12">
                                 <i class="metismenu-icon pe-7s-note" style="font-size: 50px;"></i>
@@ -166,7 +166,7 @@
         <div class="col-md-2 text-center">
             <a href="@can('translate_model_document_access') {{ route('translate_model_document.index') }} @else javascript:void(0) @endcan" style="text-decoration: none;">
                 <div style="flex-direction: column;" class="card mb-3 widget-content bg-white-bloom">
-                    <div class="widget-content text-black">
+                    <div class="">
                         <div class="row">
                             <div class="col-md-12">
                                 <i class="metismenu-icon pe-7s-note" style="font-size: 50px;"></i>
@@ -184,7 +184,7 @@
         <div class="col-md-2 text-center">
             <a href="@can('our_fee_policy_document_access') {{ route('our_fee_policy_document.index') }} @else javascript:void(0) @endcan" style="text-decoration: none;">
                 <div style="flex-direction: column;" class="card mb-3 widget-content bg-white-bloom">
-                    <div class="widget-content text-black">
+                    <div class="">
                         <div class="row">
                             <div class="col-md-12">
                                 <i class="metismenu-icon pe-7s-info" style="font-size: 50px;"></i>
@@ -202,7 +202,7 @@
         <div class="col-md-2 text-center">
             <a href="@can('account_access') {{ route('account.index') }} @else javascript:void(0) @endcan" style="text-decoration: none;">
                 <div style="flex-direction: column;" class="card mb-3 widget-content bg-white-bloom">
-                    <div class="widget-content text-black">
+                    <div class="">
                         <div class="row">
                             <div class="col-md-12">
                                 <i class="metismenu-icon pe-7s-pen" style="font-size: 50px;"></i>

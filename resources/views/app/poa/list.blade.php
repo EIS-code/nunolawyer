@@ -70,12 +70,17 @@
                                 <th width="1%"></th>
                                 <th width="1%"></th>
                                 <th width="20%">{{ __('Title') }}</th>
-                                <th width="48%">{{ __('Text') }}</th>
+                                <!--th width="48%">{{ __('Text') }}</th-->
                                 @can('poa_view')
                                     <th width="15%">{{ __('View File') }}</th>
                                 @endcan
                                 @can('poa_download')
                                     <th width="15%">{{ __('Download File') }}</th>
+                                @endcan
+                                @can('clients_email')
+                                    <th width="10%">{{ __('Emails') }}</th>
+                                @elsecan('editors_email')
+                                    <th width="10%">{{ __('Emails') }}</th>
                                 @endcan
                             </tr>
                         </thead>
@@ -87,6 +92,21 @@
                             @else
                                 @foreach($poaAgreements as $poaAgreement)
                                     <tr>
+                                        <td class="d-none">
+                                            <form action="{{ route('poa.email', $poaAgreement->id) }}" method="POST" class="d-none" id="html">
+                                                @csrf
+                                                <div>
+                                                    <br />
+                                                    <div class="form-group row">
+                                                        <div class="col-md-12">
+                                                            <label>{{ __('To') }}<span style="color: red;">* </span></label>
+                                                            <input type="text" name="emails" class="form-control" />
+                                                            <span style="color: red;">(Use comma separator for multiple like : test@gmail.com, test2@gmail.com)</span>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </form>
+                                        </td>
                                         <td width="1">
                                             @can('poa_edit')
                                                 <a href="{{route('poa.edit', $poaAgreement->id)}}" data-toggle="tooltip" data-placement="top" title="{{__('Edit')}}">
@@ -104,7 +124,7 @@
                                             @endcan
                                         </td>
                                         <td>{{ $poaAgreement->title }}</td>
-                                        <td>{!! str_limit($poaAgreement->text, 100, '...') !!}</td>
+                                        <!-- <td>{!! str_limit($poaAgreement->text, 100, '...') !!}</td> -->
                                         @can('poa_view')
                                             @if (!empty($poaAgreement->file))
                                                 <td>
@@ -123,6 +143,19 @@
                                                 @else
                                                     <mark>{{ __('No File') }}</mark>
                                                 @endif
+                                            </td>
+                                        @endcan
+                                        @can('clients_email')
+                                            <td>
+                                                <button type="button" class="btn btn-warning btn-round toEmails" data-html="#html">
+                                                    <i class="fa fa-envelope"></i>
+                                                </button>
+                                            </td>
+                                        @elsecan('editors_email')
+                                            <td>
+                                                <button type="button" class="btn btn-warning btn-round toEmails" data-html="#html">
+                                                    <i class="fa fa-envelope"></i>
+                                                </button>
                                             </td>
                                         @endcan
                                     </tr>

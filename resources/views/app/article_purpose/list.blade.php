@@ -70,7 +70,7 @@
                                 <th width="1%"></th>
                                 <th width="1%"></th>
                                 <th width="20%">{{ __('Title') }}</th>
-                                <th width="48%">{{ __('Text') }}</th>
+                                <!--th width="48%">{{ __('Text') }}</th-->
                                 @can('article_purpose_show_client')
                                     <th width="15%">{{ __('View Clients') }}</th>
                                 @endcan
@@ -104,7 +104,7 @@
                                             @endcan
                                         </td>
                                         <td>{{ $articlePurpose->title }}</td>
-                                        <td>{!! str_limit($articlePurpose->text, 100, '...') !!}</td>
+                                        <!--td>{!! str_limit($articlePurpose->text, 100, '...') !!}</td-->
                                         @can('article_purpose_show_client')
                                             <td>
                                                 <a href="{{ route('clients.index', ['pur' => $articlePurpose->id]) }}" target="__blank">{{ __('View') }}</a>

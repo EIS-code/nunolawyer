@@ -60,6 +60,7 @@ Route::middleware($middlewares)->group(function() {
     Route::group(['middleware' => ['permission:poa_access']], function () {
         Route::resources(['poa' => 'PoaController']);
         Route::get('poa/{id}/download', 'PoaController@download')->name('poa.download');
+        Route::post('poa/{id}/email', 'PoaController@email')->name('poa.email');
     });
 
     Route::group(['middleware' => ['permission:account_access']], function () {
@@ -73,6 +74,7 @@ Route::middleware($middlewares)->group(function() {
     Route::group(['middleware' => ['permission:translate_model_document_access']], function () {
         Route::resources(['translate_model_document' => 'TranslateModelDocumentController']);
         Route::post('translate_model_document/{id}/email', 'TranslateModelDocumentController@email')->name('translate_model_document.email');
+        Route::get('translate_model_document/{id}/download', 'TranslateModelDocumentController@download')->name('translate_model_document.download');
     });
 
     Route::group(['middleware' => ['permission:roles_access']], function () {

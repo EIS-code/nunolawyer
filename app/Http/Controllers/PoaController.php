@@ -193,4 +193,11 @@ class PoaController extends Controller
 
         return redirect('poa')->with('error', 'File not found!');
     }
+
+    public function email($id, Request $request)
+    {
+        $emailIds = $request->get('emails');
+
+        return redirect('poa')->with('success', __("Emails sent successfully!"));
+    }
 }

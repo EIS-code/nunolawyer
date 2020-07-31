@@ -70,7 +70,7 @@
                                 <th width="1%"></th>
                                 <th width="1%"></th>
                                 <th width="20%">{{ __('Title') }}</th>
-                                <th width="48%">{{ __('Text') }}</th>
+                                <!-- <th width="48%">{{ __('Text') }}</th> -->
                             </tr>
                         </thead>
                         <tbody>
@@ -98,7 +98,7 @@
                                             @endcan
                                         </td>
                                         <td>{{ $ourFeePolicyDocument->title }}</td>
-                                        <td>{!! str_limit($ourFeePolicyDocument->text, 100, '...') !!}</td>
+                                        <!-- <td>{!! str_limit($ourFeePolicyDocument->text, 100, '...') !!}</td> -->
                                     </tr>
                                 @endforeach
                             @endif

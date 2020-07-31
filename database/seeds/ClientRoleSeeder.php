@@ -77,6 +77,7 @@ class ClientRoleSeeder extends Seeder
             ['name' => 'translate_model_document_delete', 'display_name' => 'Translate Model Document Delete', 'group_name' => 'TMD', 'group_slug' => 'tmd', 'guard_name' => 'web'],
             ['name' => 'translate_model_document_show_client', 'display_name' => 'Translate Model Document show client', 'group_name' => 'TMD', 'group_slug' => 'tmd', 'guard_name' => 'web'],
             ['name' => 'translate_model_document_show_file', 'display_name' => 'Translate Model Document view file', 'group_name' => 'TMD', 'group_slug' => 'tmd', 'guard_name' => 'web'],
+            ['name' => 'translate_model_document_download', 'display_name' => 'Translate Model Document Download', 'group_name' => 'TMD', 'group_slug' => 'tmd', 'guard_name' => 'web'],
 
             ['name' => 'poa_access', 'display_name' => 'POA access', 'group_name' => 'POA', 'group_slug' => 'poa', 'guard_name' => 'web'],
             // ['name' => 'poa_show', 'display_name' => 'POA show', 'group_name' => 'POA', 'group_slug' => 'poa', 'guard_name' => 'web'],
