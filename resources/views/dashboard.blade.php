@@ -210,7 +210,7 @@
                         </div>
                         <div class="row">
                             <div class="col-md-12">
-                                {{ __('Account') }}<br />&nbsp;
+                                {{ __('Account') }}
                             </div>
                         </div>
                     </div>
