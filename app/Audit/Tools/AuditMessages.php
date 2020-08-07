@@ -299,6 +299,20 @@ class AuditMessages
             if (!$find || !$auditaleUser) {
                 $message = __("Changed information for a follow ups that no longer exists.");
             }
+        } elseif ($audit->auditable_type == "App\Account") {
+            $find         = Account::find($audit->auditable_id);
+            $auditaleUser = false;
+
+            if ($find) {
+                $auditaleUser = Client::find($find->client_id);
+
+                if ($auditaleUser) {
+                    $message = __("Changed client accounts info by ({$createdUser->first_name} {$createdUser->last_name}) for")." : (".$auditaleUser->first_name . ' ' . $auditaleUser->last_name . ")";
+                }
+            }
+            if (!$find || !$auditaleUser) {
+                $message = __("Changed information for a accounts that no longer exists.");
+            }
         }
 
         return $message;
@@ -334,6 +348,8 @@ class AuditMessages
             $message = __("Deleted client terms and conditions by ({$createdUser->first_name} {$createdUser->last_name}) for")." : ({$createdUser->getClientNames($audit->old_values['client_id'])})";
         } elseif($audit->auditable_type == "App\FollowUp") {
             $message = __("Deleted client follow ups by ({$createdUser->first_name} {$createdUser->last_name}) for")." : ({$createdUser->getClientNames($audit->old_values['client_id'])})";
+        } elseif($audit->auditable_type == "App\Account") {
+            $message = __("Deleted client accounts by ({$createdUser->first_name} {$createdUser->last_name}) for")." : ({$createdUser->getClientNames($audit->old_values['client_id'])})";
         }
 
         return $message;
