@@ -29,9 +29,17 @@
         @endif
 
         @if (session('error'))
-            <div class="alert alert-danger" role="alert">
-                {{ session('error') }}
-            </div>
+            @if (is_array(session('error')))
+                <div class="alert alert-danger" role="alert">
+                    @foreach (session('error') as $error)
+                        {{ $error }}<br />
+                    @endforeach
+                </div>
+            @else
+                <div class="alert alert-danger" role="alert">
+                    {{ session('error') }}
+                </div>
+            @endif
         @endif
 
         <div class="card bg-white">
