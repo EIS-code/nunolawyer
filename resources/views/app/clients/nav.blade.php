@@ -11,6 +11,11 @@
             <a class="nav-link @if(Route::getCurrentRoute()->getName() == 'clients.activity' || Route::getCurrentRoute()->getName() == 'editors.activity') active @endif" href="{{ route(($isEditors ? 'editors.activity' : 'clients.activity'), $client->id) }}">{{__('Activity Log')}}</a>
         </li>
     @endcan
+    @can('clients_activity_own')
+        <li class="nav-item">
+            <a class="nav-link @if(Route::getCurrentRoute()->getName() == 'clients.own.activity' || Route::getCurrentRoute()->getName() == 'editors.own.activity') active @endif" href="{{ route(($isEditors ? 'editors.own.activity' : 'clients.own.activity'), $client->id) }}">{{__('Activity Log Own')}}</a>
+        </li>
+    @endcan
     <div style="margin-left: 30%;width: 67%;position: absolute;" class="page-title text-right">
         <div class="heading">
             @if(!$client->isSuperAdmin())

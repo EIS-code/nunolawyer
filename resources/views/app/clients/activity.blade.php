@@ -4,6 +4,8 @@
 
     @php
         $isEditors = $client::$isEditors;
+        $routeName = \Route::current()->getName();
+        $isOwnActivity = (!empty($routeName) && in_array($routeName, ['clients.own.activity', 'editors.own.activity']));
     @endphp
 
     <div class="page-header">
@@ -12,7 +14,7 @@
                 <div class="breadcrumb">
                     <a href="{{route('dashboard')}}" class="breadcrumb-item"><i class="metismenu-icon pe-7s-home" style="margin-top: 3px;"></i>&nbsp;{{__('Dashboard')}}</a>
                     <a href="{{route('clients.index')}}" class="breadcrumb-item">{{ ($isEditors ? __('Editors') : __('Clients')) }}</a>
-                    <span class="breadcrumb-item active">{{__('Activity Log')}}</span>
+                    <span class="breadcrumb-item active">{{__('Activity Log')}} {{ $isOwnActivity ? _(' Own') : '' }}</span>
                     <span class="breadcrumb-item active">{{$client->first_name . ' ' . $client->last_name}}</span>
                 </div>
             </div>

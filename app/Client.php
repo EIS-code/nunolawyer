@@ -8,6 +8,7 @@ use Illuminate\Notifications\Notifiable;
 use Spatie\Permission\Traits\HasRoles;
 use OwenIt\Auditing\Contracts\Auditable;
 use App\PurposeArticle;
+use Arr;
 
 class Client extends Authenticatable implements MustVerifyEmail, Auditable
 {
@@ -246,4 +247,18 @@ class Client extends Authenticatable implements MustVerifyEmail, Auditable
     {
         $this->attributes['registration_date'] = (!empty($value)) ? date('Y-m-d', strtotime($value)) : $value;
     }*/
+
+    public function transformAudit(array $data) : array
+    {
+        $routeName  = \Request::route()->getName();
+
+        if (!empty($routeName) && in_array($routeName, ['clients.update', 'clients.create', 'clients.destroy', 'editors.create', 'editors.update', 'editors.destroy'])) {
+            $parameters = \Request::route()->parameters();
+            $clientId   = !empty($parameters['client']) ? $parameters['client'] : (!empty($parameters['id']) ? $parameters['id'] : NULL);
+
+            Arr::set($data, 'client_id',  $clientId);
+        }
+
+        return $data;
+    }
 }

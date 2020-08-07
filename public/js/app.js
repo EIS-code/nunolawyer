@@ -71074,6 +71074,7 @@ $(document).ready(function () {
   });
   $(".deleteBtn").on('click', function () {
     var form = $(this).parent().parent().find('form');
+    form = (form && form.length > 1) ? form[0] : form;
     var message = $(this).attr('data-confirm-message');
     bootbox.confirm({
       message: message,

@@ -45,7 +45,7 @@
                         </div>
                         <div class="row">
                             <div class="col-md-12">
-                                {{ __('Add New client') }}
+                                {{ __('Add new client') }}
                             </div>
                         </div>
                     </div>

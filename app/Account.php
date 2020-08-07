@@ -7,6 +7,7 @@ use OwenIt\Auditing\Contracts\Auditable;
 use Illuminate\Support\Facades\Validator;
 use App\Client;
 use App\PurposeArticle;
+use Arr;
 
 class Account extends BaseModel implements Auditable
 {
@@ -90,5 +91,19 @@ class Account extends BaseModel implements Auditable
         }
 
         return $value;
+    }
+
+    public function transformAudit(array $data) : array
+    {
+        $routeName  = \Request::route()->getName();
+
+        if (!empty($routeName) && in_array($routeName, ['clients.update', 'clients.create', 'clients.destroy', 'editors.create', 'editors.update', 'editors.destroy'])) {
+            $parameters = \Request::route()->parameters();
+            $clientId   = !empty($parameters['client']) ? $parameters['client'] : (!empty($parameters['id']) ? $parameters['id'] : NULL);
+
+            Arr::set($data, 'client_id',  $clientId);
+        }
+
+        return $data;
     }
 }

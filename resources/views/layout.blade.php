@@ -42,23 +42,32 @@
                                 {{ __('Dashboards') }}
                             </a>
                         </li>
-                        @can('clients_access')
+                        @can('clients_create')
                             <!--li class="app-sidebar__heading">Clients</li-->
                             <li>
-                                <a href="{{ route('clients.index') }}" class="{{ (request()->is('clients*') && !request()->is('clients/view') ? 'mm-active' : '') }}">
+                                <a href="{{ route('clients.create') }}" class="{{ (request()->is('clients/create') ? 'mm-active' : '') }}">
                                     <i class="metismenu-icon pe-7s-users"></i>
-                                    {{ __('Clients') }}
+                                    {{ __('Add new client') }}
                                 </a>
                             </li>
                         @endcan
                         @can('clients_access')
                             <!--li class="app-sidebar__heading">Clients</li-->
                             <li>
-                                <a href="{{ route('clients.view') }}" class="{{ (request()->is('clients/view') ? 'mm-active' : '') }}">
+                                <a href="{{ route('clients.index') }}" class="{{ (request()->is('clients*') && !request()->is('clients/view') && !request()->is('clients/create') ? 'mm-active' : '') }}">
                                     <i class="metismenu-icon pe-7s-users"></i>
                                     {{ __('View all clients') }}
                                 </a>
                             </li>
+                        @endcan
+                        @can('clients_access')
+                            <!--li class="app-sidebar__heading">Clients</li>
+                            <li>
+                                <a href="{{ route('clients.view') }}" class="{{ (request()->is('clients/view') ? 'mm-active' : '') }}">
+                                    <i class="metismenu-icon pe-7s-users"></i>
+                                    {{ __('View all clients') }}
+                                </a>
+                            </li-->
                         @endcan
                         <!--li>
                             <a href="#">

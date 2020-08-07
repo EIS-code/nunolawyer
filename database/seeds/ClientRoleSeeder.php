@@ -38,6 +38,7 @@ class ClientRoleSeeder extends Seeder
             ['name' => 'clients_delete', 'display_name' => 'Client Delete', 'group_name' => 'Clients', 'group_slug' => 'clients', 'guard_name' => 'web'],
             ['name' => 'clients_ban', 'display_name' => 'Ban/Activate client', 'group_name' => 'Clients', 'group_slug' => 'clients', 'guard_name' => 'web'],
             ['name' => 'clients_activity', 'display_name' => 'Client activity Log', 'group_name' => 'Clients', 'group_slug' => 'clients', 'guard_name' => 'web'],
+            ['name' => 'clients_activity_own', 'display_name' => 'Client activity Log Own', 'group_name' => 'Clients', 'group_slug' => 'clients', 'guard_name' => 'web'],
             ['name' => 'clients_print', 'display_name' => 'Client Print', 'group_name' => 'Clients', 'group_slug' => 'clients', 'guard_name' => 'web'],
             ['name' => 'clients_email', 'display_name' => 'Client Email', 'group_name' => 'Clients', 'group_slug' => 'clients', 'guard_name' => 'web'],
 
@@ -135,7 +136,7 @@ class ClientRoleSeeder extends Seeder
         ]);
 
         $assignClientPermissions = $getPermissions->map(function($item){
-            $restrictedPerms = ['clients_delete', 'clients_ban', 'clients_activity', 'editors_delete', 'editors_ban', 'editors_activity', 'roles_delete', 'permissions_delete', 'activitylog_delete'];
+            $restrictedPerms = ['clients_delete', 'clients_ban', 'clients_activity', 'clients_activity_own', 'editors_delete', 'editors_ban', 'editors_activity', 'roles_delete', 'permissions_delete', 'activitylog_delete'];
             if (!in_array($item->name, $restrictedPerms) && $item->group_slug == 'clients') {
                 return [$item->name];
             }

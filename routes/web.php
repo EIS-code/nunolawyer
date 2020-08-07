@@ -30,6 +30,7 @@ Route::middleware($middlewares)->group(function() {
         Route::resources(['clients' => 'ClientController']);
         Route::get('clients/{id}/ban', 'ClientController@banClient')->name('clients.ban');
         Route::get('clients/{id}/activity', 'ClientController@activityLog')->name('clients.activity');
+        Route::get('clients/{id}/own/activity', 'ClientController@activityLogOwn')->name('clients.own.activity');
         Route::get('clients/{id}/print', 'ClientController@print')->name('clients.print');
         Route::get('clients/{id}/remove/document', 'ClientController@removeDocument')->name('clients.remove.document');
     });
@@ -44,6 +45,7 @@ Route::middleware($middlewares)->group(function() {
         Route::get('editors/{id}/edit', 'ClientController@edit')->name('editors.edit');
         Route::get('editors/{id}', 'ClientController@show')->name('editors.show');
         Route::get('editors/{id}/activity', 'ClientController@activityLog')->name('editors.activity');
+        Route::get('editors/{id}/own/activity', 'ClientController@activityLogOwn')->name('editors.own.activity');
         // Route::get('editors', 'EditorController@index')->name('editors.index');
         // Route::get('editors/{id}/show', 'ClientController@show')->name('editors.show');
         Route::resources(['editors' => 'EditorController'], ['only' => ['index', 'show']]);
