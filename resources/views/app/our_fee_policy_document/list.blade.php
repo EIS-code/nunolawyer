@@ -70,7 +70,7 @@
                                 <th width="1%"></th>
                                 <th width="1%"></th>
                                 <th width="20%">{{ __('Title') }}</th>
-                                <!-- <th width="48%">{{ __('Text') }}</th> -->
+                                <th width="10%">{{ __('View Details') }}</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -99,6 +99,27 @@
                                         </td>
                                         <td>{{ $ourFeePolicyDocument->title }}</td>
                                         <!-- <td>{!! str_limit($ourFeePolicyDocument->text, 100, '...') !!}</td> -->
+                                        <td>
+                                            <div class="d-none" id="view-details-{{ $ourFeePolicyDocument->id }}">
+                                                <div class="content">
+                                                <div class="row">
+                                                    <label class="h6"><u>{{ __('Title') }}</u></label>
+                                                    <div class="col-md-12">
+                                                        {{ $ourFeePolicyDocument->title }}<br /><br />
+                                                    </div>
+
+                                                    <label class="h6"><u>{{ __('Text') }}</u></label>
+                                                    <div class="col-md-12 texts">
+                                                        {!! $ourFeePolicyDocument->text !!}
+                                                        @if (empty($ourFeePolicyDocument->text))
+                                                            {{ __('-') }}
+                                                        @endif
+                                                    </div>
+                                                </div>
+                                                </div>
+                                            </div>
+                                            <a href="javascript:void(0);" class="view-details" data-id="{{ $ourFeePolicyDocument->id }}" data-url="{{ route('our_fee_policy_document.edit', $ourFeePolicyDocument->id) }}">{{ __('View') }}</a>
+                                        </td>
                                     </tr>
                                 @endforeach
                             @endif

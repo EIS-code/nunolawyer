@@ -175,6 +175,7 @@
                         </div>
                     </div>
 
+                    @if (!$isEditors)
                     <div class="form-group row">
                         <div class="col-md-2">{{ __('Purpose and Article') }}</div>
                         <div class="col-md-10">
@@ -428,9 +429,10 @@
 
                         </div>
                     </div>
+                    @endif
 
                     <div class="form-group row" id="row-cd">
-                        <div class="col-md-2">{{ __('Client Documents') }}</div>
+                        <div class="col-md-2">{{ $isEditors ? __('Editor') : __('Client') }} {{ __(' Documents') }}</div>
 
                         <div class="col-md-10">
                             <div class="row" id="main-cd">
@@ -468,6 +470,7 @@
                         </div>
                     </div>
 
+                    @if (!$isEditors)
                     <div class="form-group row" id="row-pr">
                         <div class="col-md-2">{{ __('Progress Report To The Client (By Email)') }}</div>
 
@@ -526,6 +529,7 @@
 
                         </div>
                     </div>
+                    @endif
 
                     <div class="form-group row {{ ($isEditors ? 'd-none' : '') }}" id="row-tc">
                         <div class="col-md-2">{{ __('Terms and Condition') }}</div>

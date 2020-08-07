@@ -18,6 +18,10 @@
         </style>
     </head>
     <body onbeforeprint="beforePrints()" onafterprint="afterPrints()">
+        @php
+            $isEditors = $client::$isEditors;
+        @endphp
+
         <div class="container">
             <div class="print-only" style="margin-top: 20px;width: 100%;font-size: 22px;">
                 <h1 class="header" style="text-transform: uppercase;color: blue;">{{ $client->first_name .' '. $client->last_name }}</h1>
@@ -66,6 +70,7 @@
                             <td class="table-main">{{ __('Process Address') }}</td>
                             <td class="table-contain">{{ $client->process_address }}</td>
                         </tr>
+                        @if (!$isEditors)
                         <tr>
                             @php
                                 $titles = [];
@@ -88,8 +93,10 @@
                                 @endif
                             </td>
                         </tr>
+                        @endif
                     </tbody>
                 </table>
+                @if (!$isEditors)
                 <table class="table table-bordered">
                     <thead>
                         <tr class="fee-header">
@@ -164,11 +171,12 @@
                         </tbody>
                     </table>
                 @endif
+                @endif
                 <table class="table table-bordered">
                     <thead>
                         <tr class="fee-header">
                             <th style="width:10%">{{ __('SN') }}</th>
-                            <th>{{ __('Client Documents') }}</th>
+                            <th>{{ $isEditors ? __('Editor') : __('Client') }} {{ __(' Documents') }}</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -189,6 +197,7 @@
                         @endforeach
                     </tbody>
                 </table>
+                @if (!$isEditors)
                 <table class="table table-bordered">
                     <thead>
                         <tr class="fee-header">
@@ -207,6 +216,7 @@
                         @endforeach
                     </tbody>
                 </table>
+                @endif
                 <table class="table table-bordered">
                     <thead>
                         <tr class="fee-header">

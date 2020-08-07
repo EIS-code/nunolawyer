@@ -70,7 +70,7 @@
                                 <th width="1%"></th>
                                 <th width="1%"></th>
                                 <th width="20%">{{ __('Title') }}</th>
-                                <!--th width="48%">{{ __('Text') }}</th-->
+                                <th width="20%">{{ __('View Details') }}</th>
                                 @can('article_purpose_show_client')
                                     <th width="15%">{{ __('View Clients') }}</th>
                                 @endcan
@@ -105,6 +105,27 @@
                                         </td>
                                         <td>{{ $articlePurpose->title }}</td>
                                         <!--td>{!! str_limit($articlePurpose->text, 100, '...') !!}</td-->
+                                        <td>
+                                            <div class="d-none" id="view-details-{{ $articlePurpose->id }}">
+                                                <div class="content">
+                                                <div class="row">
+                                                    <label class="h6"><u>{{ __('Title') }}</u></label>
+                                                    <div class="col-md-12">
+                                                        {{ $articlePurpose->title }}<br /><br />
+                                                    </div>
+
+                                                    <label class="h6"><u>{{ __('Text') }}</u></label>
+                                                    <div class="col-md-12 texts">
+                                                        {!! $articlePurpose->text !!}
+                                                        @if (empty($articlePurpose->text))
+                                                            {{ __('-') }}
+                                                        @endif
+                                                    </div>
+                                                </div>
+                                                </div>
+                                            </div>
+                                            <a href="javascript:void(0);" class="view-details" data-id="{{ $articlePurpose->id }}" data-url="{{ route('article_purpose.edit', $articlePurpose->id) }}">{{ __('View') }}</a>
+                                        </td>
                                         @can('article_purpose_show_client')
                                             <td>
                                                 <a href="{{ route('clients.index', ['pur' => $articlePurpose->id]) }}" target="__blank">{{ __('View') }}</a>

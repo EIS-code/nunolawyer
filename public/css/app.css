@@ -10996,3 +10996,8 @@ a.text-dark:focus {
 /* add padding  */
 .left-addon input  { padding-left:  30px; }
 .right-addon input { padding-right: 30px; }
+
+/*.texts p {
+  width: 100%;
+  overflow: scroll;
+}*/

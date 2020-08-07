@@ -37,11 +37,11 @@
                             <div class="row">
                         @endif
 
-                            <a href="{{ route('follow_up.show', $followUp->follow_by) }}" target="__blank">
+                            <a href="{{ route('follow_up.show', $followUp->id) }}" target="__blank">
                                 <div class="col-md-2">
                                     <div class="folder">
                                         <span>
-                                            {{ $followUp->clientFollowedBy->first_name . ' ' . $followUp->clientFollowedBy->last_name }}
+                                            {{ $followUp->first_name . ' ' . $followUp->last_name }}
                                         </span>
                                     </div>
                                 </div>

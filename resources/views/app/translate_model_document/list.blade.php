@@ -70,7 +70,7 @@
                                 <th width="1%"></th>
                                 <th width="1%"></th>
                                 <th width="40%">{{ __('Title') }}</th>
-                                <!-- <th width="48%">{{ __('Text') }}</th> -->
+                                <th width="20%">{{ __('View Details') }}</th>
                                 @can('translate_model_document_show_file')
                                     <th width="10%">{{ __('View File') }}</th>
                                 @endcan
@@ -128,6 +128,27 @@
                                         </td>
                                         <td>{{ $translateModelDocument->title }}</td>
                                         <!-- <td>{!! str_limit($translateModelDocument->text, 100, '...') !!}</td> -->
+                                        <td>
+                                            <div class="d-none" id="view-details-{{ $translateModelDocument->id }}">
+                                                <div class="content">
+                                                <div class="row">
+                                                    <label class="h6"><u>{{ __('Title') }}</u></label>
+                                                    <div class="col-md-12">
+                                                        {{ $translateModelDocument->title }}<br /><br />
+                                                    </div>
+
+                                                    <label class="h6"><u>{{ __('Text') }}</u></label>
+                                                    <div class="col-md-12 texts">
+                                                        {!! $translateModelDocument->text !!}
+                                                        @if (empty($translateModelDocument->text))
+                                                            {{ __('-') }}
+                                                        @endif
+                                                    </div>
+                                                </div>
+                                                </div>
+                                            </div>
+                                            <a href="javascript:void(0);" class="view-details" data-id="{{ $translateModelDocument->id }}" data-url="{{ route('translate_model_document.edit', $translateModelDocument->id) }}">{{ __('View') }}</a>
+                                        </td>
                                         @can('translate_model_document_show_file')
                                             @if (!empty($translateModelDocument->file))
                                                 <td>

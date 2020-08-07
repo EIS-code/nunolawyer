@@ -71153,6 +71153,28 @@ $(document).ready(function () {
       }
     });
   });
+  $(".view-details").on('click', function () {
+    let id   = $(this).data('id'),
+        url  = $(this).data('url'),
+        html = $("#view-details-" + id).html();
+
+    bootbox.dialog({
+      message: html,
+      size: 'large',
+      buttons: {
+        edit: {
+          className: 'btn-primary',
+          callback: function() {
+            window.location.href = url;
+          }
+        },
+        cancel: {
+          className: 'btn-danger'
+        }
+      },
+      locale: window.appLocale
+    });
+  });
 });
 
 /***/ }),

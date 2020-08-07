@@ -70,7 +70,7 @@
                                 <th width="1%"></th>
                                 <th width="1%"></th>
                                 <th width="20%">{{ __('Title') }}</th>
-                                <!--th width="48%">{{ __('Text') }}</th-->
+                                <th width="20%">{{ __('View Details') }}</th>
                                 @can('poa_view')
                                     <th width="15%">{{ __('View File') }}</th>
                                 @endcan
@@ -125,6 +125,27 @@
                                         </td>
                                         <td>{{ $poaAgreement->title }}</td>
                                         <!-- <td>{!! str_limit($poaAgreement->text, 100, '...') !!}</td> -->
+                                        <td>
+                                            <div class="d-none" id="view-details-{{ $poaAgreement->id }}">
+                                                <div class="content">
+                                                <div class="row">
+                                                    <label class="h6"><u>{{ __('Title') }}</u></label>
+                                                    <div class="col-md-12">
+                                                        {{ $poaAgreement->title }}<br /><br />
+                                                    </div>
+
+                                                    <label class="h6"><u>{{ __('Text') }}</u></label>
+                                                    <div class="col-md-12 texts">
+                                                        {!! $poaAgreement->text !!}
+                                                        @if (empty($poaAgreement->text))
+                                                            {{ __('-') }}
+                                                        @endif
+                                                    </div>
+                                                </div>
+                                                </div>
+                                            </div>
+                                            <a href="javascript:void(0);" class="view-details" data-id="{{ $poaAgreement->id }}" data-url="{{ route('poa.edit', $poaAgreement->id) }}">{{ __('View') }}</a>
+                                        </td>
                                         @can('poa_view')
                                             @if (!empty($poaAgreement->file))
                                                 <td>

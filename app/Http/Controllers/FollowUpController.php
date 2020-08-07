@@ -6,6 +6,8 @@ use Illuminate\Http\Request;
 use App\Client;
 use App\BaseModel;
 use App\FollowUp;
+use App\Role;
+use App\ModelHasRoles;
 
 class FollowUpController extends Controller
 {
@@ -28,7 +30,7 @@ class FollowUpController extends Controller
         $clientModel    = new Client();
         $followUps      = [];
 
-        $getClientInfos = $clientModel::where('id', $loggedInUserId)->where('is_removed', BaseModel::$notRemoved)->first();
+        /*$getClientInfos = $clientModel::where('id', $loggedInUserId)->where('is_removed', BaseModel::$notRemoved)->first();
 
         if (!empty($getClientInfos)) {
             $followUps = $followUpModel::query();
@@ -38,7 +40,20 @@ class FollowUpController extends Controller
             }
 
             $followUps = $followUps->with('clientFollowedBy')->where('is_removed', BaseModel::$notRemoved)->groupBy('follow_by')->get();
-        }
+        }*/
+
+        $followUps = $clientModel->select($clientModel::getTableName() . '.*')
+                        ->join(ModelHasRoles::getTableName(), function($join) use($clientModel) {
+                            $join->on(ModelHasRoles::getTableName() . '.model_id', '=', $clientModel::getTableName() . '.id');
+                        })
+                        ->join(Role::getTableName(), function($join) {
+                            $join->on(ModelHasRoles::getTableName() . '.role_id', '=', Role::getTableName() . '.id');
+                        })
+                        ->whereRaw('lower(' . Role::getTableName() . '.name) = "' . $clientModel::$roleEditors .'"')
+                        ->where($clientModel::getTableName() . '.is_removed', BaseModel::$notRemoved)
+                        ->where($clientModel::getTableName() . '.id', '!=', \Auth::user()->id)
+                        ->orderBy($clientModel::getTableName() . '.id', 'DESC')
+                        ->get();
 
         return view('app.follow_up.list', ['followUps' => $followUps]);
     }

@@ -123,6 +123,7 @@
                                 {{ $client->nationality }}
                             </div>
                         </div>
+                        @if (!$isEditors)
                         <div class="form-group row">
                             <div class="col-md-2">{{ __('Purpose and Article') }}</div>
                             <div class="col-md-8">
@@ -221,8 +222,9 @@
                                 </div>
                             </div>
                         @endif
+                        @endif
                         <div class="form-group row">
-                            <div class="col-md-2">{{ __('Client Documents') }}</div>
+                            <div class="col-md-2">{{ $isEditors ? __('Editor') : __('Client') }} {{ __(' Documents') }}</div>
                             <div class="col-md-8">
                                 <table class="table table-respopnsive table-bordered">
                                     <thead>
@@ -247,6 +249,7 @@
                                 </table>
                             </div>
                         </div>
+                        @if (!$isEditors)
                         <div class="form-group row">
                             <div class="col-md-2">{{ __('Progress Report To The Client (By Email)') }}</div>
                             <div class="col-md-8">
@@ -301,6 +304,7 @@
                                 </table>
                             </div>
                         </div>
+                        @endif
                         <div class="form-group row">
                             <div class="col-md-2">{{ __('Work Status') }}</div>
                             <div class="col-md-3">

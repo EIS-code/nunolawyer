@@ -269,7 +269,7 @@ class ClientController extends Controller
             'password'          => ['required', 'string', 'min:8'],
             'password_2'        => ['string', 'min:8'],
             'is_superadmin'     => ['in:0'],
-            'purpose_articles'  => ['required']
+            'purpose_articles'  => (!$this->isEditors) ? ['required'] : []
         ]);
 
         $validator->validate();
@@ -303,10 +303,9 @@ class ClientController extends Controller
             $assignTo    = (!empty($data['assign_to'])) ? $data['assign_to'] : [];
             $assignDates = (!empty($data['assign_dates'])) ? $data['assign_dates'] : [];
             $existsIds   = (!empty($data['id_follow_up'])) ? $data['id_follow_up'] : [];
-            $this->storeAssignTo($clientId, $assignTo, $assignDates, $existsIds);
-            /*if (!empty($assignTo)) {
+            if (!empty($assignTo)) {
                 $this->storeAssignTo($clientId, $assignTo, $assignDates, $existsIds);
-            }*/
+            }
 
             $this->storeOtherInfos($clientId, $request);
 
@@ -339,39 +338,39 @@ class ClientController extends Controller
 
     public function storeAssignTo(int $clientId, array $assignTo, array $assignDates, array $existsIds, $operation = 'insert')
     {
-        $create = function($index, $existsId = null) use($assignTo, $assignDates, $clientId, $operation) {
-            if (!isset($index)) {
-                return false;
-            }
-
-            $data       = [];
-            $assignDate = (isset($assignDates[$index])) ? $assignDates[$index] : false;
-
-            $data[$index] = [
-                'date'        => $assignDate,
-                'follow_by'   => $assignTo[$index],
-                'follow_from' => \Auth::user()->id,
-                'client_id'   => $clientId,
-                'is_removed'  => BaseModel::$notRemoved
-            ];
-
-            $validator = FollowUp::validators($data[$index], true);
-            if ($validator) {
-                $update = NULL;
-                if (!empty($existsId)) {
-                    $update = FollowUp::find($existsId);
-                }
-
-                if (!empty($update)) {
-                    $update->update($data[$index]);
-                } else {
-                    FollowUp::updateOrCreate($data[$index], $data[$index]);
-                }
-            }
-        };
-
         if (!empty($clientId) && !empty($assignTo)) {
             $remove = [];
+
+            $create = function($index, $existsId = null) use($assignTo, $assignDates, $clientId, $operation) {
+                if (!isset($index)) {
+                    return false;
+                }
+
+                $data       = [];
+                $assignDate = (isset($assignDates[$index])) ? $assignDates[$index] : false;
+
+                $data[$index] = [
+                    'date'        => $assignDate,
+                    'follow_by'   => $assignTo[$index],
+                    'follow_from' => \Auth::user()->id,
+                    'client_id'   => $clientId,
+                    'is_removed'  => BaseModel::$notRemoved
+                ];
+
+                $validator = FollowUp::validators($data[$index], true);
+                if ($validator) {
+                    $update = NULL;
+                    if (!empty($existsId)) {
+                        $update = FollowUp::find($existsId);
+                    }
+
+                    if (!empty($update)) {
+                        $update->update($data[$index]);
+                    } else {
+                        FollowUp::updateOrCreate($data[$index], $data[$index]);
+                    }
+                }
+            };
 
             if (!empty($existsIds)) {
                 foreach ($existsIds as $index => $existsId) {
@@ -394,14 +393,6 @@ class ClientController extends Controller
                 $find = FollowUp::where(['client_id' => $clientId, 'is_removed' => BaseModel::$notRemoved])->whereIn('id', $remove)->get();
                 BaseModel::isRemoveFire($find);
             }
-        } else {
-            $data[$index] = [
-                'date'        => '0000-00-00',
-                'follow_by'   => '0',
-                'follow_from' => \Auth::user()->id,
-                'client_id'   => $clientId,
-                'is_removed'  => BaseModel::$notRemoved
-            ];
         }
     }
 
@@ -984,7 +975,7 @@ class ClientController extends Controller
                 'password'          => ['string', 'min:8'],
                 'password_2'        => ['string', 'min:8'],
                 'is_superadmin'     => ['in:0'],
-                'purpose_articles'  => ['required']
+                'purpose_articles'  => (!$this->isEditors) ? ['required'] : []
             ]);
 
             $validator->validate();
@@ -1023,10 +1014,9 @@ class ClientController extends Controller
 
             if ($client->update($data)) {
 
-                $this->storeAssignTo($id, $assignTo, $assignDates, $existsIds, 'update');
-                /*if (!empty($assignTo)) {
+                if (!empty($assignTo)) {
                     $this->storeAssignTo($id, $assignTo, $assignDates, $existsIds, 'update');
-                }*/
+                }
 
                 $this->storeOtherInfos($id, $request, 'update');
 

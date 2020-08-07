@@ -197,6 +197,7 @@
                         </div>
                     </div>
 
+                    @if (!$isEditors)
                     <div class="form-group row">
                         @php
                             $clientPurposeArticles = $client->clientPurposeArticles;
@@ -488,6 +489,7 @@
                             </div>
                         </div>
                     @endif
+                    @endif
 
                     <div class="form-group row" id="row-cd">
                         @php
@@ -501,7 +503,7 @@
                             }
                         @endphp
 
-                        <div class="col-md-2">{{ __('Client Documents') }}</div>
+                        <div class="col-md-2">{{ $isEditors ? __('Editor') : __('Client') }} {{ __(' Documents') }}</div>
 
                         <div class="col-md-10">
                             @foreach ($clientDocuments as $index => $clientDocument)
@@ -555,6 +557,7 @@
                         </div>
                     </div>
 
+                    @if (!$isEditors)
                     <div class="form-group row" id="row-pr">
                         @php
                             $clientEmailProgressReports = $client->clientEmailProgressReports->toArray();
@@ -634,6 +637,7 @@
 
                         </div>
                     </div>
+                    @endif
 
                     <div class="form-group row {{ ($isEditors ? 'd-none' : '') }}" id="row-tc">
                         @php

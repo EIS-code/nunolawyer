@@ -70,7 +70,7 @@
                                 <th width="1%"></th>
                                 <th width="1%"></th>
                                 <th width="20%">{{ __('Title') }}</th>
-                                <!-- <th width="48%">{{ __('Text') }}</th> -->
+                                <th width="10%">{{ __('View Details') }}</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -99,6 +99,27 @@
                                         </td>
                                         <td>{{ $termsAndCondition->title }}</td>
                                         <!-- <td>{!! str_limit($termsAndCondition->text, 100, '...') !!}</td> -->
+                                        <td>
+                                            <div class="d-none" id="view-details-{{ $termsAndCondition->id }}">
+                                                <div class="content">
+                                                <div class="row">
+                                                    <label class="h6"><u>{{ __('Title') }}</u></label>
+                                                    <div class="col-md-12">
+                                                        {{ $termsAndCondition->title }}<br /><br />
+                                                    </div>
+
+                                                    <label class="h6"><u>{{ __('Text') }}</u></label>
+                                                    <div class="col-md-12 texts">
+                                                        {!! $termsAndCondition->text !!}
+                                                        @if (empty($termsAndCondition->text))
+                                                            {{ __('-') }}
+                                                        @endif
+                                                    </div>
+                                                </div>
+                                                </div>
+                                            </div>
+                                            <a href="javascript:void(0);" class="view-details" data-id="{{ $termsAndCondition->id }}" data-url="{{ route('terms_and_conditions.edit', $termsAndCondition->id) }}">{{ __('View') }}</a>
+                                        </td>
                                     </tr>
                                 @endforeach
                             @endif
