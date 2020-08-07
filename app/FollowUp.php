@@ -30,6 +30,10 @@ class FollowUp extends BaseModel implements Auditable
         ]);
 
         if ($returnBoolsOnly === true) {
+            if ($validator->fails()) {
+                \Session::flash('error', $validator->errors()->all());
+            }
+
             return !$validator->fails();
         }
 

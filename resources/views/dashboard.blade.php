@@ -218,6 +218,9 @@
             </a>
         </div>
     </div>
+
+    @php
+    /*
     <div class="row">
         <div class="col-md-6 col-xl-4">
             <a href="@can('clients_access') {{ route('clients.index') }} @else javascript:void(0) @endcan" style="text-decoration: none;">
@@ -327,4 +330,6 @@
             </a>
         </div>
     </div>
+    */
+    @endphp
 @endsection

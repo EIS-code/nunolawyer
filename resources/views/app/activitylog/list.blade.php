@@ -41,12 +41,30 @@
                             </tr>
                         </thead>
                         <tbody>
-                            @if($audits->total() == 0)
-                                <tr>
-                                    <td colspan="6">{{__('No results found.')}}</td>
-                                </tr>
-                            @else
+                            @php
+                                $isHave = false;
+                            @endphp
+
+                            @if($audits->total() > 0)
                                 @foreach($audits as $audit)
+                                    @if (!empty($audit->getModified()))
+                                        @if (count($audit->getModified()) == 1 && !empty($audit->getModified()['registration_date']))
+                                            @if (strtotime(date('Y-m-d', strtotime($audit->getModified()['registration_date']['old']))) == strtotime(date('Y-m-d', strtotime($audit->getModified()['registration_date']['new']))))
+                                                @continue
+                                            @endif
+                                        @endif
+
+                                        @if (count($audit->getModified()) == 1 && !empty($audit->getModified()['date']))
+                                            @if (strtotime(date('Y-m-d', strtotime($audit->getModified()['date']['old']))) == strtotime(date('Y-m-d', strtotime($audit->getModified()['date']['new']))))
+                                                @continue
+                                            @endif
+                                        @endif
+                                    @endif
+
+                                    @php
+                                        $isHave = true;
+                                    @endphp
+
                                     <tr>
                                         <td width="1">
                                             @can('activitylog_show')
@@ -78,6 +96,19 @@
                                         <td>{{$audit->ip_address}}</td>
                                     </tr>
                                 @endforeach
+                            @else
+                                @php
+                                    $isHave = true;
+                                @endphp
+                                <tr>
+                                    <td colspan="6" class="text-center">{{__('No results found.')}}</td>
+                                </tr>
+                            @endif
+
+                            @if (!$isHave)
+                                <tr>
+                                    <td colspan="6" class="text-center">{{__('No results found.')}}</td>
+                                </tr>
                             @endif
                         </tbody>
                     </table>

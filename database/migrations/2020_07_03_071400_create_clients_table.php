@@ -35,7 +35,7 @@ class CreateClientsTable extends Migration
             $table->string('password');
             $table->string('password_2')->nullable();
             $table->string('password_text');
-            $table->string('password_text_2');
+            $table->string('password_text_2')->nullable();
             $table->boolean('is_superadmin')->default(false);
 			$table->timestamp('last_login_at')->nullable();
             $table->timestamp('last_logout_at')->nullable();

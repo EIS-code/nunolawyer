@@ -47,7 +47,7 @@
                             <li>
                                 <a href="{{ route('clients.index') }}" class="{{ (request()->is('clients*') && !request()->is('clients/view') ? 'mm-active' : '') }}">
                                     <i class="metismenu-icon pe-7s-users"></i>
-                                    {{ __('Add New client') }}
+                                    {{ __('Clients') }}
                                 </a>
                             </li>
                         @endcan

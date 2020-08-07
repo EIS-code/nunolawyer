@@ -37,4 +37,14 @@ class ClientCondition extends BaseModel implements Auditable
 
         return $validator;
     }
+
+    public function getDateAttribute($value)
+    {
+        return (!empty($value)) ? date('Y-m-d', strtotime($value)) : $value;
+    }
+
+    /*public function setDateAttribute($value)
+    {
+        return (!empty($value)) ? date('Y-m-d', strtotime($value)) : $value;
+    }*/
 }

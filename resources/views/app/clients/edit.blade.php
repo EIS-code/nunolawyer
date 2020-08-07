@@ -20,6 +20,26 @@
     </div>
 
     <div class="content">
+        @if (session('success'))
+            <div class="alert alert-success" role="alert">
+                {{ session('success') }}
+            </div>
+        @endif
+
+        @if (session('error'))
+            @if (is_array(session('error')))
+                <div class="alert alert-danger" role="alert">
+                    @foreach (session('error') as $error)
+                        {{ $error }}<br />
+                    @endforeach
+                </div>
+            @else
+                <div class="alert alert-danger" role="alert">
+                    {{ session('error') }}
+                </div>
+            @endif
+        @endif
+
         <div class="card bg-white">
             <div class="card-body">
                 <form method="POST" action="{{ route(($isEditors ? 'editors.update' : 'clients.update'), $client->id) }}" enctype='multipart/form-data'>
@@ -311,7 +331,6 @@
                                                     <td  rowspan="4">
                                                         <i class="{{ ($index == 0 ? 'fa fa-plus' : 'fa fa-trash') }}" id="{{ ($index == 0 ? 'plus-cf' : 'minus-cf') }}" style="cursor: pointer;"></i>
                                                     </td>
-                                                    <input type="hidden" name="id_client_fees[]" value="{{ $clientFee['id'] }}" />
                                                 </tr>
                                                 <!--tr>
                                                     <th style="width: 15%">{{ __('Total Proposed-Gov Fee') }}</th>
@@ -326,6 +345,9 @@
                                         </table>
                                     </div>
                                 </div>
+                            @endforeach
+                            @foreach ($clientFees as $index => $clientFee)
+                                <input type="hidden" name="id_client_fees[]" value="{{ $clientFee['id'] }}" />
                             @endforeach
 
                             <div id="cloned-cf"></div>
@@ -384,12 +406,14 @@
                                                     <td>
                                                         <i class="{{ ($index == 0 ? 'fa fa-plus' : 'fa fa-trash') }}" id="{{ ($index == 0 ? 'plus-pa' : 'minus-pa') }}" style="cursor: pointer;"></i>
                                                     </td>
-                                                    <input type="hidden" name="id_client_conditions[]" value="{{ $clientCondition['id'] }}" />
                                                 </tr>
                                             </tbody>
                                         </table>
                                     </div>
                                 </div>
+                            @endforeach
+                            @foreach ($clientConditions as $index => $clientCondition)
+                                <input type="hidden" name="id_client_conditions[]" value="{{ $clientCondition['id'] }}" />
                             @endforeach
 
                             <div id="cloned-pa"></div>
@@ -397,7 +421,7 @@
                         </div>
                     </div>
 
-                    @if ($loggedInId == $client->id || $client->isSuperAdmin())
+                    @if ($loggedInId == $client->id || $client->hasSuperAdmin())
                         <div class="form-group row" id="row-ci">
                             @php
                                 $clientPrivateInformations = $client->clientPrivateInformations->toArray();
@@ -449,12 +473,14 @@
                                                         <td>
                                                             <i class="{{ ($index == 0 ? 'fa fa-plus' : 'fa fa-trash') }}" id="{{ ($index == 0 ? 'plus-ci' : 'minus-ci') }}" style="cursor: pointer;"></i>
                                                         </td>
-                                                        <input type="hidden" name="id_client_private_informations[]" value="{{ $clientPrivateInformation['id'] }}" />
                                                     </tr>
                                                 </tbody>
                                             </table>
                                         </div>
                                     </div>
+                                @endforeach
+                                @foreach ($clientPrivateInformations as $index => $clientPrivateInformation)
+                                    <input type="hidden" name="id_client_private_informations[]" value="{{ $clientPrivateInformation['id'] }}" />
                                 @endforeach
 
                                 <div id="cloned-ci"></div>
@@ -493,7 +519,14 @@
                                                     <td >{{ $index + 1 }}</td>
                                                     <td>
                                                         @if (!empty($clientDocument['file']))
-                                                            <a href="{{ $clientDocument['file'] }}" target="_blank">{{ __('View') }}</a><br />
+                                                            <a href="{{ $clientDocument['file'] }}" target="_blank">{{ __('View') }}</a>
+                                                            &nbsp;
+                                                            @if ($index == 0)
+                                                                <a href="{{ route('clients.remove.document', $clientDocument['id']) }}" class="confirmBtn" data-confirm-message="{{__("Are you sure you want to delete this document?")}}" data-toggle="tooltip" data-placement="top" title="{{__('Delete Document')}}">
+                                                                    <i class="fa fa-trash"></i>
+                                                                </a>
+                                                            @endif
+                                                            <br />
                                                         @endif
                                                         <input type="file" class="form-control{{ $errors->has('client_documents.' . $index) ? ' is-invalid' : '' }}" name="client_documents[]" value="{{ old('client_documents.' . $index) }}">
 
@@ -514,7 +547,7 @@
                                 </div>
                             @endforeach
                             @foreach ($clientDocuments as $index => $clientDocument)
-                                <input type="hidden" name="id_client_documents_old[{{ $clientDocument['id'] }}]" value="{{ $clientDocument['id'] }}" />
+                                <input type="hidden" name="id_client_documents_old[]" value="{{ $clientDocument['id'] }}" />
                             @endforeach
 
                             <div id="cloned-cd"></div>
@@ -648,14 +681,16 @@
                                                         @endif
                                                     </td>
                                                     <td>
-                                                        <i class="{{ ($index == 0 ? 'fa fa-plus' : '') }}" id="{{ ($index == 0 ? 'plus-tc' : 'minus-tc') }}" style="cursor: pointer;"></i>
+                                                        <i class="{{ ($index == 0 ? 'fa fa-plus' : 'fa fa-trash') }}" id="{{ ($index == 0 ? 'plus-tc' : 'minus-tc') }}" style="cursor: pointer;"></i>
                                                     </td>
-                                                    <input type="hidden" name="id_client_terms_and_conditions[]" value="{{ $clientTermsAndCondition['id'] }}" />
                                                 </tr>
                                             </tbody>
                                         </table>
                                     </div>
                                 </div>
+                            @endforeach
+                            @foreach ($clientTermsAndConditions as $index => $clientTermsAndCondition)
+                                <input type="hidden" name="id_client_terms_and_conditions[]" value="{{ $clientTermsAndCondition['id'] }}" />
                             @endforeach
 
                             <div id="cloned-tc"></div>
@@ -780,6 +815,9 @@
                                             </table>
                                         </div>
                                     </div>
+                                @endforeach
+                                @foreach ($followUps as $index => $followUp)
+                                    <input type="hidden" name="id_follow_up[]" value="{{ $followUp['id'] }}" />
                                 @endforeach
 
                                 <div id="cloned-sas"></div>

@@ -26,9 +26,17 @@
         @endif
 
         @if (session('error'))
-            <div class="alert alert-danger" role="alert">
-                {{ session('error') }}
-            </div>
+            @if (is_array(session('error')))
+                <div class="alert alert-danger" role="alert">
+                    @foreach (session('error') as $error)
+                        {{ $error }}<br />
+                    @endforeach
+                </div>
+            @else
+                <div class="alert alert-danger" role="alert">
+                    {{ session('error') }}
+                </div>
+            @endif
         @endif
 
         <div class="card">
@@ -187,7 +195,7 @@
                                 </table>
                             </div>
                         </div>
-                        @if ($loggedInId == $client->id || $client->isSuperAdmin())
+                        @if ($loggedInId == $client->id || $client->hasSuperAdmin())
                             <div class="form-group row">
                                 <div class="col-md-2">{{ __('Client Private Informations') }}</div>
                                 <div class="col-md-8">

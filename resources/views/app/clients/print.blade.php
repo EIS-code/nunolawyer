@@ -142,26 +142,28 @@
                         @endforeach
                     </tbody>
                 </table>
-                <table class="table table-bordered" id="print-no">
-                    <thead>
-                        <tr class="fee-header">
-                            <th style="width:10%">{{ __('Date') }}</th>
-                            <th>
-                                {{ __('Client Private Information') }}
-                            </th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        @foreach ($client->clientPrivateInformations as $index => $clientPrivateInformation)
-                            <tr>
-                                <td>{{ date('Y-m-d', strtotime($clientPrivateInformation->date)) }}</td>
-                                <td>
-                                    <p>{{ $clientPrivateInformation->private_information }}</p>
-                                </td>
+                @if ($loggedInId == $client->id || $client->hasSuperAdmin())
+                    <table class="table table-bordered" id="print-no">
+                        <thead>
+                            <tr class="fee-header">
+                                <th style="width:10%">{{ __('Date') }}</th>
+                                <th>
+                                    {{ __('Client Private Information') }}
+                                </th>
                             </tr>
-                        @endforeach
-                    </tbody>
-                </table>
+                        </thead>
+                        <tbody>
+                            @foreach ($client->clientPrivateInformations as $index => $clientPrivateInformation)
+                                <tr>
+                                    <td>{{ date('Y-m-d', strtotime($clientPrivateInformation->date)) }}</td>
+                                    <td>
+                                        <p>{{ $clientPrivateInformation->private_information }}</p>
+                                    </td>
+                                </tr>
+                            @endforeach
+                        </tbody>
+                    </table>
+                @endif
                 <table class="table table-bordered">
                     <thead>
                         <tr class="fee-header">

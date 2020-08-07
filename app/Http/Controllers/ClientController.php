@@ -28,6 +28,7 @@ use DB;
 use Illuminate\Http\UploadedFile;
 use Maatwebsite\Excel\Facades\Excel;
 use App\Exports\ClientExport;
+use Illuminate\Pagination\LengthAwarePaginator;
 
 class ClientController extends Controller
 {
@@ -300,8 +301,9 @@ class ClientController extends Controller
 
             $assignTo    = (!empty($data['assign_to'])) ? $data['assign_to'] : [];
             $assignDates = (!empty($data['assign_dates'])) ? $data['assign_dates'] : [];
+            $existsIds   = (!empty($data['id_follow_up'])) ? $data['id_follow_up'] : [];
             if (!empty($assignTo)) {
-                $this->storeAssignTo($clientId, $assignTo, $assignDates);
+                $this->storeAssignTo($clientId, $assignTo, $assignDates, $existsIds);
             }
 
             $this->storeOtherInfos($clientId, $request);
@@ -333,24 +335,22 @@ class ClientController extends Controller
         }
     }
 
-    public function storeAssignTo(int $clientId, array $assignTo, array $assignDates, $operation = 'insert')
+    public function storeAssignTo(int $clientId, array $assignTo, array $assignDates, array $existsIds, $operation = 'insert')
     {
         if (!empty($clientId) && !empty($assignTo)) {
-            if ($operation == 'update') {
-                $find = FollowUp::where(['client_id' => $clientId, 'is_removed' => BaseModel::$notRemoved])->update(['is_removed' => BaseModel::$removed]);
-            }
+            $remove = [];
 
-            foreach ($assignTo as $index => $assignee) {
+            $create = function($index, $existsId = null) use($assignTo, $assignDates, $clientId, $operation) {
+                if (!isset($index)) {
+                    return false;
+                }
+
                 $data       = [];
                 $assignDate = (isset($assignDates[$index])) ? $assignDates[$index] : false;
 
-                if (!$assignDate) {
-                    continue;
-                }
-
                 $data[$index] = [
                     'date'        => $assignDate,
-                    'follow_by'   => $assignee,
+                    'follow_by'   => $assignTo[$index],
                     'follow_from' => \Auth::user()->id,
                     'client_id'   => $clientId,
                     'is_removed'  => BaseModel::$notRemoved
@@ -358,8 +358,39 @@ class ClientController extends Controller
 
                 $validator = FollowUp::validators($data[$index], true);
                 if ($validator) {
-                    FollowUp::updateOrCreate($data[$index], $data[$index]);
+                    $update = NULL;
+                    if (!empty($existsId)) {
+                        $update = FollowUp::find($existsId);
+                    }
+
+                    if (!empty($update)) {
+                        $update->update($data[$index]);
+                    } else {
+                        FollowUp::updateOrCreate($data[$index], $data[$index]);
+                    }
                 }
+            };
+
+            if (!empty($existsIds)) {
+                foreach ($existsIds as $index => $existsId) {
+                    if (!empty($assignDates[$index])) {
+                        unset($assignDates[$index]);
+
+                        $create($index, $existsId);
+                    } else {
+                        $remove[$index] = $existsId;
+                    }
+                }
+            }
+            if (!empty($assignDates)) {
+                foreach ($assignDates as $index => $assignee) {
+                    $create($index);
+                }
+            }
+
+            if (!empty($remove)) {
+                $find = FollowUp::where(['client_id' => $clientId, 'is_removed' => BaseModel::$notRemoved])->whereIn('id', $remove)->get();
+                BaseModel::isRemoveFire($find);
             }
         }
     }
@@ -371,13 +402,17 @@ class ClientController extends Controller
             $purposeAarticals = $request->get('purpose_articles', []);
             $lastSelectedId   = $request->get('last_purpose_articles', '0');
 
-            // Remove old records.
-            if ($operation == 'update') {
-                $find = ClientPurposeArticle::where(['client_id' => $clientId, 'is_removed' => BaseModel::$notRemoved])->update(['is_removed' => BaseModel::$removed]);
+            $find    = ClientPurposeArticle::where(['client_id' => $clientId, 'is_removed' => BaseModel::$notRemoved])->get();
+            $new     = $purposeAarticals;
+            if (!empty($find) && !$find->isEmpty()) {
+                $records = $find->pluck('purpose_article_id')->toArray();
+
+                $remove = array_diff($records, $purposeAarticals);
+                $new    = array_diff($purposeAarticals, $records);
             }
 
-            if (!empty($purposeAarticals)) {
-                foreach ((array)$purposeAarticals as $index => $purposeAartical) {
+            if (!empty($new)) {
+                foreach ((array)$new as $index => $purposeAartical) {
                     $data = [];
 
                     $isLastInserted = ($purposeAartical == $lastSelectedId) ? '1' : '0';
@@ -395,33 +430,66 @@ class ClientController extends Controller
                     }
                 }
             }
+            if (!empty($remove)) {
+                $find = ClientPurposeArticle::where(['client_id' => $clientId, 'is_removed' => BaseModel::$notRemoved])->whereIn('purpose_article_id', $remove)->get();
+                BaseModel::isRemoveFire($find);
+            }
 
             // Client conditions.
             $clientConditionDates = $request->get('condition_dates', []);
             $clientConditions     = $request->get('conditions', []);
-            // $existsIds            = $request->get('id_client_conditions', []);
+            $existsIds            = $request->get('id_client_conditions', []);
+            $remove               = [];
 
-            // Remove old records.
-            if ($operation == 'update') {
-                $find = ClientCondition::where(['client_id' => $clientId, 'is_removed' => BaseModel::$notRemoved])->update(['is_removed' => BaseModel::$removed]);
-            }
+            $create = function($index, $existsId = null) use($clientConditionDates, $clientConditions, $clientId) {
+                if (!isset($index)) {
+                    return false;
+                }
 
-            if (!empty($clientConditionDates)) {
-                foreach ((array)$clientConditionDates as $index => $clientConditionDate) {
-                    $data = [];
+                $data = [];
 
-                    $data[$index] = [
-                        'date'       => $clientConditionDate,
-                        'condition'  => (!empty($clientConditions[$index]) ? $clientConditions[$index] : NULL),
-                        'client_id'  => $clientId,
-                        'is_removed' => BaseModel::$notRemoved
-                    ];
+                $data[$index] = [
+                    'date'       => $clientConditionDates[$index],
+                    'condition'  => $clientConditions[$index],
+                    'client_id'  => $clientId,
+                    'is_removed' => BaseModel::$notRemoved
+                ];
 
-                    $validator = ClientCondition::validators($data[$index], true);
-                    if ($validator) {
+                $validator = ClientCondition::validators($data[$index], true);
+                if ($validator) {
+                    $update = NULL;
+                    if (!empty($existsId)) {
+                        $update = ClientCondition::find($existsId);
+                    }
+
+                    if (!empty($update)) {
+                        $update->update($data[$index]);
+                    } else {
                         ClientCondition::updateOrCreate($data[$index], $data[$index]);
                     }
                 }
+            };
+
+            if (!empty($existsIds)) {
+                foreach ($existsIds as $index => $existsId) {
+                    if (!empty($clientConditionDates[$index])) {
+
+                        unset($clientConditionDates[$index]);
+                        $create($index, $existsId);
+
+                    } else {
+                        $remove[$index] = $existsId;
+                    }
+                }
+            }
+            if (!empty($clientConditionDates)) {
+                foreach ($clientConditionDates as $index => $clientConditionDate) {
+                    $create($index);
+                }
+            }
+            if (!empty($remove)) {
+                $find = ClientCondition::where(['client_id' => $clientId, 'is_removed' => BaseModel::$notRemoved])->whereIn('id', $remove)->get();
+                BaseModel::isRemoveFire($find);
             }
 
             // Client fees.
@@ -432,59 +500,90 @@ class ClientController extends Controller
             $proposedGovernmentFees = $request->get('total_proposed_government_fee', []);
             $receivedGovernmentFees = $request->get('received_government_fee', []);
             $missingGovernmentFees  = $request->get('missing_government_fee', []);
+            $existsIds              = $request->get('id_client_fees', []);
+            $remove                 = [];
 
-            // Remove old records.
-            if ($operation == 'update') {
-                $find = ClientFee::where(['client_id' => $clientId, 'is_removed' => BaseModel::$notRemoved])->update(['is_removed' => BaseModel::$removed]);
+            $create = function($index, $count, $inc, $existsId = null) use($feeDates, $proposedLawyerFees, $receivedLawyerFees, $missingLawyerFees, $proposedGovernmentFees, $receivedGovernmentFees, $missingGovernmentFees, $clientId) {
+                if (!isset($index)) {
+                    return false;
+                }
+
+                $data = [];
+
+                $receivedLawyerFee      = (!empty($receivedLawyerFees[$index]) ? $receivedLawyerFees[$index] : NULL);
+                $receivedGovernmentFee  = (!empty($receivedGovernmentFees[$index]) ? $receivedGovernmentFees[$index] : NULL);
+                $data[$index] = [
+                    'date'                    => $feeDates[$index],
+                    'proposed_lawyer_fee'     => (!empty($proposedLawyerFees[$index]) ? $proposedLawyerFees[$index] : NULL),
+                    'received_lawyer_fee'     => $receivedLawyerFee,
+                    'missing_lawyer_fee'      => (!empty($missingLawyerFees[$index]) ? $missingLawyerFees[$index] : NULL),
+                    'proposed_government_fee' => (!empty($proposedGovernmentFees[$index]) ? $proposedGovernmentFees[$index] : NULL),
+                    'received_government_fee' => $receivedGovernmentFee,
+                    'missing_government_fee'  => (!empty($missingGovernmentFees[$index]) ? $missingGovernmentFees[$index] : NULL),
+                    'client_id'               => $clientId,
+                    'is_removed'              => BaseModel::$notRemoved
+                ];
+
+                $validator = ClientFee::validators($data[$index], true);
+                if ($validator) {
+                    $update = ClientFee::find($existsId);
+
+                    if (!empty($update)) {
+                        $update->update($data[$index]);
+                    } else {
+                        ClientFee::updateOrCreate($data[$index], $data[$index]);
+                    }
+                }
+
+                if ($inc == ($count - 1)) {
+                    $accountData = [];
+
+                    // Get last purpose article id.
+                    $getLastPurposeArticleId = ClientPurposeArticle::where(['is_removed' => BaseModel::$notRemoved, 'is_last_inserted' => '1', 'client_id' => $clientId])->first();
+
+                    if (!empty($getLastPurposeArticleId)) {
+                        $accountData['created_by']          = \Auth::user()->id;
+                        $accountData['client_id']           = $clientId;
+                        $accountData['date']                = $feeDates[$index];
+                        $accountData['received_amount']     = ($receivedLawyerFee + $receivedGovernmentFee);
+                        $accountData['purpose_article_id']  = ($getLastPurposeArticleId->purpose_article_id);
+                    }
+
+                    $validator = Account::validators($accountData, true);
+                    if ($validator) {
+                        Account::updateOrCreate($accountData, $accountData);
+                    }
+                }
+            };
+
+            if (!empty($existsIds)) {
+                $inc   = 0;
+                $count = count($existsIds);
+                foreach ($existsIds as $index => $existsId) {
+                    if (!empty($feeDates[$index])) {
+
+                        unset($feeDates[$index]);
+
+                        $create($index, $count, $inc, $existsId);
+
+                        $inc++;
+                    } else {
+                        $remove[$index] = $existsId;
+                    }
+                }
             }
-
             if (!empty($feeDates)) {
                 $inc   = 0;
                 $count = count($feeDates);
-                foreach ((array)$feeDates as $index => $feeDate) {
-                    $data = [];
-
-                    $receivedLawyerFee      = (!empty($receivedLawyerFees[$index]) ? $receivedLawyerFees[$index] : NULL);
-                    $receivedGovernmentFee  = (!empty($receivedGovernmentFees[$index]) ? $receivedGovernmentFees[$index] : NULL);
-                    $data[$index] = [
-                        'date'                    => $feeDate,
-                        'proposed_lawyer_fee'     => (!empty($proposedLawyerFees[$index]) ? $proposedLawyerFees[$index] : NULL),
-                        'received_lawyer_fee'     => $receivedLawyerFee,
-                        'missing_lawyer_fee'      => (!empty($missingLawyerFees[$index]) ? $missingLawyerFees[$index] : NULL),
-                        'proposed_government_fee' => (!empty($proposedGovernmentFees[$index]) ? $proposedGovernmentFees[$index] : NULL),
-                        'received_government_fee' => $receivedGovernmentFee,
-                        'missing_government_fee'  => (!empty($missingGovernmentFees[$index]) ? $missingGovernmentFees[$index] : NULL),
-                        'client_id'               => $clientId,
-                        'is_removed'              => BaseModel::$notRemoved
-                    ];
-
-                    $validator = ClientFee::validators($data[$index], true);
-                    if ($validator) {
-                        ClientFee::updateOrCreate($data[$index], $data[$index]);
-                    }
-
-                    if ($inc == ($count - 1)) {
-                        $accountData = [];
-
-                        // Get last purpose article id.
-                        $getLastPurposeArticleId = ClientPurposeArticle::where(['is_removed' => BaseModel::$notRemoved, 'is_last_inserted' => '1', 'client_id' => $clientId])->first();
-
-                        if (!empty($getLastPurposeArticleId)) {
-                            $accountData['created_by']          = \Auth::user()->id;
-                            $accountData['client_id']           = $clientId;
-                            $accountData['date']                = $feeDate;
-                            $accountData['received_amount']     = ($receivedLawyerFee + $receivedGovernmentFee);
-                            $accountData['purpose_article_id']  = ($getLastPurposeArticleId->purpose_article_id);
-                        }
-
-                        $validator = Account::validators($accountData, true);
-                        if ($validator) {
-                            Account::updateOrCreate($accountData, $accountData);
-                        }
-                    }
+                foreach ($feeDates as $index => $feeDate) {
+                    $create($index, $count, $inc);
 
                     $inc++;
                 }
+            }
+            if (!empty($remove)) {
+                $find = ClientFee::where(['client_id' => $clientId, 'is_removed' => BaseModel::$notRemoved])->whereIn('id', $remove)->get();
+                BaseModel::isRemoveFire($find);
             }
 
             // Progress report emails.
@@ -492,167 +591,277 @@ class ClientController extends Controller
             $progressReports     = $request->get('progress_reports', []);
             $progressReportFiles = $request->file('progress_report_files', []);
             $existsIds           = $request->get('id_client_email_progress_reports', []);
+            $remove              = [];
 
-            // Remove old records.
-            if ($operation == 'update') {
-                // $find = ClientEmailProgressReport::where(['client_id' => $clientId, 'is_removed' => BaseModel::$notRemoved])->update(['is_removed' => BaseModel::$removed]);
-            }
+            $create = function($index, $existsId = null) use($progressReportDates, $progressReports, $progressReportFiles, $clientId, $operation) {
+                if (!isset($index)) {
+                    return false;
+                }
 
-            if (!empty($progressReportDates)) {
-                foreach ((array)$progressReportDates as $index => $progressReportDate) {
-                    $data = [];
+                $data = [];
 
-                    $data[$index] = [
-                        'date'            => $progressReportDate,
-                        'progress_report' => (!empty($progressReports[$index]) ? $progressReports[$index] : NULL),
-                        'file'            => '',
-                        'client_id'       => $clientId,
-                        'is_removed'      => BaseModel::$notRemoved
-                    ];
+                $data[$index] = [
+                    'date'            => $progressReportDates[$index],
+                    'progress_report' => (!empty($progressReports[$index]) ? $progressReports[$index] : NULL),
+                    'file'            => '',
+                    'client_id'       => $clientId,
+                    'is_removed'      => BaseModel::$notRemoved
+                ];
 
-                    if ($operation == 'update' && !empty($existsIds[$index])) {
-                        $find = ClientEmailProgressReport::where(['id' => $existsIds[$index], 'client_id' => $clientId]);
+                if ($operation == 'update' && !empty($existsId)) {
+                    $find = ClientEmailProgressReport::where(['id' => $existsId, 'client_id' => $clientId]);
 
-                        if (!empty($find)) {
-                            $updated = $find->first();
-                            $find->update(['is_removed' => BaseModel::$removed]);
+                    if (!empty($find)) {
+                        $updated = $find->first();
 
-                            if (!empty($updated) && !empty($updated->getAttributes()['file'])) {
-                                $data[$index]['file'] = $updated->getAttributes()['file'];
-                            }
-                        }
-
-                        unset($existsIds[$index]);
-                    }
-
-                    $validator = ClientEmailProgressReport::validators($data[$index], true);
-                    if ($validator) {
-                        $progressReport   = ClientEmailProgressReport::updateOrCreate($data[$index], $data[$index]);
-                        $progressReportId = $progressReport->id;
-
-                        if (!empty($progressReportFiles[$index]) && $progressReportFiles[$index] instanceof UploadedFile ) {
-                            $pathInfos = pathinfo($progressReportFiles[$index]->getClientOriginalName());
-
-                            if (!empty($pathInfos['extension'])) {
-                                $fileName  = (empty($pathInfos['filename']) ? time() : $pathInfos['filename']) . '_' . $clientId . '_' . $progressReportId . '.' . $pathInfos['extension'];
-                                $storeFile = $progressReportFiles[$index]->storeAs('client' . '\\' . $clientId . '\\'. ClientEmailProgressReport::$storageFolderName, $fileName, ClientEmailProgressReport::$fileSystem);
-
-                                if ($storeFile) {
-                                    ClientEmailProgressReport::find($progressReportId)->update(['file' => $fileName]);
-                                }
-                            }
+                        if (!empty($updated) && !empty($updated->getAttributes()['file'])) {
+                            $data[$index]['file'] = $updated->getAttributes()['file'];
                         }
                     }
                 }
-            }
+
+                $validator = ClientEmailProgressReport::validators($data[$index], true);
+                if ($validator) {
+                    /*$progressReport   = ClientEmailProgressReport::updateOrCreate($data[$index], $data[$index]);
+                    $progressReportId = $progressReport->id;*/
+                    $getMax             = ClientEmailProgressReport::max('id');
+                    $progressReportId   = ($operation == 'update' && !empty($existsId)) ? $existsId : $getMax + 1;
+                    $data[$index]['id'] = $progressReportId;
+                    $fileName           = null;
+
+                    if (!empty($progressReportFiles[$index]) && $progressReportFiles[$index] instanceof UploadedFile ) {
+                        $pathInfos = pathinfo($progressReportFiles[$index]->getClientOriginalName());
+
+                        if (!empty($pathInfos['extension'])) {
+                            $fileName  = (empty($pathInfos['filename']) ? time() : $pathInfos['filename']) . '_' . $clientId . '_' . $progressReportId . '.' . $pathInfos['extension'];
+                            $storeFile = $progressReportFiles[$index]->storeAs('client' . '\\' . $clientId . '\\'. ClientEmailProgressReport::$storageFolderName, $fileName, ClientEmailProgressReport::$fileSystem);
+
+                            if ($storeFile) {
+                                // $data[$index]['file'] = $fileName;
+                                // ClientEmailProgressReport::find($progressReportId)->update(['file' => $fileName]);
+                            } else {
+                                $fileName = null;
+                            }
+                        }
+                    }
+
+                    $newData[$index]         = [];
+                    $newData[$index]         = $data[$index];
+                    if (!empty($fileName)) {
+                        $newData[$index]['file'] = $fileName;
+                    }
+                    $progressReport = ClientEmailProgressReport::updateOrCreate($data[$index], $newData[$index]);
+                }
+            };
 
             if (!empty($existsIds)) {
-                ClientEmailProgressReport::whereIn('id', $existsIds)->update(['is_removed' => BaseModel::$removed]);
+                foreach ($existsIds as $index => $existsId) {
+                    if (!empty($progressReportDates[$index])) {
+
+                        unset($progressReportDates[$index]);
+
+                        $create($index, $existsId);
+                    } else {
+                        $remove[$index] = $existsId;
+                    }
+                }
+            }
+            if (!empty($progressReportDates)) {
+                foreach ($progressReportDates as $index => $progressReportDate) {
+                    $create($index);
+                }
+            }
+            if (!empty($remove)) {
+                $find = ClientEmailProgressReport::where(['client_id' => $clientId, 'is_removed' => BaseModel::$notRemoved])->whereIn('id', $remove)->get();
+                BaseModel::isRemoveFire($find);
             }
 
             // Client private informations.
             $privateDates        = $request->get('client_private_dates', []);
             $privateInformations = $request->get('client_private_informations', []);
+            $existsIds           = $request->get('id_client_private_informations', []);
+            $remove              = [];
 
-            // Remove old records.
-            if ($operation == 'update') {
-                $find = ClientPrivateInformation::where(['client_id' => $clientId, 'is_removed' => BaseModel::$notRemoved])->update(['is_removed' => BaseModel::$removed]);
-            }
+            $create = function($index, $existsId = null) use($privateDates, $privateInformations, $clientId) {
+                if (!isset($index)) {
+                    return false;
+                }
 
-            if (!empty($privateDates)) {
-                foreach ((array)$privateDates as $index => $privateDate) {
-                    $data = [];
+                $data = [];
 
-                    $data[$index] = [
-                        'date'                => $privateDate,
-                        'private_information' => (!empty($privateInformations[$index]) ? $privateInformations[$index] : NULL),
-                        'client_id'           => $clientId,
-                        'is_removed'          => BaseModel::$notRemoved
-                    ];
+                $data[$index] = [
+                    'date'                => $privateDates[$index],
+                    'private_information' => (!empty($privateInformations[$index]) ? $privateInformations[$index] : NULL),
+                    'client_id'           => $clientId,
+                    'is_removed'          => BaseModel::$notRemoved
+                ];
 
-                    $validator = ClientPrivateInformation::validators($data[$index], true);
-                    if ($validator) {
+                $validator = ClientPrivateInformation::validators($data[$index], true);
+                if ($validator) {
+                    $update = NULL;
+                    if (!empty($existsId)) {
+                        $update = ClientPrivateInformation::find($existsId);
+                    }
+
+                    if (!empty($update)) {
+                        $update->update($data[$index]);
+                    } else {
                         ClientPrivateInformation::updateOrCreate($data[$index], $data[$index]);
                     }
                 }
+            };
+
+            if (!empty($existsIds)) {
+                foreach ($existsIds as $index => $existsId) {
+                    if (!empty($privateDates[$index])) {
+                        unset($privateDates[$index]);
+
+                        $create($index, $existsId);
+                    } else {
+                        $remove[$index] = $existsId;
+                    }
+                }
+            }
+            if (!empty($privateDates)) {
+                foreach ((array)$privateDates as $index => $privateDate) {
+                    $create($index);
+                }
+            }
+            if (!empty($remove)) {
+                $find = ClientPrivateInformation::where(['client_id' => $clientId, 'is_removed' => BaseModel::$notRemoved])->whereIn('id', $remove)->get();
+                BaseModel::isRemoveFire($find);
             }
 
             // Client documents
             $clientDocuments = $request->file('client_documents', []);
             $existsIds       = $request->get('id_client_documents', []);
-            $existsOldIds    = $request->get('id_client_documents_old', []);
+            $existsIdsOld    = $request->get('id_client_documents_old', []);
+            $remove          = [];
 
-            if (!empty($existsIds)) {
-                foreach ((array)$existsIds as $index => $existsId) {
-                    $data           = [];
-                    $clientDocument = (!empty($clientDocuments[$index])) ? $clientDocuments[$index] : [];
-                    $fileName       = NULL;
+            $create = function($index, $existsId = null) use($clientDocuments, $clientId, $operation) {
+                if (!isset($index)) {
+                    return false;
+                }
 
-                    if ($operation == 'update' && isset($existsOldIds[$existsId])) {
-                        $find = ClientDocument::where(['id' => $existsId, 'client_id' => $clientId]);
+                $data           = [];
+                $clientDocument = (!empty($clientDocuments[$index])) ? $clientDocuments[$index] : [];
+                $fileName       = NULL;
 
-                        if (!empty($find)) {
-                            $updated = $find->first();
-                            $find->update(['is_removed' => BaseModel::$removed]);
+                if ($operation == 'update' && !empty($existsId)) {
+                    $find = ClientDocument::where(['id' => $existsId, 'client_id' => $clientId]);
 
-                            if (!empty($updated) && !empty($updated->getAttributes()['file'])) {
-                                $fileName = $updated->getAttributes()['file'];
-                            }
+                    if (!empty($find)) {
+                        $updated = $find->first();
+
+                        if (!empty($updated) && !empty($updated->getAttributes()['file'])) {
+                            $fileName = $updated->getAttributes()['file'];
                         }
-                    }
-
-                    if (!empty($clientDocument) && $clientDocument instanceof UploadedFile) {
-                        $pathInfos = pathinfo($clientDocument->getClientOriginalName());
-
-                        if (!empty($pathInfos['extension'])) {
-                            $fileName  = (empty($pathInfos['filename']) ? time() : $pathInfos['filename']) . '_' . $clientId . '.' . $pathInfos['extension'];
-                            $storeFile = $clientDocument->storeAs('client' . '\\' . $clientId . '\\'. ClientDocument::$storageFolderName, $fileName, ClientDocument::$fileSystem);
-
-                            if ($storeFile) {
-                                $data[$index] = [
-                                    'file'       => $fileName,
-                                    'client_id'  => $clientId,
-                                    'is_removed' => BaseModel::$notRemoved
-                                ];
-
-                                ClientDocument::updateOrCreate($data[$index]);
-                            }
-                        }
-                    } elseif (!empty($fileName)) {
-                        $data[$index] = [
-                            'file'       => $fileName,
-                            'client_id'  => $clientId,
-                            'is_removed' => BaseModel::$notRemoved
-                        ];
-
-                        ClientDocument::updateOrCreate($data[$index]);
                     }
                 }
+
+                if (!empty($clientDocument) && $clientDocument instanceof UploadedFile) {
+                    $pathInfos = pathinfo($clientDocument->getClientOriginalName());
+
+                    if (!empty($pathInfos['extension'])) {
+                        $fileName  = (empty($pathInfos['filename']) ? time() : $pathInfos['filename']) . '_' . $clientId . '.' . $pathInfos['extension'];
+                        $storeFile = $clientDocument->storeAs('client' . '\\' . $clientId . '\\'. ClientDocument::$storageFolderName, $fileName, ClientDocument::$fileSystem);
+
+                        if ($storeFile) {
+                            $data[$index] = [
+                                'file'       => $fileName,
+                                'client_id'  => $clientId,
+                                'is_removed' => BaseModel::$notRemoved
+                            ];
+
+                            ClientDocument::updateOrCreate($data[$index]);
+                        }
+                    }
+                } elseif (!empty($fileName)) {
+                    $data[$index] = [
+                        'file'       => $fileName,
+                        'client_id'  => $clientId,
+                        'is_removed' => BaseModel::$notRemoved
+                    ];
+
+                    ClientDocument::updateOrCreate($data[$index]);
+                }
+            };
+
+            if (!empty($existsIdsOld)) {
+                foreach ($existsIdsOld as $index => $existsId) {
+                    if (!empty($existsIds[$index])) {
+
+                        unset($clientDocuments[$index]);
+
+                        $create($index, $existsId);
+                    } else {
+                        $remove[$index] = $existsId;
+                    }
+                }
+            }
+            if (!empty($clientDocuments)) {
+                foreach ($clientDocuments as $index => $clientDocument) {
+                    $create($index);
+                }
+            }
+            if (!empty($remove)) {
+                $find = ClientDocument::where(['client_id' => $clientId, 'is_removed' => BaseModel::$notRemoved])->whereIn('id', $remove)->get();
+                BaseModel::isRemoveFire($find);
             }
 
             // Terms and conditions.
             $termsAndConditions = $request->get('terms_and_conditions', []);
+            $existsIds          = $request->get('id_client_terms_and_conditions', []);
+            $remove             = [];
 
-            // Remove old records.
-            if ($operation == 'update') {
-                $find = ClientTermsAndCondition::where(['client_id' => $clientId, 'is_removed' => BaseModel::$notRemoved])->update(['is_removed' => BaseModel::$removed]);
-            }
+            $create = function($index, $existsId = null) use($termsAndConditions, $clientId) {
+                if (!isset($index)) {
+                    return false;
+                }
 
-            if (!empty($termsAndConditions)) {
-                foreach ((array)$termsAndConditions as $index => $termsAndCondition) {
-                    $data = [];
+                $data = [];
 
-                    $data[$index] = [
-                        'terms_and_conditions' => $termsAndCondition,
-                        'client_id'            => $clientId,
-                        'is_removed'           => BaseModel::$notRemoved
-                    ];
+                $data[$index] = [
+                    'terms_and_conditions' => $termsAndConditions[$index],
+                    'client_id'            => $clientId,
+                    'is_removed'           => BaseModel::$notRemoved
+                ];
 
-                    $validator = ClientTermsAndCondition::validators($data[$index], true);
-                    if ($validator) {
+                $validator = ClientTermsAndCondition::validators($data[$index], true);
+                if ($validator) {
+                    $update = NULL;
+                    if (!empty($existsId)) {
+                        $update = ClientTermsAndCondition::find($existsId);
+                    }
+
+                    if (!empty($update)) {
+                        $update->update($data[$index]);
+                    } else {
                         ClientTermsAndCondition::updateOrCreate($data[$index], $data[$index]);
                     }
                 }
+            };
+
+            if (!empty($existsIds)) {
+                foreach ($existsIds as $index => $existsId) {
+                    if (!empty($termsAndConditions[$index])) {
+
+                        unset($termsAndConditions[$index]);
+
+                        $create($index, $existsId);
+                    } else {
+                        $remove[$index] = $existsId;
+                    }
+                }
+            }
+            if (!empty($termsAndConditions)) {
+                foreach ($termsAndConditions as $index => $termsAndCondition) {
+                    $create($index);
+                }
+            }
+            if (!empty($remove)) {
+                $find = ClientTermsAndCondition::where(['client_id' => $clientId, 'is_removed' => BaseModel::$notRemoved])->whereIn('id', $remove)->get();
+                BaseModel::isRemoveFire($find);
             }
         }
     }
@@ -796,10 +1005,16 @@ class ClientController extends Controller
                 unset($data['assign_dates']);
             }
 
+            $existsIds = [];
+            if (isset($data['id_follow_up'])) {
+                $existsIds = $data['id_follow_up'];
+                unset($data['id_follow_up']);
+            }
+
             if ($client->update($data)) {
 
                 if (!empty($assignTo)) {
-                    $this->storeAssignTo($id, $assignTo, $assignDates, 'update');
+                    $this->storeAssignTo($id, $assignTo, $assignDates, $existsIds, 'update');
                 }
 
                 $this->storeOtherInfos($id, $request, 'update');
@@ -868,7 +1083,9 @@ class ClientController extends Controller
 
             $client->audits()->delete();
             // $client->delete();
-            $client->update(['is_removed' => BaseModel::$removed]);
+            // $client->update(['is_removed' => BaseModel::$removed]);
+            $find = Client::where('id', $id)->get();
+            BaseModel::isRemoveFire($find);
 
             if ($this->isEditors) {
                 return redirect('editors')->with('success',__("Editor deleted!"));
@@ -966,12 +1183,39 @@ class ClientController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function activityLog($id)
+    public function activityLog($id, Request $request)
     {
         $client = Client::find($id);
 
         if ($client) {
-            $audits = Audit::where('new_values','NOT LIKE','%remember_token%')->where('user_id', $client->id)->orderBy('created_at','DESC')->paginate(20);
+            $audits = Audit::where('new_values','NOT LIKE','%remember_token%')->where('user_id', $client->id)->orderBy('created_at','DESC');
+
+            $records = $audits->get();
+            if (!empty($records) && !$records->isEmpty()) {
+                $records->map(function($data, $index) use($records) {
+                    if (count($data->getModified()) == 1) {
+                        if (!empty($data->getModified()['registration_date'])) {
+                            if (strtotime(date('Y-m-d', strtotime($data->getModified()['registration_date']['old']))) == strtotime(date('Y-m-d', strtotime($data->getModified()['registration_date']['new'])))) {
+                                unset($records[$index]);
+                            }
+                        }
+
+                        if (!empty($data->getModified()['date'])) {
+                            if (strtotime(date('Y-m-d', strtotime($data->getModified()['date']['old']))) == strtotime(date('Y-m-d', strtotime($data->getModified()['date']['new'])))) {
+                                unset($records[$index]);
+                            }
+                        }
+                    }
+                });
+            }
+
+            // $audits = $audits->paginate(20);
+
+            $page   = $request->get('page', 1);
+            $limit  = 20;
+            $audits = new LengthAwarePaginator(
+                $records->forPage($page, $limit), $records->count(), $limit, $page, ['path' => $request->path()]
+            );
 
             $audits = AuditMessages::get($audits);
 
@@ -1031,11 +1275,13 @@ class ClientController extends Controller
 
     public function print($id)
     {
+        $loggedInId = \Auth::user()->id;
+
         $clientModel = new Client();
 
         $client = $clientModel->find($id);
 
-        return view('app.clients.print', ['client' => $client]);
+        return view('app.clients.print', ['client' => $client, 'loggedInId' => $loggedInId]);
     }
 
     public function profile()
@@ -1064,5 +1310,20 @@ class ClientController extends Controller
         $emailIds = $request->get('emails');
 
         return redirect('clients/'.$id)->with('success', __("Emails sent successfully!"));
+    }
+
+    public function removeDocument($id)
+    {
+        if (!empty($id)) {
+            $find = ClientDocument::where('id', $id)->get();
+
+            if (!empty($find)) {
+                BaseModel::isRemoveFire($find);
+
+                return redirect()->back()->with('success', __('Document removed successfully!'));
+            }
+        }
+
+        return redirect()->back()->with('email', __('Document not removed!'));
     }
 }

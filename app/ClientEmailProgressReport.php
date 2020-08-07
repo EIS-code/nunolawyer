@@ -35,12 +35,16 @@ class ClientEmailProgressReport extends BaseModel implements Auditable
     {
         $validator = Validator::make($data, [
             'date'            => ['required','date_format:Y-m-d'],
-            'progress_report' => ['string', 'max:255'],
+            'progress_report' => ['required', 'string', 'max:255'],
             'file'            => ['string', 'nullable'],
             'client_id'       => ['required', 'integer', 'exists:' . Client::getTableName() . ',id'],
         ]);
 
         if ($returnBoolsOnly === true) {
+            if ($validator->fails()) {
+                \Session::flash('error', $validator->errors()->all());
+            }
+
             return !$validator->fails();
         }
 

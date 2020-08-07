@@ -31,6 +31,7 @@ Route::middleware($middlewares)->group(function() {
         Route::get('clients/{id}/ban', 'ClientController@banClient')->name('clients.ban');
         Route::get('clients/{id}/activity', 'ClientController@activityLog')->name('clients.activity');
         Route::get('clients/{id}/print', 'ClientController@print')->name('clients.print');
+        Route::get('clients/{id}/remove/document', 'ClientController@removeDocument')->name('clients.remove.document');
     });
 
     Route::group(['middleware' => ['permission:admin_profile_access']], function () {

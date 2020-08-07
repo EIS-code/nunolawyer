@@ -79,7 +79,7 @@ class DashboardController extends Controller
 
         $poaAgreement       = PoaAgreement::query();
         $totalPoaAgreement  = 0;
-        $poaAgreement       = $poaAgreement->where('is_removed', BaseModel::$notRemoved)->get();
+        $poaAgreement       = $poaAgreement->where(PoaAgreement::getTableName() . '.is_removed', BaseModel::$notRemoved)->get();
         if (!empty($poaAgreement) && !$poaAgreement->isEmpty()) {
             $totalPoaAgreement = $poaAgreement->count();
         }
@@ -99,14 +99,14 @@ class DashboardController extends Controller
 
         $ourFeePolicyDocument       = OurFeePolicyDocument::query();
         $totalOurFeePolicyDocument  = 0;
-        $ourFeePolicyDocument       = $ourFeePolicyDocument->where('is_removed', BaseModel::$notRemoved)->get();
+        $ourFeePolicyDocument       = $ourFeePolicyDocument->where(OurFeePolicyDocument::getTableName() . '.is_removed', BaseModel::$notRemoved)->get();
         if (!empty($ourFeePolicyDocument) && !$ourFeePolicyDocument->isEmpty()) {
             $totalOurFeePolicyDocument = $ourFeePolicyDocument->count();
         }
 
         $termsAndCondition       = TermsAndCondition::query();
         $totalTermsAndCondition  = 0;
-        $termsAndCondition       = $termsAndCondition->where('is_removed', BaseModel::$notRemoved)->get();
+        $termsAndCondition       = $termsAndCondition->where(TermsAndCondition::getTableName() . '.is_removed', BaseModel::$notRemoved)->get();
         if (!empty($termsAndCondition) && !$termsAndCondition->isEmpty()) {
             $totalTermsAndCondition = $termsAndCondition->count();
         }

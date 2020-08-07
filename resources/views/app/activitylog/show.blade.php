@@ -63,6 +63,14 @@
                     <div class="col-md-8">
                         @if (!empty($audit->old_values))
                             @foreach ($audit->old_values as $key => $oldValue)
+
+                                @if ($key == 'registration_date' || $key == 'date')
+                                    @php $oldValue = date('Y-m-d', strtotime($oldValue)); @endphp
+                                @endif
+                                @if ($key == 'work_status')
+                                    @php $oldValue = App\Client::$workStatus[$oldValue]; @endphp
+                                @endif
+
                                 {{ ucfirst(str_ireplace("_", " ", $key)) . ': ' . $oldValue }}
                                 <br />
                             @endforeach
@@ -76,6 +84,10 @@
                     <div class="col-md-8">
                         @if (!empty($audit->new_values))
                             @foreach ($audit->new_values as $key => $newValue)
+                                @if ($key == 'work_status')
+                                    @php $newValue = App\Client::$workStatus[$newValue]; @endphp
+                                @endif
+
                                 {{ ucfirst(str_ireplace("_", " ", $key)) . ': ' . $newValue }}
                                 <br />
                             @endforeach

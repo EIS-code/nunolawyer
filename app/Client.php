@@ -14,6 +14,8 @@ class Client extends Authenticatable implements MustVerifyEmail, Auditable
     use Notifiable, HasRoles;
     use \OwenIt\Auditing\Auditable;
 
+    public $auditExclude = ['password', 'password_2'];
+
     /**
      * The attributes that are mass assignable.
      *
@@ -101,6 +103,13 @@ class Client extends Authenticatable implements MustVerifyEmail, Auditable
     public function isSuperAdmin()
     {
         return ($this->is_superadmin == '1' && $this->hasRole(self::$roleAdmin)) ? true : false;
+    }
+
+    public function hasSuperAdmin()
+    {
+        $user = auth()->user();
+
+        return ($user->is_superadmin == '1' && $user->hasRole(self::$roleAdmin)) ? true : false;
     }
 
     public function getCurentRoleName()
@@ -209,4 +218,32 @@ class Client extends Authenticatable implements MustVerifyEmail, Auditable
     {
         return $this->hasMany('App\FollowUp', 'client_id', 'id')->where('is_removed', self::$notRemoved);
     }
+
+    /*protected static function boot()
+    {
+        parent::boot();
+
+        // On saving
+        static::updating(
+            function($record) {
+                $dirty = $record->getDirty();
+
+                foreach ($dirty as $field => $newdata) {
+                    $olddata = $record->getOriginal($field);
+                    if ($olddata != $newdata) {
+                        if ($field == 'registration_date' && strtotime($olddata) == strtotime($newdata)) {
+                            
+                        }
+                    }
+                }
+
+                return true;
+            }
+        );
+    }*/
+
+    /*public function setRegistrationDateAttribute($value)
+    {
+        $this->attributes['registration_date'] = (!empty($value)) ? date('Y-m-d', strtotime($value)) : $value;
+    }*/
 }
