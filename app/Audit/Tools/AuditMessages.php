@@ -14,6 +14,7 @@ use App\ClientPrivateInformation;
 use App\ClientDocument;
 use App\ClientEmailProgressReport;
 use App\ClientTermsAndCondition;
+use App\FollowUp;
 
 class AuditMessages 
 {
@@ -153,6 +154,14 @@ class AuditMessages
             } else {
                 $message = __("Created a new client terms and conditions that no longer exists.");
             }
+        } elseif ($audit->auditable_type == "App\FollowUp") {
+            $find = FollowUp::find($audit->auditable_id);
+
+            if ($find) {
+                $message = __("Created a new follow ups by ({$createdUser->first_name} {$createdUser->last_name}) for : ({$createdUser->getClientNames($find->getAttributes()['client_id'])})");
+            } else {
+                $message = __("Created a new follow ups that no longer exists.");
+            }
         }
 
         return $message;
@@ -276,6 +285,20 @@ class AuditMessages
             if (!$find || !$auditaleUser) {
                 $message = __("Changed information for a terms and conditions that no longer exists.");
             }
+        } elseif ($audit->auditable_type == "App\FollowUp") {
+            $find         = FollowUp::find($audit->auditable_id);
+            $auditaleUser = false;
+
+            if ($find) {
+                $auditaleUser = Client::find($find->client_id);
+
+                if ($auditaleUser) {
+                    $message = __("Changed client follow ups info by ({$createdUser->first_name} {$createdUser->last_name}) for")." : (".$auditaleUser->first_name . ' ' . $auditaleUser->last_name . ")";
+                }
+            }
+            if (!$find || !$auditaleUser) {
+                $message = __("Changed information for a follow ups that no longer exists.");
+            }
         }
 
         return $message;
@@ -309,6 +332,8 @@ class AuditMessages
             $message = __("Deleted client email progress reports by ({$createdUser->first_name} {$createdUser->last_name}) for")." : ({$createdUser->getClientNames($audit->old_values['client_id'])})";
         } elseif($audit->auditable_type == "App\ClientTermsAndCondition") {
             $message = __("Deleted client terms and conditions by ({$createdUser->first_name} {$createdUser->last_name}) for")." : ({$createdUser->getClientNames($audit->old_values['client_id'])})";
+        } elseif($audit->auditable_type == "App\FollowUp") {
+            $message = __("Deleted client follow ups by ({$createdUser->first_name} {$createdUser->last_name}) for")." : ({$createdUser->getClientNames($audit->old_values['client_id'])})";
         }
 
         return $message;
