@@ -18,8 +18,9 @@ class CreateTranslateModelDocumentsTable extends Migration
             $table->text('title');
             $table->text('text')->nullable();
             $table->string('file')->nullable();
-            $table->bigInteger('client_id')->unsigned();
+            $table->bigInteger('client_id')->unsigned()->nullable();
             $table->foreign('client_id')->references('id')->on('clients')->onDelete('cascade');
+            $table->integer('old_id')->nullable();
 			$table->enum('is_removed', ['0', '1'])->default('0')->comment('0: Nope, 1: Yes');
             $table->timestamps();
         });

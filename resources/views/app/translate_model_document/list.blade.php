@@ -162,7 +162,11 @@
                                         @endcan
                                         @can('translate_model_document_show_client')
                                             <td>
-                                                <a href="{{ route('clients.edit', $translateModelDocument->client_id) }}" target="__blank">{{ __('View') }}</a>
+                                                @if (!empty($translateModelDocument->client_id))
+                                                    <a href="{{ route('clients.edit', $translateModelDocument->client_id) }}" target="__blank">{{ __('View') }}</a>
+                                                @else
+                                                    <mark>{{ __('No Clients') }}</mark>
+                                                @endif
                                             </td>
                                         @endcan
                                         @can('translate_model_document_download')

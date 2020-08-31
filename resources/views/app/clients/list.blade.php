@@ -169,7 +169,7 @@
                                 <th>{{ __('Passport/Art.') }}</th>
                                 <th>{{__('E-mail')}}</th>
                                 <th>{{ __('Contact') }}</th>
-                                <th>{{__('Role')}}</th>
+                                <!-- <th>{{__('Role')}}</th> -->
                                 @can('clients_activity')
                                     <th>{{ __('Log') }}</th>
                                 @endcan
@@ -226,7 +226,7 @@
                                         <td>{{ $client->passport_number . ' / ' . $client->process_address }}</td>
                                         <td>{{$client->email}}</td>
                                         <td>{{$client->contact}}</td>
-                                        <td><span class="badge badge-lg badge-secondary text-white">{{@$client->getRoleNames()[0]}}</span></td>
+                                        <!-- <td><span class="badge badge-lg badge-secondary text-white">{{@$client->getRoleNames()[0]}}</span></td> -->
                                         @can('clients_activity')
                                             <td>
                                                 <a href="{{ route('clients.activity', $client->id) }}#" target="_blank">{{ __('Log') }}</a>

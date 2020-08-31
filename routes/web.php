@@ -103,3 +103,12 @@ Route::middleware($middlewares)->group(function() {
     });
 });
 
+Route::get('/seed', function () {
+    Artisan::call('db:seed');
+
+    dd(Artisan::output());
+});
+
+Route::get('/session/flush', function () {
+    session()->flush();
+});

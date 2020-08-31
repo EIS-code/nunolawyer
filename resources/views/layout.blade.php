@@ -60,6 +60,15 @@
                                 </a>
                             </li>
                         @endcan
+						@can('clients_access')
+                            <!--li class="app-sidebar__heading">Clients</li-->
+                            <li>
+                                <a href="{{ route('clients.view') }}" class="{{ (request()->is('clients/view') && !request()->is('clients/create') ? 'mm-active' : '') }}">
+                                    <i class="metismenu-icon pe-7s-search"></i>
+                                    {{ __('Search all clients') }}
+                                </a>
+                            </li>
+                        @endcan
                         @can('clients_access')
                             <!--li class="app-sidebar__heading">Clients</li>
                             <li>

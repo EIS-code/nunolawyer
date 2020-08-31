@@ -19,8 +19,8 @@ class ClientRoleSeeder extends Seeder
             'first_name'     => 'Nunolawyer',
             'last_name'      => 'Admin',
             'email'          => 'nrcadvogados.pt@gmail.com',
-            'password'       => (env('APP_ENV') == 'local') ? Hash::make('Shiv@Nrcadvogados') : Hash::make('Portugal@2020'),
-            'password_text'  => (env('APP_ENV') == 'local') ? 'Shiv@Nrcadvogados' : 'Portugal@2020',
+            'password'       => (env('APP_ENV') == 'local') ? Hash::make('Shiv@Nrcadvogados') : Hash::make('Portugal@123'),
+            'password_text'  => (env('APP_ENV') == 'local') ? 'Shiv@Nrcadvogados' : 'Portugal@123',
             'is_superadmin'  => true,
         ]);
 
