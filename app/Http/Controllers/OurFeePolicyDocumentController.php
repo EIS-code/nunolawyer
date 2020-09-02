@@ -14,6 +14,7 @@ class OurFeePolicyDocumentController extends Controller
 {
     public function __construct()
     {
+        $this->middleware(['permission:our_fee_policy_document_access'])->only(['index']);
         $this->middleware(['permission:our_fee_policy_document_create'])->only(['create','store']);
         $this->middleware(['permission:our_fee_policy_document_edit'])->only(['edit','update']);
         $this->middleware(['permission:our_fee_policy_document_delete'])->only('destroy');

@@ -16,7 +16,7 @@ class CreateClientEmailProgressReportsTable extends Migration
         Schema::create('client_email_progress_reports', function (Blueprint $table) {
             $table->id();
             $table->date('date');
-			$table->string('progress_report');
+			$table->text('progress_report')->nullable();
 			$table->string('file')->nullable();
 			$table->enum('is_removed', ['0', '1'])->default('0')->comment('0: Nope, 1: Yes');
 			$table->bigInteger('client_id')->unsigned();

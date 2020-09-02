@@ -81,11 +81,11 @@ class ClientRoleSeeder extends Seeder
             ['name' => 'translate_model_document_show_file', 'display_name' => 'Translate Model Document view file', 'group_name' => 'TMD', 'group_slug' => 'tmd', 'guard_name' => 'web'],
             ['name' => 'translate_model_document_download', 'display_name' => 'Translate Model Document Download', 'group_name' => 'TMD', 'group_slug' => 'tmd', 'guard_name' => 'web'],
 
-            ['name' => 'poa_access', 'display_name' => 'POA access', 'group_name' => 'POA', 'group_slug' => 'poa', 'guard_name' => 'web'],
+            // ['name' => 'poa_access', 'display_name' => 'POA access', 'group_name' => 'POA', 'group_slug' => 'poa', 'guard_name' => 'web'],
             // ['name' => 'poa_show', 'display_name' => 'POA show', 'group_name' => 'POA', 'group_slug' => 'poa', 'guard_name' => 'web'],
-            ['name' => 'poa_create', 'display_name' => 'POA Create', 'group_name' => 'POA', 'group_slug' => 'poa', 'guard_name' => 'web'],
-            ['name' => 'poa_edit', 'display_name' => 'POA Edit', 'group_name' => 'POA', 'group_slug' => 'poa', 'guard_name' => 'web'],
-            ['name' => 'poa_delete', 'display_name' => 'POA Delete', 'group_name' => 'POA', 'group_slug' => 'poa', 'guard_name' => 'web'],
+            // ['name' => 'poa_create', 'display_name' => 'POA Create', 'group_name' => 'POA', 'group_slug' => 'poa', 'guard_name' => 'web'],
+            // ['name' => 'poa_edit', 'display_name' => 'POA Edit', 'group_name' => 'POA', 'group_slug' => 'poa', 'guard_name' => 'web'],
+            // ['name' => 'poa_delete', 'display_name' => 'POA Delete', 'group_name' => 'POA', 'group_slug' => 'poa', 'guard_name' => 'web'],
 
             ['name' => 'our_fee_policy_document_access', 'display_name' => 'Our Fee Policy Document access', 'group_name' => 'OurFeePolicy', 'group_slug' => 'our_fee_policy_document', 'guard_name' => 'web'],
             ['name' => 'our_fee_policy_document_create', 'display_name' => 'Our Fee Policy Document Create', 'group_name' => 'OurFeePolicy', 'group_slug' => 'our_fee_policy_document', 'guard_name' => 'web'],

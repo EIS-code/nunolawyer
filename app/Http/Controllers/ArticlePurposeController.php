@@ -14,8 +14,9 @@ class ArticlePurposeController extends Controller
 {
     public function __construct()
     {
-        $this->middleware(['permission:article_purpose_show_client']);
-        $this->middleware(['permission:article_purpose_show_editor']);
+        // $this->middleware(['permission:article_purpose_show_client']);
+        // $this->middleware(['permission:article_purpose_show_editor']);
+        $this->middleware(['permission:article_purpose_access'])->only(['index']);
         $this->middleware(['permission:article_purpose_create'])->only(['create','store']);
         $this->middleware(['permission:article_purpose_edit'])->only(['edit','update']);
         $this->middleware(['permission:article_purpose_delete'])->only('destroy');

@@ -11,4 +11,6 @@ class ModelHasRoles extends BaseModel
         'model_type',
         'model_id',
     ];
+
+    public $timestamps = false;
 }

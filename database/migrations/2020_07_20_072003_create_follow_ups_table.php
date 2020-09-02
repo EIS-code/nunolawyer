@@ -15,7 +15,7 @@ class CreateFollowUpsTable extends Migration
     {
         Schema::create('follow_ups', function (Blueprint $table) {
             $table->id();
-            $table->date('dob');
+            $table->date('date');
             $table->bigInteger('follow_by')->unsigned();
             $table->foreign('follow_by')->references('id')->on('clients')->onDelete('cascade');
             $table->bigInteger('follow_from')->unsigned();

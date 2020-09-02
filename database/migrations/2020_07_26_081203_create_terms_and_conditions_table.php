@@ -16,7 +16,7 @@ class CreateTermsAndConditionsTable extends Migration
         Schema::create('terms_and_conditions', function (Blueprint $table) {
             $table->id();
             $table->string('title');
-            $table->string('text')->nullable();
+            $table->text('text')->nullable();
             $table->integer('old_id')->nullable();
 			$table->enum('is_removed', ['0', '1'])->default('0')->comment('0: Nope, 1: Yes');
             $table->timestamps();

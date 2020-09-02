@@ -112,3 +112,9 @@ Route::get('/seed', function () {
 Route::get('/session/flush', function () {
     session()->flush();
 });
+
+Route::get('/storage/link', function () {
+    Artisan::call('storage:link');
+
+    dd(Artisan::output());
+});

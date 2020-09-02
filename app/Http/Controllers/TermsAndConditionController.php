@@ -13,6 +13,7 @@ class TermsAndConditionController extends Controller
 {
     public function __construct()
     {
+        $this->middleware(['permission:terms_and_conditions_access'])->only(['index']);
         $this->middleware(['permission:terms_and_conditions_create'])->only(['create','store']);
         $this->middleware(['permission:terms_and_conditions_edit'])->only(['edit','update']);
         $this->middleware(['permission:terms_and_conditions_delete'])->only('destroy');
