@@ -20,9 +20,10 @@ class CreateEmailsTable extends Migration
             $table->string('cc')->nullable()->comment('Comma separated email ids.');
             $table->string('bcc')->nullable()->comment('Comma separated email ids.');
             $table->string('subject');
-            $table->string('body')->nullable();
+            $table->text('body')->nullable();
+            $table->text('attachments')->nullable();
             $table->enum('is_send', [0, 1])->default(1)->comment('0: Not send, 1: Sent');
-            $table->string('exception_info')->nullable();
+            $table->text('exception_info')->nullable();
             $table->dateTime('created_at', 0);
         });
     }

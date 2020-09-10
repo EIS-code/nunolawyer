@@ -23,7 +23,7 @@ class Email extends BaseModel implements Auditable
         'created_at'
     ];
 
-    public function validator(array $data)
+    public static function validator(array $data)
     {
         return Validator::make($data, [
             'to.*'    => ['required', 'email'],

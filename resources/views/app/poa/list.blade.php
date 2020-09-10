@@ -93,7 +93,7 @@
                                 @foreach($poaAgreements as $poaAgreement)
                                     <tr>
                                         <td class="d-none">
-                                            <form action="{{ route('poa.email', $poaAgreement->id) }}" method="POST" class="d-none" id="html">
+                                            <form action="{{ route('poa.email', $poaAgreement->id) }}" method="POST" class="d-none" id="html-{{ $poaAgreement->id }}">
                                                 @csrf
                                                 <div>
                                                     <br />
@@ -102,6 +102,12 @@
                                                             <label>{{ __('To') }}<span style="color: red;">* </span></label>
                                                             <input type="text" name="emails" class="form-control" />
                                                             <span style="color: red;">(Use comma separator for multiple like : test@gmail.com, test2@gmail.com)</span>
+                                                        </div>
+                                                    </div>
+
+                                                    <div class="">
+                                                        <div class="col-md-12 text-right">
+                                                            <button type="submit" class="btn btn-primary">{{ __('Send') }}</button>
                                                         </div>
                                                     </div>
                                                 </div>
@@ -168,13 +174,13 @@
                                         @endcan
                                         @can('clients_email')
                                             <td>
-                                                <button type="button" class="btn btn-warning btn-round toEmails" data-html="#html">
+                                                <button type="button" class="btn btn-warning btn-round toEmails" data-html="#html-{{ $poaAgreement->id }}" data-title="{{ __('Send Emails') }}">
                                                     <i class="fa fa-envelope"></i>
                                                 </button>
                                             </td>
                                         @elsecan('editors_email')
                                             <td>
-                                                <button type="button" class="btn btn-warning btn-round toEmails" data-html="#html">
+                                                <button type="button" class="btn btn-warning btn-round toEmails" data-html="#html-{{ $poaAgreement->id }}" data-title="{{ __('Send Emails') }}">
                                                     <i class="fa fa-envelope"></i>
                                                 </button>
                                             </td>

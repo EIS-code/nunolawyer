@@ -29,6 +29,7 @@ use Illuminate\Http\UploadedFile;
 use Maatwebsite\Excel\Facades\Excel;
 use App\Exports\ClientExport;
 use Illuminate\Pagination\LengthAwarePaginator;
+use Illuminate\Http\Testing\MimeType;
 
 class ClientController extends Controller
 {
@@ -1352,7 +1353,37 @@ class ClientController extends Controller
     {
         $emailIds = $request->get('emails');
 
-        return redirect('clients/'.$id)->with('success', __("Emails sent successfully!"));
+        if (!empty($emailIds)) {
+            $client = Client::find($id);
+
+            if (!empty($client)) {
+                $loggedInId = \Auth::user()->id;
+                $emailIds   = array_map("trim", explode(",", $emailIds));
+                $subject    = env('APP_NAME', 'Nunolawyer') . '-' . $client->first_name . ' '. $client->last_name;
+
+                $attachments = [];
+                /*$pathInfos   = pathinfo($client->getAttributes()['file']);
+                if (!empty($client->file) && !empty($pathInfos['extension'])) {
+                    $as = (!empty($pathInfos['basename'])) ? $pathInfos['basename'] : time();
+
+                    $attachments[] = [
+                        'path' => $client->file,
+                        'as'   => $as,
+                        'mime' => MimeType::get($pathInfos['extension'])
+                    ];
+                }*/
+
+                $return = $this->sendMail('client', $emailIds, $subject, ['client' => $client], '', '', '', $attachments);
+
+                if ($this->getJsonResponseCode($return) == '200') {
+                    return redirect('clients/' . $id)->with('success', __("Emails sent successfully!"));
+                } elseif (!empty($this->getJsonResponseMsg($return))) {
+                    return redirect('clients/' . $id)->with('error', $this->getJsonResponseMsg($return));
+                }
+            }
+        }
+
+        return redirect('clients/' . $id)->with('error', __("Emails not sent!"));
     }
 
     public function removeDocument($id)

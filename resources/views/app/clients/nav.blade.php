@@ -59,6 +59,12 @@
                             <span style="color: red;">(Use comma separator for multiple like : test@gmail.com, test2@gmail.com)</span>
                         </div>
                     </div>
+
+                    <div class="">
+                        <div class="col-md-12 text-right">
+                            <button type="submit" class="btn btn-primary">{{ __('Send') }}</button>
+                        </div>
+                    </div>
                 </div>
             </form>
             @can('clients_email')

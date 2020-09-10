@@ -10,6 +10,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use DB;
 use Illuminate\Http\UploadedFile;
+use Illuminate\Http\Testing\MimeType;
 
 class PoaController extends Controller
 {
@@ -199,6 +200,35 @@ class PoaController extends Controller
     {
         $emailIds = $request->get('emails');
 
-        return redirect('poa')->with('success', __("Emails sent successfully!"));
+        if (!empty($emailIds)) {
+            $poaAgreement = PoaAgreement::find($id);
+
+            if (!empty($poaAgreement)) {
+                $emailIds = array_map("trim", explode(",", $emailIds));
+                $subject  = env('APP_NAME', 'Nunolawyer') . '-' . $poaAgreement->title;
+
+                $attachments = [];
+                $pathInfos   = pathinfo($poaAgreement->getAttributes()['file']);
+                if (!empty($poaAgreement->file) && !empty($pathInfos['extension'])) {
+                    $as = (!empty($pathInfos['basename'])) ? $pathInfos['basename'] : time();
+
+                    $attachments[] = [
+                        'path' => $poaAgreement->file,
+                        'as'   => $as,
+                        'mime' => MimeType::get($pathInfos['extension'])
+                    ];
+                }
+
+                $return = $this->sendMail('poa', $emailIds, $subject, ['poaAgreement' => $poaAgreement], '', '', '', $attachments);
+
+                if ($this->getJsonResponseCode($return) == '200') {
+                    return redirect('poa')->with('success', __("Emails sent successfully!"));
+                } elseif (!empty($this->getJsonResponseMsg($return))) {
+                    return redirect('poa')->with('error', $this->getJsonResponseMsg($return));
+                }
+            }
+        }
+
+        return redirect('poa')->with('error', __("Emails not sent!"));
     }
 }
