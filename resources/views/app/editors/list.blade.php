@@ -159,12 +159,12 @@
                                 <th>{{ __('Contact') }}</th>
                                 <th>{{ __('Purpose/Article') }}</th>
                                 <!-- <th>{{__('Role')}}</th> -->
-                                @can('editors_activity')
+                                <!-- @can('editors_activity')
                                     <th>{{ __('Log') }}</th>
                                 @endcan
                                 @can('editors_print')
                                     <th>{{ __('View') }}</th>
-                                @endcan
+                                @endcan -->
                             </tr>
                         </thead>
                         <tbody>
@@ -174,7 +174,17 @@
                                 </tr>
                             @else
                                 @foreach($clients as $client)
-                                    <tr>
+                                    @php
+                                        $style = '';
+                                        if ($client->getAttributes()['work_status'] == 0) {
+                                            $style = 'tr-default-status';
+                                        } elseif ($client->getAttributes()['work_status'] == 1) {
+                                            $style = 'tr-to-follow-status';
+                                        } elseif ($client->getAttributes()['work_status'] == 2) {
+                                            $style = 'tr-work-done-status';
+                                        }
+                                    @endphp
+                                    <tr class="{{ $style }}">
                                         <td width="1">
                                             @can('editors_show')
                                                 <a href="{{route('editors.show', $client->id)}}" target="__blank" data-toggle="tooltip" data-placement="top" title="{{__('View Editor')}}">
@@ -215,8 +225,8 @@
                                         <td>{{$client->contact}}</td>
                                         @php
                                             $purposeArticles = [];
-                                            if (!empty($client->clientPurposeArticles())) {
-                                                $getPurposeArticles = $client->clientPurposeArticles()->get();
+                                            if (!empty($client->clientPurposeArticleLatests())) {
+                                                $getPurposeArticles = $client->clientPurposeArticleLatests()->get();
 
                                                 if (!empty($getPurposeArticles) && !$getPurposeArticles->isEmpty()) {
                                                     foreach ($getPurposeArticles as $getPurposeArticle) {
@@ -230,7 +240,7 @@
                                         @endphp
                                         <td>{{ $purposeArticles }}</td>
                                         <!-- <td><span class="badge badge-lg badge-secondary text-white">{{@$client->getRoleNames()[0]}}</span></td> -->
-                                        @can('editors_activity')
+                                        <!-- @can('editors_activity')
                                             <td>
                                                 <a href="{{ route('editors.activity', $client->id) }}#" target="_blank">{{ __('Log') }}</a>
                                             </td>
@@ -239,7 +249,7 @@
                                             <td>
                                                 <a href="{{ route('editors.print', $client->id) }}" target="_blank">{{ __('Print') }}</a>
                                             </td>
-                                        @endcan
+                                        @endcan -->
                                     </tr>
                                 @endforeach
                             @endif

@@ -175,6 +175,11 @@ class Client extends Authenticatable implements MustVerifyEmail, Auditable
         return $this->hasMany('App\ClientPurposeArticle', 'client_id', 'id')->where('is_removed', self::$notRemoved);
     }
 
+    public function clientPurposeArticleLatests()
+    {
+        return $this->hasMany('App\ClientPurposeArticle', 'client_id', 'id')->where('is_removed', self::$notRemoved)->orderBy('id', 'DESC')->limit(1);
+    }
+
     public static function getAllClientPurposeArticles()
     {
         return PurposeArticle::where('is_removed', self::$notRemoved)->get();

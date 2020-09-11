@@ -559,7 +559,7 @@ class OriginalDatabaseSeeder extends Seeder
         $getClient = Client::find($clientId);
 
         if (!empty($getClient)) {
-            $getClient->update(['password' => Hash::make('Portugal@123'), 'password_text' => 'Portugal@123']);
+            $getClient->update(['is_superadmin' => 1, 'password' => Hash::make('Portugal@123'), 'password_text' => 'Portugal@123']);
 
             if ($assignAdminsRole) {
                 $modelHasRoles = ModelHasRoles::where('model_id', $clientId)->update(['role_id' => 1]);

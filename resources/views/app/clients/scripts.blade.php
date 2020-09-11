@@ -377,19 +377,45 @@
                 });
             }
 
-            /*$("input[id='number']").on("keydown", function(e) {
-                if(e.keyCode === 189 && !e.shiftKey) {
-                    return true;
-                }
+            /*$("input[id='number']").on("keyup", function(e) {
                 let value = $(this).val();
 
-                if (!/^[+-]?\d+$/.test(value)) {
-                    $(this).val(value.replace(/[^\d.-]/g,''));
-                    return false;
+                // !/^[+-]?\d+$/
+                // /^[\d\(\)\-+]+$/
+                if (/^[\d\(\)\-+]+$/.test(value)) {
+                    return true;
                 }
 
-                return true;
+                return false;
             });*/
         }
     });
+    function checkNumber(event) {
+        event = event || window.event;
+        console.log(event.keyCode);
+
+        var allowedKeys = [
+            48, 49, 50, 51, 52, 53, 54, 55, 56, 57, 8, 189, 9, 37, 39, 190, 13
+        ];
+
+        var isMinus = (event.target.value.indexOf("-") !== -1),
+            isPlus  = (event.target.value.indexOf("+") !== -1);
+
+        if (isMinus) {
+            var index = allowedKeys.indexOf(187);
+            allowedKeys.splice(index, 1);
+
+            var index = allowedKeys.indexOf(189);
+            allowedKeys.splice(index, 1);
+        }
+        if (isPlus) {
+            var index = allowedKeys.indexOf(189);
+            allowedKeys.splice(index, 1);
+
+            var index = allowedKeys.indexOf(187);
+            allowedKeys.splice(index, 1);
+        }
+
+        return (allowedKeys.indexOf(event.keyCode) !== -1 && event.key != '_');
+    }
 </script>

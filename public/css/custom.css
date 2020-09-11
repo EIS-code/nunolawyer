@@ -23,3 +23,46 @@
 .app-sidebar.sidebar-shadow {
     overflow-y: scroll;
 }
+
+.input-error-border {
+    box-shadow: 0 0 3px #CC0000;
+}
+
+.default-status {
+    color: white;
+    background-color: black;
+}
+
+.to-follow-status {
+    color: white;
+    background-color: #1da0d2;
+}
+
+.work-done-status {
+    color: white;
+    background-color: red;
+}
+
+.tr-default-status {
+    color: unset;
+}
+.tr-default-status a {
+    color: unset;
+    text-decoration: underline;
+}
+
+.tr-to-follow-status {
+    color: #1da0d2;
+}
+.tr-to-follow-status a {
+    color: #1da0d2;
+    text-decoration: underline;
+}
+
+.tr-work-done-status {
+    color: red;
+}
+.tr-work-done-status a {
+    color: red;
+    text-decoration: underline;
+}

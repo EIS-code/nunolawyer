@@ -47,8 +47,9 @@
                     @csrf
                     <div class="form-group row">
                         <div class="col-md-6">
-                            <label>{{ __('Registration Date') }}<span style="color: red;">*</span></label>
-                            <input id="registration_date" type="date" class="form-control{{ $errors->has('registration_date') ? ' is-invalid' : '' }}" name="registration_date" value="{{ date('Y-m-d', strtotime($client->registration_date)) }}" required autofocus>
+                            <!-- <label>{{ __('Registration Date') }}<span style="color: red;">*</span></label> -->
+                            <input id="registration_date" type="date" class="form-control{{ $errors->has('registration_date') ? ' is-invalid' : '' }} input-error-border" name="registration_date" value="{{ date('Y-m-d', strtotime($client->registration_date)) }}" required autofocus placeholder="{{ __('Registration Date') }}">
+                            <i>{{ __('Registration Date') }}</i>
 
                             @if ($errors->has('registration_date'))
                                 <span class="invalid-feedback" role="alert">
@@ -57,8 +58,9 @@
                             @endif
                         </div>
                         <div class="col-md-6">
-                            <label>{{ __('Date of birth') }}</label>
-                            <input id="dob" type="date" class="form-control{{ $errors->has('dob') ? ' is-invalid' : '' }}" name="dob" value="{{ $client->dob }}">
+                            <!-- <label>{{ __('Date of birth') }}</label> -->
+                            <input id="dob" type="date" class="form-control{{ $errors->has('dob') ? ' is-invalid' : '' }}" name="dob" value="{{ $client->dob }}" placeholder="{{ __('Date of birth') }}">
+                            <i>{{ __('Date of birth') }}</i>
 
                             @if ($errors->has('dob'))
                                 <span class="invalid-feedback" role="alert">
@@ -69,8 +71,8 @@
                     </div>
                     <div class="form-group row">
                         <div class="col-md-6">
-                            <label>{{ __('First Name') }}<span style="color: red;">*</span></label>
-                            <input id="first_name" type="text" class="form-control{{ $errors->has('first_name') ? ' is-invalid' : '' }}" name="first_name" value="{{ $client->first_name }}" required autofocus>
+                            <!-- <label>{{ __('First Name') }}<span style="color: red;">*</span></label> -->
+                            <input id="first_name" type="text" class="form-control{{ $errors->has('first_name') ? ' is-invalid' : '' }} input-error-border" name="first_name" value="{{ $client->first_name }}" required autofocus placeholder="{{ __('First Name') }}">
 
                             @if ($errors->has('first_name'))
                                 <span class="invalid-feedback" role="alert">
@@ -79,8 +81,8 @@
                             @endif
                         </div>
                         <div class="col-md-6">
-                            <label>{{ __('Last Name') }}<span style="color: red;">*</span></label>
-                            <input id="last_name" type="text" class="form-control{{ $errors->has('last_name') ? ' is-invalid' : '' }}" name="last_name" value="{{ $client->last_name }}">
+                            <!-- <label>{{ __('Last Name') }}<span style="color: red;">*</span></label> -->
+                            <input id="last_name" type="text" class="form-control{{ $errors->has('last_name') ? ' is-invalid' : '' }} input-error-border" name="last_name" value="{{ $client->last_name }}" placeholder="{{ __('Last Name') }}" required="">
 
                             @if ($errors->has('last_name'))
                                 <span class="invalid-feedback" role="alert">
@@ -91,8 +93,8 @@
                     </div>
                     <div class="form-group row">
                         <div class="col-md-6">
-                            <label>{{ __('E-Mail') }}<span style="color: red;">*</span></label>
-                            <input id="email" type="email" class="form-control{{ $errors->has('email') ? ' is-invalid' : '' }}" name="email" value="{{ $client->email }}" required>
+                            <!-- <label>{{ __('E-Mail') }}<span style="color: red;">*</span></label> -->
+                            <input id="email" type="email" class="form-control{{ $errors->has('email') ? ' is-invalid' : '' }} input-error-border" name="email" value="{{ $client->email }}" required placeholder="{{ __('E-Mail') }}">
 
                             @if ($errors->has('email'))
                                 <span class="invalid-feedback" role="alert">
@@ -101,8 +103,8 @@
                             @endif
                         </div>
                         <div class="col-md-6">
-                            <label>{{ __('Secondary E-Mail') }}</label>
-                            <input id="secondary_email" type="email" class="form-control{{ $errors->has('secondary_email') ? ' is-invalid' : '' }}" name="secondary_email" value="{{ $client->secondary_email }}">
+                            <!-- <label>{{ __('Secondary E-Mail') }}</label> -->
+                            <input id="secondary_email" type="email" class="form-control{{ $errors->has('secondary_email') ? ' is-invalid' : '' }}" name="secondary_email" value="{{ $client->secondary_email }}" placeholder="{{ __('Secondary E-Mail') }}">
 
                             @if ($errors->has('secondary_email'))
                                 <span class="invalid-feedback" role="alert">
@@ -113,10 +115,10 @@
                     </div>
                     <div class="form-group row">
                         <div class="col-md-6">
-                            <label>{{ __('Password') }}<span style="color: red;"> * {{ __("Leave blank if don't want to update") }}</span></label>
+                            <!-- <label>{{ __('Password') }}<span style="color: red;"> * {{ __("Leave blank if don't want to update") }}</span></label> -->
                             <div class="inner-addon right-addon">
                                 <i class="fa fa-eye togglePassword" id=""></i>
-                                <input id="password" type="password" class="form-control{{ $errors->has('password') ? ' is-invalid' : '' }}" name="password" value="{{ old('password', $client->password_text) }}">
+                                <input id="password" type="password" class="form-control{{ $errors->has('password') ? ' is-invalid' : '' }}" name="password" value="{{ old('password', $client->password_text) }}" placeholder="{{ __('Password') }} ({{ __("Leave blank if don't want to update") }})">
                                 @if ($errors->has('password'))
                                     <span class="invalid-feedback" role="alert">
                                         <strong>{{ $errors->first('password') }}</strong>
@@ -125,10 +127,10 @@
                             </div>
                         </div>
                         <div class="col-md-6">
-                            <label>{{ __('Password 2') }}</label>
+                            <!-- <label>{{ __('Password 2') }}</label> -->
                             <div class="inner-addon right-addon">
                                 <i class="fa fa-eye togglePassword" id=""></i>
-                                <input id="password-2" type="password" class="form-control{{ $errors->has('password_2') ? ' is-invalid' : '' }}" name="password_2" value="{{ old('password_2', $client->password_text_2) }}">
+                                <input id="password-2" type="password" class="form-control{{ $errors->has('password_2') ? ' is-invalid' : '' }}" name="password_2" value="{{ old('password_2', $client->password_text_2) }}" placeholder="{{ __('Password 2') }}">
                                 @if ($errors->has('password_2'))
                                     <span class="invalid-feedback" role="alert">
                                         <strong>{{ $errors->first('password_2') }}</strong>
@@ -139,8 +141,8 @@
                     </div>
                     <div class="form-group row">
                         <div class="col-md-6">
-                            <label>{{ __('Process Address') }}</label>
-                            <input id="process_address" type="text" class="form-control{{ $errors->has('process_address') ? ' is-invalid' : '' }}" name="process_address" value="{{ $client->process_address }}">
+                            <!-- <label>{{ __('Process Address') }}</label> -->
+                            <input id="process_address" type="text" class="form-control{{ $errors->has('process_address') ? ' is-invalid' : '' }}" name="process_address" value="{{ $client->process_address }}" placeholder="{{ __('Process Address') }}">
 
                             @if ($errors->has('process_address'))
                                 <span class="invalid-feedback" role="alert">
@@ -151,8 +153,8 @@
                         <div class="col-md-6">
                             <div class="row">
                                 <div class="col-md-6">
-                                    <label>{{ __('Contact') }}</label>
-                                    <input id="contact" type="number" class="form-control{{ $errors->has('contact') ? ' is-invalid' : '' }}" name="contact" value="{{ $client->contact }}">
+                                    <!-- <label>{{ __('Contact') }}</label> -->
+                                    <input id="contact" type="number" class="form-control{{ $errors->has('contact') ? ' is-invalid' : '' }}" name="contact" value="{{ $client->contact }}" placeholder="{{ __('Contact') }}">
 
                                     @if ($errors->has('contact'))
                                         <span class="invalid-feedback" role="alert">
@@ -162,8 +164,8 @@
                                 </div>
 
                                 <div class="col-md-6">
-                                    <label>{{ __('Secondary Contact') }}</label>
-                                    <input id="secondary_contact" type="number" class="form-control{{ $errors->has('secondary_contact') ? ' is-invalid' : '' }}" name="secondary_contact" value="{{ $client->secondary_contact }}">
+                                    <!-- <label>{{ __('Secondary Contact') }}</label> -->
+                                    <input id="secondary_contact" type="number" class="form-control{{ $errors->has('secondary_contact') ? ' is-invalid' : '' }}" name="secondary_contact" value="{{ $client->secondary_contact }}" placeholder="{{ __('Secondary Contact') }}">
 
                                     @if ($errors->has('secondary_contact'))
                                         <span class="invalid-feedback" role="alert">
@@ -176,8 +178,8 @@
                     </div>
                     <div class="form-group row">
                         <div class="col-md-6">
-                            <label>{{ __('Passport Number') }}</label>
-                            <input id="passport_number" type="text" class="form-control{{ $errors->has('passport_number') ? ' is-invalid' : '' }}" name="passport_number" value="{{ $client->passport_number }}">
+                            <!-- <label>{{ __('Passport Number') }}</label> -->
+                            <input id="passport_number" type="text" class="form-control{{ $errors->has('passport_number') ? ' is-invalid' : '' }}" name="passport_number" value="{{ $client->passport_number }}" placeholder="{{ __('Passport Number') }}">
 
                             @if ($errors->has('passport_number'))
                                 <span class="invalid-feedback" role="alert">
@@ -186,8 +188,8 @@
                             @endif
                         </div>
                         <div class="col-md-6">
-                            <label>{{ __('Nationality') }}<span style="color: red;"> *</span></label>
-                            <input id="nationality" type="text" class="form-control{{ $errors->has('nationality') ? ' is-invalid' : '' }}" name="nationality" value="{{ $client->nationality }}" required="true">
+                            <!-- <label>{{ __('Nationality') }}<span style="color: red;"> *</span></label> -->
+                            <input id="nationality" type="text" class="form-control{{ $errors->has('nationality') ? ' is-invalid' : '' }} input-error-border" name="nationality" value="{{ $client->nationality }}" required="true" placeholder="{{ __('Nationality') }}">
 
                             @if ($errors->has('nationality'))
                                 <span class="invalid-feedback" role="alert">
@@ -267,7 +269,7 @@
                                                 <tr>
                                                     <td rowspan="4">{{ $index + 1 }}</td>
                                                     <td>
-                                                        <input type="date" class="form-control{{ $errors->has('fee_dates.' . $index) ? ' is-invalid' : '' }}" name="fee_dates[]" value="{{ old('fee_dates.' . $index, (!empty($clientFee['date']) ? date('Y-m-d', strtotime($clientFee['date'])) : '')) }}">
+                                                        <input type="date" class="form-control{{ $errors->has('fee_dates.' . $index) ? ' is-invalid' : '' }}" name="fee_dates[]" value="{{ old('fee_dates.' . $index, (!empty($clientFee['date']) ? date('Y-m-d', strtotime($clientFee['date'])) : '')) }}" onkeydown="return checkNumber(event);">
 
                                                         @if ($errors->has('fee_dates.' . $index))
                                                             <span class="invalid-feedback" role="alert">
@@ -276,7 +278,7 @@
                                                         @endif
                                                     </td>
                                                     <td>
-                                                        <input type="text" class="form-control{{ $errors->has('total_proposed_lawyer_fee.' . $index) ? ' is-invalid' : '' }}" name="total_proposed_lawyer_fee[]" value="{{ old('total_proposed_lawyer_fee.' . $index, $clientFee['proposed_lawyer_fee']) }}">
+                                                        <input type="text" class="form-control{{ $errors->has('total_proposed_lawyer_fee.' . $index) ? ' is-invalid' : '' }}" name="total_proposed_lawyer_fee[]" value="{{ old('total_proposed_lawyer_fee.' . $index, $clientFee['proposed_lawyer_fee']) }}" onkeydown="return checkNumber(event);">
 
                                                         @if ($errors->has('total_proposed_lawyer_fee.' . $index))
                                                             <span class="invalid-feedback" role="alert">
@@ -285,7 +287,7 @@
                                                         @endif
                                                     </td>
                                                     <td>
-                                                        <input type="text" class="form-control{{ $errors->has('received_lawyer_fee.' . $index) ? ' is-invalid' : '' }}" name="received_lawyer_fee[]" value="{{ old('received_lawyer_fee.' . $index, $clientFee['received_lawyer_fee']) }}">
+                                                        <input type="text" class="form-control{{ $errors->has('received_lawyer_fee.' . $index) ? ' is-invalid' : '' }}" name="received_lawyer_fee[]" value="{{ old('received_lawyer_fee.' . $index, $clientFee['received_lawyer_fee']) }}" onkeydown="return checkNumber(event);">
 
                                                         @if ($errors->has('received_lawyer_fee.' . $index))
                                                             <span class="invalid-feedback" role="alert">
@@ -294,7 +296,7 @@
                                                         @endif
                                                     </td>
                                                     <td>
-                                                        <input type="text" class="form-control{{ $errors->has('missing_lawyer_fee.' . $index) ? ' is-invalid' : '' }}" name="missing_lawyer_fee[]" value="{{ old('missing_lawyer_fee.' . $index, $clientFee['missing_lawyer_fee']) }}">
+                                                        <input type="text" class="form-control{{ $errors->has('missing_lawyer_fee.' . $index) ? ' is-invalid' : '' }}" name="missing_lawyer_fee[]" value="{{ old('missing_lawyer_fee.' . $index, $clientFee['missing_lawyer_fee']) }}" onkeydown="return checkNumber(event);">
 
                                                         @if ($errors->has('missing_lawyer_fee.' . $index))
                                                             <span class="invalid-feedback" role="alert">
@@ -303,7 +305,7 @@
                                                         @endif
                                                     </td>
                                                     <td>
-                                                        <input type="text" class="form-control{{ $errors->has('total_proposed_government_fee.' . $index) ? ' is-invalid' : '' }}" name="total_proposed_government_fee[]" value="{{ old('total_proposed_government_fee.' . $index, $clientFee['proposed_government_fee']) }}">
+                                                        <input type="text" class="form-control{{ $errors->has('total_proposed_government_fee.' . $index) ? ' is-invalid' : '' }}" name="total_proposed_government_fee[]" value="{{ old('total_proposed_government_fee.' . $index, $clientFee['proposed_government_fee']) }}" onkeydown="return checkNumber(event);">
 
                                                         @if ($errors->has('total_proposed_government_fee.' . $index))
                                                             <span class="invalid-feedback" role="alert">
@@ -312,7 +314,7 @@
                                                         @endif
                                                     </td>
                                                     <td>
-                                                        <input type="text" class="form-control{{ $errors->has('received_government_fee.' . $index) ? ' is-invalid' : '' }}" name="received_government_fee[]" value="{{ old('received_government_fee.' . $index, $clientFee['received_government_fee']) }}">
+                                                        <input type="text" class="form-control{{ $errors->has('received_government_fee.' . $index) ? ' is-invalid' : '' }}" name="received_government_fee[]" value="{{ old('received_government_fee.' . $index, $clientFee['received_government_fee']) }}" onkeydown="return checkNumber(event);">
 
                                                         @if ($errors->has('received_government_fee.' . $index))
                                                             <span class="invalid-feedback" role="alert">
@@ -321,7 +323,7 @@
                                                         @endif
                                                     </td>
                                                     <td>
-                                                        <input type="text" class="form-control{{ $errors->has('missing_government_fee.' . $index) ? ' is-invalid' : '' }}" name="missing_government_fee[]" value="{{ old('missing_government_fee.' . $index, $clientFee['missing_government_fee']) }}">
+                                                        <input type="text" class="form-control{{ $errors->has('missing_government_fee.' . $index) ? ' is-invalid' : '' }}" name="missing_government_fee[]" value="{{ old('missing_government_fee.' . $index, $clientFee['missing_government_fee']) }}" onkeydown="return checkNumber(event);">
 
                                                         @if ($errors->has('missing_government_fee.' . $index))
                                                             <span class="invalid-feedback" role="alert">
@@ -735,7 +737,17 @@
                         <div class="col-md-2">{{ __('Work Status') }}</div>
                         <div class="col-md-6">
                             @foreach ($client::$workStatus as $value => $text)
-                                <label>
+                                @php
+                                    $style = '';
+                                    if ($value == 0) {
+                                        $style = 'default-status';
+                                    } elseif ($value == 1) {
+                                        $style = 'to-follow-status';
+                                    } elseif ($value == 2) {
+                                        $style = 'work-done-status';
+                                    }
+                                @endphp
+                                <label class="{{ $style }}">
                                     <input type="radio" id="status-{{ strtolower(str_ireplace(' ', '-', $text)) }}" name="work_status" value="{{ $value }}" @if (old('work_status', $client->getAttributes()['work_status']) == $value) checked="true"' @endif />&nbsp;{{ $text }}
                                 </label>&nbsp;
                             @endforeach
@@ -800,8 +812,8 @@
                                                             <select id="assign_to" class="form-control {{ $errors->has('assign_to.' . $index) ? ' is-invalid' : '' }} " name="assign_to[]" >
                                                                 <option value="">{{ __('Select') }}</option>
 
-                                                                @foreach ($assignTo as $index => $assign)
-                                                                    <option value="{{ $assign->id }}" {{ (old('assign_to.' . $index, $followUp['follow_by']) == $assign->id ? 'selected' : '') }}>{{ $assign->first_name . ' ' . $assign->last_name }}</option>
+                                                                @foreach ($assignTo as $index1 => $assign)
+                                                                    <option value="{{ $assign->id }}" {{ (old('assign_to.' . $index1, $followUp['follow_by']) == $assign->id ? 'selected' : '') }}>{{ $assign->first_name . ' ' . $assign->last_name }}</option>
                                                                 @endforeach
                                                             </select>
 

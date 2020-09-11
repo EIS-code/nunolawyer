@@ -27,7 +27,14 @@
 
         <div class="container">
             <div class="print-only" style="margin-top: 20px;width: 100%;font-size: 22px;">
-                <h1 class="header" style="text-transform: uppercase;color: blue;">{{ $client->first_name .' '. $client->last_name }}</h1>
+                <h1 class="header" style="text-transform: uppercase;color: blue;float: left;">
+                    {{ $client->first_name .' '. $client->last_name }}
+                </h1>
+                <div style="float: right;" id="print-no">
+                    <button class="btn btn-primary btn-sm" onclick="printPage();">
+                        {{ __('Print') }}
+                    </button>
+                </div>
                 <table class="user-table table table-bordered">
                     <tbody>
                         <tr>
@@ -278,6 +285,11 @@
             if (printNo) {
                 printNo.style.display = "block";
             }
+        }
+
+        function printPage()
+        {
+            window.print();
         }
     </script>
 </html>

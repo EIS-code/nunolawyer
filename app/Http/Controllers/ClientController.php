@@ -246,6 +246,10 @@ class ClientController extends Controller
             $assignTo = $assignDate = ['required'];
         }
 
+        if (empty($data['password'])) {
+            $data['password'] = '';
+        }
+
         if (empty($data['password_2'])) {
             $data['password_2'] = '';
         }
@@ -267,7 +271,7 @@ class ClientController extends Controller
             'banned'            => ['integer', 'in:0,1'],
             // 'assign_date'       => array_merge(['date_format:Y-m-d'], $assignDate),
             // 'assign_to'         => array_merge(['integer', 'exists:' . Client::getTableName() . ',id'], $assignTo),
-            'password'          => ['required', 'string', 'min:8'],
+            'password'          => ['string', 'min:8'],
             'password_2'        => ['string', 'min:8'],
             'is_superadmin'     => ['in:0'],
             'purpose_articles'  => (!$this->isEditors) ? ['required'] : []
@@ -292,9 +296,9 @@ class ClientController extends Controller
             'banned'          => (isset($data['banned'])) ? $data['banned'] : '0',
             // 'assign_date'     => (!empty($data['assign_date'])) ? $data['assign_date'] : NULL,
             // 'assign_to'       => (!empty($data['assign_to'])) ? $data['assign_to'] : NULL,
-            'password'        => Hash::make($data['password']),
+            'password'        => (!empty($data['password'])) ? Hash::make($data['password']) : '',
             'password_2'      => (!empty($data['password_2'])) ? Hash::make($data['password_2']) : '',
-            'password_text'   => $data['password'],
+            'password_text'   => (!empty($data['password'])) ? $data['password'] : '',
             'password_text_2' => (!empty($data['password_2'])) ? $data['password_2'] : '',
             'is_superadmin'   => '0'
         ]);
@@ -985,6 +989,9 @@ class ClientController extends Controller
             if (isset($data['password']) && $data['password'] !== null) {
                 $data['password_text'] = $data['password'];
                 $data['password']      = Hash::make($data['password']);
+            } else {
+                $data['password_text'] = '';
+                $data['password']      = '';
             }
             if (isset($data['password_2']) && $data['password_2'] !== null) {
                 $data['password_text_2'] = $data['password_2'];
