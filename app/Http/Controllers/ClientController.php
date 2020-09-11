@@ -276,6 +276,7 @@ class ClientController extends Controller
         $validator->validate();
 
         $client = CLient::create([
+            'registration_date' => $data['registration_date'],
             'first_name'      => $data['first_name'],
             'last_name'       => $data['last_name'],
             'email'           => $data['email'],

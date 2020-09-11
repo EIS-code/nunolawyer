@@ -34,7 +34,7 @@ class ActivityLogController extends Controller
     {
         $audits = Audit::where('new_values','NOT LIKE','%remember_token%')->whereNotNull('user_id')->whereNotIn('auditable_type', $this->excepts)->orderBy('created_at','DESC');
 
-        $records = $audits->get();
+        /*$records = $audits->get();
         if (!empty($records) && !$records->isEmpty()) {
             $records->map(function($data, $index) use($records) {
                 if (count($data->getModified()) == 1) {
@@ -51,15 +51,15 @@ class ActivityLogController extends Controller
                     }
                 }
             });
-        }
+        }*/
 
-        // $audits = $audits->paginate(20);
+        $audits = $audits->paginate(20);
 
-        $page   = $request->get('page', 1);
+        /*$page   = $request->get('page', 1);
         $limit  = 20;
         $audits = new LengthAwarePaginator(
             $records->forPage($page, $limit), $records->count(), $limit, $page, ['path' => $request->path()]
-        );
+        );*/
 
         $audits = AuditMessages::get($audits);
 

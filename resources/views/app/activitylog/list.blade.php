@@ -47,6 +47,10 @@
 
                             @if($audits->total() > 0)
                                 @foreach($audits as $audit)
+                                    @if (empty($audit['event_message']))
+                                        @continue
+                                    @endif
+
                                     @if (!empty($audit->getModified()))
                                         @if (count($audit->getModified()) == 1 && !empty($audit->getModified()['registration_date']))
                                             @if (strtotime(date('Y-m-d', strtotime($audit->getModified()['registration_date']['old']))) == strtotime(date('Y-m-d', strtotime($audit->getModified()['registration_date']['new']))))

@@ -62,7 +62,7 @@ class TermsAndConditionController extends Controller
 
         $validator = Validator::make($data, [
             'title' => ['required', 'string', 'max:255'],
-            'text'  => ['nullable', 'string', 'max:255']
+            'text'  => ['nullable', 'string']
         ]);
 
         $validator->validate();
@@ -99,7 +99,7 @@ class TermsAndConditionController extends Controller
 
             $validator = Validator::make($data, [
                 'title' => ['required', 'string', 'max:255'],
-                'text'  => ['nullable', 'string', 'max:255']
+                'text'  => ['nullable', 'string']
             ]);
 
             $validator->validate();

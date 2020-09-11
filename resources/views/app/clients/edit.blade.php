@@ -285,7 +285,7 @@
                                                         @endif
                                                     </td>
                                                     <td>
-                                                        <input type="number" class="form-control{{ $errors->has('received_lawyer_fee.' . $index) ? ' is-invalid' : '' }}" name="received_lawyer_fee[]" value="{{ old('received_lawyer_fee.' . $index, $clientFee['received_lawyer_fee']) }}">
+                                                        <input type="text" class="form-control{{ $errors->has('received_lawyer_fee.' . $index) ? ' is-invalid' : '' }}" name="received_lawyer_fee[]" value="{{ old('received_lawyer_fee.' . $index, $clientFee['received_lawyer_fee']) }}">
 
                                                         @if ($errors->has('received_lawyer_fee.' . $index))
                                                             <span class="invalid-feedback" role="alert">
@@ -294,7 +294,7 @@
                                                         @endif
                                                     </td>
                                                     <td>
-                                                        <input type="number" class="form-control{{ $errors->has('missing_lawyer_fee.' . $index) ? ' is-invalid' : '' }}" name="missing_lawyer_fee[]" value="{{ old('missing_lawyer_fee.' . $index, $clientFee['missing_lawyer_fee']) }}">
+                                                        <input type="text" class="form-control{{ $errors->has('missing_lawyer_fee.' . $index) ? ' is-invalid' : '' }}" name="missing_lawyer_fee[]" value="{{ old('missing_lawyer_fee.' . $index, $clientFee['missing_lawyer_fee']) }}">
 
                                                         @if ($errors->has('missing_lawyer_fee.' . $index))
                                                             <span class="invalid-feedback" role="alert">
@@ -312,7 +312,7 @@
                                                         @endif
                                                     </td>
                                                     <td>
-                                                        <input type="number" class="form-control{{ $errors->has('received_government_fee.' . $index) ? ' is-invalid' : '' }}" name="received_government_fee[]" value="{{ old('received_government_fee.' . $index, $clientFee['received_government_fee']) }}">
+                                                        <input type="text" class="form-control{{ $errors->has('received_government_fee.' . $index) ? ' is-invalid' : '' }}" name="received_government_fee[]" value="{{ old('received_government_fee.' . $index, $clientFee['received_government_fee']) }}">
 
                                                         @if ($errors->has('received_government_fee.' . $index))
                                                             <span class="invalid-feedback" role="alert">
@@ -321,7 +321,7 @@
                                                         @endif
                                                     </td>
                                                     <td>
-                                                        <input type="number" class="form-control{{ $errors->has('missing_government_fee.' . $index) ? ' is-invalid' : '' }}" name="missing_government_fee[]" value="{{ old('missing_government_fee.' . $index, $clientFee['missing_government_fee']) }}">
+                                                        <input type="text" class="form-control{{ $errors->has('missing_government_fee.' . $index) ? ' is-invalid' : '' }}" name="missing_government_fee[]" value="{{ old('missing_government_fee.' . $index, $clientFee['missing_government_fee']) }}">
 
                                                         @if ($errors->has('missing_government_fee.' . $index))
                                                             <span class="invalid-feedback" role="alert">

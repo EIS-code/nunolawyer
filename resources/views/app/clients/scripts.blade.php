@@ -376,6 +376,20 @@
                     }
                 });
             }
+
+            /*$("input[id='number']").on("keydown", function(e) {
+                if(e.keyCode === 189 && !e.shiftKey) {
+                    return true;
+                }
+                let value = $(this).val();
+
+                if (!/^[+-]?\d+$/.test(value)) {
+                    $(this).val(value.replace(/[^\d.-]/g,''));
+                    return false;
+                }
+
+                return true;
+            });*/
         }
     });
 </script>

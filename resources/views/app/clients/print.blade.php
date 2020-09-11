@@ -15,6 +15,9 @@
             * {
                 font-size: 20px;
             }
+            table th, td:not(.wrap) {
+                white-space: nowrap;
+            }
         </style>
     </head>
     <body onbeforeprint="beforePrints()" onafterprint="afterPrints()">
@@ -37,7 +40,7 @@
                         <tr>
                             <td class="table-main">{{ __('Name') }}</td>
                             <td class="table-contain">{{ $client->first_name .' '. $client->last_name }}</td>
-                            <td rowspan="8" style="width:50%;">
+                            <td rowspan="8" style="width:50%;" class="wrap">
                                 <p>1. {{ __('Adm. Fee is for mention purpose, Art and for one time attempt in Lisbon work area only, otherwise additional charge, hotel booking cost plus transportation charge 0.50 Cent Euro per K.M will be charged.') }}</p>
                                 <p>2. {{ __('Missing / Due amount will be charged before your appointment on any suitable day.') }}</p>
                                 <p>3. {{ __('All the money we have received and will be received is always non refundable.') }}</p>

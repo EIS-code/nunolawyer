@@ -166,9 +166,10 @@
                                 <th>{{__('Name')}}</th>
                                 <th>{{ __('DOB') }}</th>
                                 <th>{{ __('Nationality') }}</th>
-                                <th>{{ __('Passport/Art.') }}</th>
+                                <th>{{ __('Passport/Add.') }}</th>
                                 <th>{{__('E-mail')}}</th>
                                 <th>{{ __('Contact') }}</th>
+                                <th>{{ __('Purpose/Article') }}</th>
                                 <!-- <th>{{__('Role')}}</th> -->
                                 @can('clients_activity')
                                     <th>{{ __('Log') }}</th>
@@ -226,6 +227,24 @@
                                         <td>{{ $client->passport_number . ' / ' . $client->process_address }}</td>
                                         <td>{{$client->email}}</td>
                                         <td>{{$client->contact}}</td>
+                                        @php
+                                            $purposeArticles = ['-'];
+                                            if (!empty($client->clientPurposeArticles())) {
+                                                $getPurposeArticles = $client->clientPurposeArticles()->get();
+
+                                                if (!empty($getPurposeArticles) && !$getPurposeArticles->isEmpty()) {
+                                                    $purposeArticles = [];
+
+                                                    foreach ($getPurposeArticles as $getPurposeArticle) {
+                                                        if (!empty($getPurposeArticle->purposeArticle)) {
+                                                            $purposeArticles[] = $getPurposeArticle->purposeArticle->title;
+                                                        }
+                                                    }
+                                                }
+                                            }
+                                            $purposeArticles = implode(", ", $purposeArticles);
+                                        @endphp
+                                        <td>{{ $purposeArticles }}</td>
                                         <!-- <td><span class="badge badge-lg badge-secondary text-white">{{@$client->getRoleNames()[0]}}</span></td> -->
                                         @can('clients_activity')
                                             <td>
