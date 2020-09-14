@@ -66,3 +66,7 @@
     color: red;
     text-decoration: underline;
 }
+
+.bootbox-body table{
+    width:100% !important;
+}

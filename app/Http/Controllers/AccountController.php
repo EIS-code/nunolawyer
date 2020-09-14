@@ -14,6 +14,7 @@ use DB;
 
 class AccountController extends Controller
 {
+    public $isEditors;
 
     public function __construct()
     {
@@ -41,6 +42,12 @@ class AccountController extends Controller
         }
 
         $accounts = $accountModel::query();
+
+        $this->isEditors();
+
+        if ($this->isEditors) {
+            $accounts->where('created_by', \Auth::user()->id);
+        }
 
         if ($isFiltered) {
             if ($request->get('dt', false) || $request->get('dtt', false)) {
@@ -103,7 +110,7 @@ class AccountController extends Controller
 
         $roles    = Role::where('id', '!=', Client::$roleAdminId)->orderBy('id', 'ASC')->get();
 
-        return view('app.accounts.list', ['accounts' => $accounts, 'term' => $request, 'isFiltered' => $isFiltered, 'roles' => $roles]);
+        return view('app.accounts.list', ['accounts' => $accounts, 'term' => $request, 'isFiltered' => $isFiltered, 'roles' => $roles, 'isEditors' => $this->isEditors]);
     }
 
     /**
@@ -116,5 +123,10 @@ class AccountController extends Controller
         }
 
         return Excel::download($this->accountExport, 'account.csv');
+    }
+
+    public function isEditors()
+    {
+        return $this->isEditors = \Auth::user()->hasRole('editor');
     }
 }

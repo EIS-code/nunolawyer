@@ -25,7 +25,7 @@
                     <div class="form-group row">
                         <div class="col-md-12">
                             <label>{{ __('Title') }}</label>
-                            <input id="title" type="text" class="form-control{{ $errors->has('title') ? ' is-invalid' : '' }}" name="title" value="{{ $articlePurpose->title }}"  autofocus>
+                            <input id="title" type="text" class="form-control{{ $errors->has('title') ? ' is-invalid' : '' }}" name="title" value="{{ $articlePurpose->title }}"  autofocus @cannot('article_purpose_title_edit') disabled="" @endcan>
 
                             @if ($errors->has('title'))
                                 <span class="invalid-feedback" role="alert">

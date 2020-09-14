@@ -71143,6 +71143,7 @@ $(document).ready(function () {
   $(".view-details").on('click', function () {
     let id   = $(this).data('id'),
         url  = $(this).data('url'),
+        isEdit = $(this).data('is-edit'),
         html = $("#view-details-" + id).html();
 
     bootbox.dialog({
@@ -71150,7 +71151,7 @@ $(document).ready(function () {
       size: 'large',
       buttons: {
         edit: {
-          className: 'btn-primary',
+          className: (isEdit == true) ? 'btn-primary' : 'd-none',
           callback: function() {
             window.location.href = url;
           }

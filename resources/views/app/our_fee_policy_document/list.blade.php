@@ -118,7 +118,7 @@
                                                 </div>
                                                 </div>
                                             </div>
-                                            <a href="javascript:void(0);" class="view-details" data-id="{{ $ourFeePolicyDocument->id }}" data-url="{{ route('our_fee_policy_document.edit', $ourFeePolicyDocument->id) }}">{{ __('View') }}</a>
+                                            <a href="javascript:void(0);" class="view-details" @can('our_fee_policy_document_edit') data-is-edit="true" @else data-is-edit="false" @endcan data-id="{{ $ourFeePolicyDocument->id }}" data-url="{{ route('our_fee_policy_document.edit', $ourFeePolicyDocument->id) }}">{{ __('View') }}</a>
                                         </td>
                                     </tr>
                                 @endforeach

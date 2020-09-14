@@ -100,8 +100,15 @@ class ArticlePurposeController extends Controller
         if ($articlePurpose) {
             $data = $request->all();
 
+            $rule = ['required'];
+            if (!auth()->user()->can('article_purpose_title_edit')) {
+                unset($data['title']);
+
+                $rule = [];
+            }
+
             $validator = Validator::make($data, [
-                'title' => ['required', 'string'],
+                'title' => array_merge($rule, ['string']),
                 'text'  => ['nullable', 'string']
             ]);
 
