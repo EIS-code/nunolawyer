@@ -26,9 +26,17 @@
         @endif
 
         @if (session('error'))
-            <div class="alert alert-danger" role="alert">
-                {{ session('error') }}
-            </div>
+            @if (is_array(session('error')))
+                <div class="alert alert-danger" role="alert">
+                    @foreach (session('error') as $error)
+                        {{ $error }}<br />
+                    @endforeach
+                </div>
+            @else
+                <div class="alert alert-danger" role="alert">
+                    {{ session('error') }}
+                </div>
+            @endif
         @endif
 
         <div class="card">
@@ -41,6 +49,12 @@
                             <div class="col-md-2">{{ __('Registration Date') }}</div>
                             <div class="col-md-8">
                                 {{ $client->registration_date }}
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <div class="col-md-2">{{ __('DOB') }}</div>
+                            <div class="col-md-8">
+                                {{ $client->dob }}
                             </div>
                         </div>
                         <div class="form-group row">
@@ -68,21 +82,15 @@
                             </div>
                         </div>
                         <div class="form-group row">
-                            <div class="col-md-2">{{ __('DOB') }}</div>
+                            <div class="col-md-2">{{ __('Password') }}</div>
                             <div class="col-md-8">
-                                {{ $client->dob }}
+                                {{ $client->password_text }}
                             </div>
                         </div>
                         <div class="form-group row">
-                            <div class="col-md-2">{{ __('Contact') }}</div>
+                            <div class="col-md-2">{{ __('Password 2') }}</div>
                             <div class="col-md-8">
-                                {{ $client->contact }}
-                            </div>
-                        </div>
-                        <div class="form-group row">
-                            <div class="col-md-2">{{ __('Passport Number') }}</div>
-                            <div class="col-md-3">
-                                {{ $client->passport_number }}
+                                {{ $client->password_text_2 }}
                             </div>
                         </div>
                         <div class="form-group row">
@@ -92,39 +100,42 @@
                             </div>
                         </div>
                         <div class="form-group row">
-                            <div class="col-md-2">{{ __('Purpose and Article') }}</div>
+                            <div class="col-md-2">{{ __('Contact') }}</div>
                             <div class="col-md-8">
-                                @php
-                                    $titles = [];
-                                    $client->clientPurposeArticles->map(function($data) use(&$titles) {
-                                        $titles[] = $data->purposeArticle->title;
-                                    });
-                                @endphp
-                                {{ implode(", ", $titles) }}
+                                {{ $client->contact }}
                             </div>
                         </div>
                         <div class="form-group row">
-                            <div class="col-md-2">{{ __('Client Condition / Work To Do') }}</div>
+                            <div class="col-md-2">{{ __('Secondary Contact') }}</div>
                             <div class="col-md-8">
-                                <table class="table table-respopnsive table-bordered">
-                                    <thead>
-                                        <tr>
-                                            <th width="1%">#</th>
-                                            <th width="25%">{{ __('Date') }}</th>
-                                            <th width="74%">{{ __('Client Condition ') }}</th>
-                                        </tr>
-                                    </thead>
-
-                                    <tbody>
-                                        @foreach ($client->clientConditions as $index => $clientCondition)
-                                            <tr>
-                                                <td>{{ $index + 1 }}</td>
-                                                <td>{{ $clientCondition->date }}</td>
-                                                <td>{{ $clientCondition->condition }}</td>
-                                            </tr>
-                                        @endforeach
-                                    </tbody>
-                                </table>
+                                {{ $client->secondary_contact }}
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <div class="col-md-2">{{ __('Passport Number') }}</div>
+                            <div class="col-md-3">
+                                {{ $client->passport_number }}
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <div class="col-md-2">{{ __('Nationality') }}</div>
+                            <div class="col-md-8">
+                                {{ $client->nationality }}
+                            </div>
+                        </div>
+                        @if (!$isEditors)
+                        <div class="form-group row">
+                            <div class="col-md-2">{{ __('Purpose and Article') }}</div>
+                            <div class="col-md-8">
+                                @php
+                                    $titles = []; 
+                                    $client->clientPurposeArticles->map(function($data) use(&$titles) {
+                                        if (!empty($data->purposeArticle)) {
+                                            $titles[] = $data->purposeArticle->title;
+                                        }
+                                    });
+                                @endphp
+                                {{ implode(", ", $titles) }}
                             </div>
                         </div>
                         <div class="form-group row">
@@ -162,6 +173,84 @@
                             </div>
                         </div>
                         <div class="form-group row">
+                            <div class="col-md-2">{{ __('Client Condition / Work To Do') }}</div>
+                            <div class="col-md-8">
+                                <table class="table table-respopnsive table-bordered">
+                                    <thead>
+                                        <tr>
+                                            <th width="1%">#</th>
+                                            <th width="25%">{{ __('Date') }}</th>
+                                            <th width="74%">{{ __('Client Condition ') }}</th>
+                                        </tr>
+                                    </thead>
+
+                                    <tbody>
+                                        @foreach ($client->clientConditions as $index => $clientCondition)
+                                            <tr>
+                                                <td>{{ $index + 1 }}</td>
+                                                <td>{{ $clientCondition->date }}</td>
+                                                <td>{{ $clientCondition->condition }}</td>
+                                            </tr>
+                                        @endforeach
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                        @if ($loggedInId == $client->id || $client->hasSuperAdmin())
+                            <div class="form-group row">
+                                <div class="col-md-2">{{ __('Client Private Informations') }}</div>
+                                <div class="col-md-8">
+                                    <table class="table table-respopnsive table-bordered">
+                                        <thead>
+                                            <tr>
+                                                <th width="1%">#</th>
+                                                <th width="25%">{{ __('Date') }}</th>
+                                                <th width="74%">{{ __('Client Private Informations') }}</th>
+                                            </tr>
+                                        </thead>
+
+                                        <tbody>
+                                            @foreach ($client->clientPrivateInformations as $index => $clientPrivateInformation)
+                                                <tr>
+                                                    <td>{{ $index + 1 }}</td>
+                                                    <td>{{ $clientPrivateInformation->date }}</td>
+                                                    <td>{{ $clientPrivateInformation->private_information }}</td>
+                                                </tr>
+                                            @endforeach
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        @endif
+                        @endif
+                        <div class="form-group row">
+                            <div class="col-md-2">{{ $isEditors ? __('Editor') : __('Client') }} {{ __(' Documents') }}</div>
+                            <div class="col-md-8">
+                                <table class="table table-respopnsive table-bordered">
+                                    <thead>
+                                        <tr>
+                                            <th width="1%">#</th>
+                                            <th width="99%">{{ __('File') }}</th>
+                                        </tr>
+                                    </thead>
+
+                                    <tbody>
+                                        @foreach ($client->clientDocuments as $index => $clientDocument)
+                                            <tr>
+                                                <td>{{ $index + 1 }}</td>
+                                                <td>
+                                                    <a href="{{ $clientDocument->file }}" target="__blank">
+                                                        {{ __('View') }}
+                                                    </a>
+                                                </td>
+                                            </tr>
+                                        @endforeach
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                        @if (!$isEditors)
+                        <div class="form-group row">
                             <div class="col-md-2">{{ __('Progress Report To The Client (By Email)') }}</div>
                             <div class="col-md-8">
                                 <table class="table table-respopnsive table-bordered">
@@ -182,56 +271,6 @@
                                                 <td>{{ $clientEmailProgressReport->progress_report }}</td>
                                                 <td>
                                                     <a href="{{ $clientEmailProgressReport->file }}" target="__blank">
-                                                        {{ __('View') }}
-                                                    </a>
-                                                </td>
-                                            </tr>
-                                        @endforeach
-                                    </tbody>
-                                </table>
-                            </div>
-                        </div>
-                        <div class="form-group row">
-                            <div class="col-md-2">{{ __('Client Private Informations') }}</div>
-                            <div class="col-md-8">
-                                <table class="table table-respopnsive table-bordered">
-                                    <thead>
-                                        <tr>
-                                            <th width="1%">#</th>
-                                            <th width="25%">{{ __('Date') }}</th>
-                                            <th width="74%">{{ __('Client Private Informations') }}</th>
-                                        </tr>
-                                    </thead>
-
-                                    <tbody>
-                                        @foreach ($client->clientPrivateInformations as $index => $clientPrivateInformation)
-                                            <tr>
-                                                <td>{{ $index + 1 }}</td>
-                                                <td>{{ $clientPrivateInformation->date }}</td>
-                                                <td>{{ $clientPrivateInformation->private_information }}</td>
-                                            </tr>
-                                        @endforeach
-                                    </tbody>
-                                </table>
-                            </div>
-                        </div>
-                        <div class="form-group row">
-                            <div class="col-md-2">{{ __('Client Documents') }}</div>
-                            <div class="col-md-8">
-                                <table class="table table-respopnsive table-bordered">
-                                    <thead>
-                                        <tr>
-                                            <th width="1%">#</th>
-                                            <th width="99%">{{ __('File') }}</th>
-                                        </tr>
-                                    </thead>
-
-                                    <tbody>
-                                        @foreach ($client->clientDocuments as $index => $clientDocument)
-                                            <tr>
-                                                <td>{{ $index + 1 }}</td>
-                                                <td>
-                                                    <a href="{{ $clientDocument->file }}" target="__blank">
                                                         {{ __('View') }}
                                                     </a>
                                                 </td>
@@ -265,25 +304,42 @@
                                 </table>
                             </div>
                         </div>
+                        @endif
                         <div class="form-group row">
                             <div class="col-md-2">{{ __('Work Status') }}</div>
                             <div class="col-md-3">
                                 {{ $client->work_status }}
                             </div>
                         </div>
-                        @if ($client->work_status == '1')
-                            <div class="form-group row">
-                                <div class="col-md-2">{{ __('Assign Date') }}</div>
-                                <div class="col-md-8">
-                                    {{ $client->assign_date }}
-                                </div>
+                        @if ($client->getAttributes()['work_status'] == '1')
+                        <div class="form-group row">
+                            <div class="col-md-2">{{ __('Assign') }}</div>
+                            <div class="col-md-8">
+                                <table class="table table-respopnsive table-bordered">
+                                    <thead>
+                                        <tr>
+                                            <th width="1%">#</th>
+                                            <th width="20%">{{ __('Date') }}</th>
+                                            <th width="79%">{{ __('Custom') }}</th>
+                                        </tr>
+                                    </thead>
+
+                                    <tbody>
+                                        @foreach ($client->followUps as $index => $followUp)
+                                            <tr>
+                                                <td>{{ $index + 1 }}</td>
+                                                <td>
+                                                    {{ $followUp->date }}
+                                                </td>
+                                                <td>
+                                                    {{ $client->getClientNames($followUp->follow_by) }}
+                                                </td>
+                                            </tr>
+                                        @endforeach
+                                    </tbody>
+                                </table>
                             </div>
-                            <div class="form-group row">
-                                <div class="col-md-2">{{ __('Assign To') }}</div>
-                                <div class="col-md-8">
-                                    {{ $client->assign_to }}
-                                </div>
-                            </div>
+                        </div>
                         @endif
                         <div class="form-group row">
                             <div class="col-md-2">{{ __('Created at') }}</div>
@@ -291,7 +347,7 @@
                                 {{$client->created_at}}
                             </div>
                         </div>
-                        <div class="form-group row">
+                        <!--div class="form-group row">
                             <div class="col-md-2">{{ __('Role') }}</div>
                             <div class="col-md-3">
                                 <span class="badge badge-lg badge-secondary text-white">{{@$client->getRoleNames()[0]}}</span>
@@ -323,7 +379,7 @@
                                     @endforeach
                                 </table>
                             </div>
-                        </div>
+                        </div-->
                     </div>
                 </div>
             </div>

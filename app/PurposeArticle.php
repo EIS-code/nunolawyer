@@ -17,6 +17,20 @@ class PurposeArticle extends BaseModel implements Auditable
      */
     protected $fillable = [
         'title',
+        'text',
         'is_removed',
     ];
+
+    public static function getNameById(int $id)
+    {
+        if (!empty($id)) {
+            $getData = self::where('is_removed', self::$notRemoved)->where('id', $id)->first();
+
+            if (!empty($getData)) {
+                return $getData->title;
+            }
+        }
+
+        return NULL;
+    }
 }

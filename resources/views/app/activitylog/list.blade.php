@@ -41,12 +41,34 @@
                             </tr>
                         </thead>
                         <tbody>
-                            @if($audits->total() == 0)
-                                <tr>
-                                    <td colspan="6">{{__('No results found.')}}</td>
-                                </tr>
-                            @else
+                            @php
+                                $isHave = false;
+                            @endphp
+
+                            @if($audits->total() > 0)
                                 @foreach($audits as $audit)
+                                    @if (empty($audit['event_message']))
+                                        @continue
+                                    @endif
+
+                                    @if (!empty($audit->getModified()))
+                                        @if (count($audit->getModified()) == 1 && !empty($audit->getModified()['registration_date']))
+                                            @if (strtotime(date('Y-m-d', strtotime($audit->getModified()['registration_date']['old']))) == strtotime(date('Y-m-d', strtotime($audit->getModified()['registration_date']['new']))))
+                                                @continue
+                                            @endif
+                                        @endif
+
+                                        @if (count($audit->getModified()) == 1 && !empty($audit->getModified()['date']))
+                                            @if (strtotime(date('Y-m-d', strtotime($audit->getModified()['date']['old']))) == strtotime(date('Y-m-d', strtotime($audit->getModified()['date']['new']))))
+                                                @continue
+                                            @endif
+                                        @endif
+                                    @endif
+
+                                    @php
+                                        $isHave = true;
+                                    @endphp
+
                                     <tr>
                                         <td width="1">
                                             @can('activitylog_show')
@@ -66,10 +88,10 @@
                                         </td>
                                         <td>
                                             @if(isset($audit->user))
-                                                @if(auth()->user()->can('users_show'))
-                                                    <a href="{{route('users.activity', $audit->user->id)}}" data-toggle="tooltip" data-placement="top" title="{{__('Go to user\'s activity log')}}">{{$audit->user->first_name . ' ' . $audit->user->last_name}}</a>
+                                                @if(auth()->user()->can('clients_show'))
+                                                    <a href="{{route('clients.own.activity', $audit->user->id)}}" data-toggle="tooltip" data-placement="top" title="{{__('Go to client\'s activity log')}}">{{$audit->user->first_name . ' ' . $audit->user->last_name}}</a>
                                                 @else
-                                                    {{$audit->user->first_name . ' ' . $audit->user->last_name}}
+                                                    {{ $audit->user->first_name . ' ' . $audit->user->last_name }}
                                                 @endif
                                             @endif
                                         </td>
@@ -78,6 +100,19 @@
                                         <td>{{$audit->ip_address}}</td>
                                     </tr>
                                 @endforeach
+                            @else
+                                @php
+                                    $isHave = true;
+                                @endphp
+                                <tr>
+                                    <td colspan="6" class="text-center">{{__('No results found.')}}</td>
+                                </tr>
+                            @endif
+
+                            @if (!$isHave)
+                                <tr>
+                                    <td colspan="6" class="text-center">{{__('No results found.')}}</td>
+                                </tr>
                             @endif
                         </tbody>
                     </table>

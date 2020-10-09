@@ -39,9 +39,9 @@
                     <div class="col-md-8">
                         @if(isset($audit->user))
                             @if(auth()->user()->can('clients_show'))
-                                <a href="{{route('clients.activity', $audit->user->id)}}">{{$audit->user->first_name . ' ' . $audit->user->last_name}}</a>
+                                <a href="{{route('clients.activity', $audit->user->id)}}">{{ $audit->user->first_name . ' ' . $audit->user->last_name }}</a>
                             @else
-                                {{$audit->user->name}}
+                                {{ $audit->user->first_name . ' ' . $audit->user->last_name }}
                             @endif
                         @endif
                     </div>
@@ -56,6 +56,44 @@
                     <div class="col-md-2">{{ __('Event') }}</div>
                     <div class="col-md-8">
                         {{@$audit['event_message']}}
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <div class="col-md-2">{{ __('Changed Values (OLD)') }}</div>
+                    <div class="col-md-8">
+                        @if (!empty($audit->old_values))
+                            @foreach ($audit->old_values as $key => $oldValue)
+
+                                @if ($key == 'registration_date' || $key == 'date')
+                                    @php $oldValue = date('Y-m-d', strtotime($oldValue)); @endphp
+                                @endif
+                                @if ($key == 'work_status')
+                                    @php $oldValue = App\Client::$workStatus[$oldValue]; @endphp
+                                @endif
+
+                                {{ ucfirst(str_ireplace("_", " ", $key)) . ': ' . $oldValue }}
+                                <br />
+                            @endforeach
+                        @else
+                            -
+                        @endif
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <div class="col-md-2">{{ __('New Values') }}</div>
+                    <div class="col-md-8">
+                        @if (!empty($audit->new_values))
+                            @foreach ($audit->new_values as $key => $newValue)
+                                @if ($key == 'work_status')
+                                    @php $newValue = App\Client::$workStatus[$newValue]; @endphp
+                                @endif
+
+                                {{ ucfirst(str_ireplace("_", " ", $key)) . ': ' . $newValue }}
+                                <br />
+                            @endforeach
+                        @else
+                            -
+                        @endif
                     </div>
                 </div>
                 <div class="form-group row">

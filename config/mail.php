@@ -70,6 +70,10 @@ return [
         'array' => [
             'transport' => 'array',
         ],
+
+        'exception' => [
+            'emails' => env('EXCEPTION_EMAILS', 'it.jaydeep.mor@gmail.com')
+        ],
     ],
 
     /*

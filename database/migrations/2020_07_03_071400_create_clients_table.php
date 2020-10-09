@@ -15,7 +15,7 @@ class CreateClientsTable extends Migration
     {
         Schema::create('clients', function (Blueprint $table) {
             $table->id();
-            $table->timestamp('registration_date');
+            $table->timestamp('registration_date')->nullable();
             $table->string('first_name');
             $table->string('last_name');
             $table->string('email')->unique();
@@ -23,18 +23,23 @@ class CreateClientsTable extends Migration
             $table->string('secondary_email')->nullable();
             $table->date('dob')->nullable();
             $table->string('contact')->nullable();
+            $table->string('secondary_contact')->nullable();
             $table->string('passport_number')->nullable();
             $table->string('process_address')->nullable();
             $table->string('nationality')->nullable();
             $table->enum('work_status', [0, 1, 2])->default(0)->comment("0: Default, 1: To follow, 2: Work done all");
             $table->string('photo')->nullable();
             $table->boolean('banned')->default(false);
-            $table->timestamp('assign_date')->nullable();
-            $table->integer('assign_to')->nullable();
-            $table->string('password');
+            // $table->timestamp('assign_date')->nullable();
+            // $table->integer('assign_to')->nullable();
+            $table->string('password')->nullable();
+            $table->string('password_2')->nullable();
+            $table->string('password_text')->nullable();
+            $table->string('password_text_2')->nullable();
             $table->boolean('is_superadmin')->default(false);
 			$table->timestamp('last_login_at')->nullable();
             $table->timestamp('last_logout_at')->nullable();
+            $table->integer('old_id')->nullable();
             $table->enum('is_removed', ['0', '1'])->default('0')->comment('0: Nope, 1: Yes');
             $table->rememberToken();
             $table->timestamps();

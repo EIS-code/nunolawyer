@@ -42,13 +42,42 @@
                                 {{ __('Dashboards') }}
                             </a>
                         </li>
-                        <!--li class="app-sidebar__heading">Clients</li-->
-                        <li>
-                            <a href="{{ route('clients.index') }}" class="{{ (request()->is('clients*') ? 'mm-active' : '') }}">
-                                <i class="metismenu-icon pe-7s-users"></i>
-                                {{ __('Add New client') }}
-                            </a>
-                        </li>
+                        @can('clients_create')
+                            <!--li class="app-sidebar__heading">Clients</li-->
+                            <li>
+                                <a href="{{ route('clients.create') }}" class="{{ (request()->is('clients/create') ? 'mm-active' : '') }}">
+                                    <i class="metismenu-icon pe-7s-users"></i>
+                                    {{ __('Add new client') }}
+                                </a>
+                            </li>
+                        @endcan
+                        @can('clients_access')
+                            <!--li class="app-sidebar__heading">Clients</li-->
+                            <li>
+                                <a href="{{ route('clients.index') }}" class="{{ (request()->is('clients*') && !request()->is('clients/view') && !request()->is('clients/create') ? 'mm-active' : '') }}">
+                                    <i class="metismenu-icon pe-7s-users"></i>
+                                    {{ __('View all clients') }}
+                                </a>
+                            </li>
+                        @endcan
+						@can('clients_access')
+                            <!--li class="app-sidebar__heading">Clients</li-->
+                            <li>
+                                <a href="{{ route('clients.view') }}" class="{{ (request()->is('clients/view') && !request()->is('clients/create') ? 'mm-active' : '') }}">
+                                    <i class="metismenu-icon pe-7s-search"></i>
+                                    {{ __('Search all clients') }}
+                                </a>
+                            </li>
+                        @endcan
+                        @can('clients_access')
+                            <!--li class="app-sidebar__heading">Clients</li>
+                            <li>
+                                <a href="{{ route('clients.view') }}" class="{{ (request()->is('clients/view') ? 'mm-active' : '') }}">
+                                    <i class="metismenu-icon pe-7s-users"></i>
+                                    {{ __('View all clients') }}
+                                </a>
+                            </li-->
+                        @endcan
                         <!--li>
                             <a href="#">
                                 <i class="metismenu-icon pe-7s-albums"></i>
@@ -61,48 +90,85 @@
                                 {{ __('Search clients') }}
                             </a>
                         </li-->
-                        <!--li class="app-sidebar__heading">{{ ('Editors') }}</li-->
-                        <li>
-                            <a href="{{ route('editors.index') }}" class="{{ (request()->is('editors*') ? 'mm-active' : '') }}">
-                                <i class="metismenu-icon pe-7s-display2"></i>
-                                {{ __('View all editors') }}
-                            </a>
-                        </li>
-                        <!--li class="app-sidebar__heading">{{ __('Article / Purpose') }}</li-->
-                        <li>
-                            <a class="{{ (request()->is('') ? 'mm-active' : '') }}">
-                                <i class="metismenu-icon pe-7s-notebook"></i>
-                                {{ __('Article / Purpose') }}
-                            </a>
-                        </li>
-                        <!--li class="app-sidebar__heading">{{ __('POA & agreement') }}</li-->
-                        <li>
-                            <a class="{{ (request()->is('') ? 'mm-active' : '') }}">
-                                <i class="metismenu-icon pe-7s-note"></i>
-                                {{ __('POA & agreement') }}
-                            </a>
-                        </li>
-                        <!--li class="app-sidebar__heading">{{ __('Translate model or documents') }}</li-->
-                        <li>
-                            <a class="{{ (request()->is('') ? 'mm-active' : '') }}">
-                                <i class="metismenu-icon pe-7s-file"></i>
-                                {{ __('Translate model or documents') }}
-                            </a>
-                        </li>
-                        <!--li class="app-sidebar__heading">{{ __('Our fee / policy document') }}</li-->
-                        <li>
-                            <a class="{{ (request()->is('') ? 'mm-active' : '') }}">
-                                <i class="metismenu-icon pe-7s-file"></i>
-                                {{ __('Our fee / policy document') }}
-                            </a>
-                        </li>
-                        <!--li class="app-sidebar__heading">{{ __('Account') }}</li-->
-                        <li>
-                            <a class="{{ (request()->is('') ? 'mm-active' : '') }}">
-                                <i class="metismenu-icon pe-7s-pen"></i>
-                                {{ __('Account') }}
-                            </a>
-                        </li>
+                        @can('editors_access')
+                            <!--li class="app-sidebar__heading">{{ ('Editors') }}</li-->
+                            <li>
+                                <a href="{{ route('editors.index') }}" class="{{ (request()->is('editors*') ? 'mm-active' : '') }}">
+                                    <i class="metismenu-icon pe-7s-display2"></i>
+                                    {{ __('View all editors') }}
+                                </a>
+                            </li>
+                        @endcan
+                        @can('article_purpose_access')
+                            <!--li class="app-sidebar__heading">{{ __('Article / Purpose') }}</li-->
+                            <li>
+                                <a href="{{ route('article_purpose.index') }}" class="{{ (request()->is('article_purpose*') ? 'mm-active' : '') }}">
+                                    <i class="metismenu-icon pe-7s-notebook"></i>
+                                    {{ __('Article / Purpose') }}
+                                </a>
+                            </li>
+                        @endcan
+                        @can('poa_access')
+                            <!--li class="app-sidebar__heading">{{ __('POA & agreement') }}</li-->
+                            <li>
+                                <a href="{{ route('poa.index') }}" class="{{ (request()->is('poa*') ? 'mm-active' : '') }}">
+                                    <i class="metismenu-icon pe-7s-note"></i>
+                                    {{ __('POA & agreement') }}
+                                </a>
+                            </li>
+                        @endcan
+                        @can('translate_model_document_access')
+                            <!--li class="app-sidebar__heading">{{ __('Translate model or documents') }}</li-->
+                            <li>
+                                <a href="{{ route('translate_model_document.index') }}" class="{{ (request()->is('translate_model_document*') ? 'mm-active' : '') }}">
+                                    <i class="metismenu-icon pe-7s-file"></i>
+                                    {{ __('Translate model or documents') }}
+                                </a>
+                            </li>
+                        @endcan
+                        @can('our_fee_policy_document_access')
+                            <!--li class="app-sidebar__heading">{{ __('Our fee / policy document') }}</li-->
+                            <li>
+                                <a href="{{ route('our_fee_policy_document.index') }}" class="{{ (request()->is('our_fee_policy_document*') ? 'mm-active' : '') }}">
+                                    <i class="metismenu-icon pe-7s-wallet"></i>
+                                    {{ __('Our fee / policy document') }}
+                                </a>
+                            </li>
+                        @endcan
+                        @can('terms_and_conditions_access')
+                            <!--li class="app-sidebar__heading">{{ __('Our fee / policy document') }}</li-->
+                            <li>
+                                <a href="{{ route('terms_and_conditions.index') }}" class="{{ (request()->is('terms_and_conditions*') ? 'mm-active' : '') }}">
+                                    <i class="metismenu-icon pe-7s-info"></i>
+                                    {{ __('Terms and conditions') }}
+                                </a>
+                            </li>
+                        @endcan
+                        @can('account_access')
+                            <!--li class="app-sidebar__heading">{{ __('Account') }}</li-->
+                            <li>
+                                <a href="{{ route('account.index') }}" class="{{ (request()->is('account*') ? 'mm-active' : '') }}">
+                                    <i class="metismenu-icon pe-7s-pen"></i>
+                                    {{ __('Account') }}
+                                </a>
+                            </li>
+                        @endcan
+                        @can('follow_up_access')
+                            <li>
+                                <a href="{{ route('follow_up.index') }}" class="{{ (request()->is('follow_up*') ? 'mm-active' : '') }}">
+                                    <i class="metismenu-icon pe-7s-note"></i>
+                                    {{ __('Follow Up') }}
+                                </a>
+                            </li>
+                        @endcan
+                        @can('activitylog_access')
+                            <li>
+                                <a href="{{ route('activitylog.index') }}" class="{{ (request()->is('activitylog*') ? 'mm-active' : '') }}">
+                                    <i class="metismenu-icon pe-7s-pen"></i>
+                                    {{ __('Activity Log') }}
+                                </a>
+                            </li>
+                        @endcan
                         @can('roles_access')
                             <li>
                                 <a href="{{ route('roles.index') }}" class="{{ (request()->is('roles*') ? 'mm-active' : '') }}">

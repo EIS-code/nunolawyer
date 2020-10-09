@@ -7,16 +7,26 @@
     <!-- CSRF Token -->
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
-    <title>{{ config('app.name', 'Nunolawyer') }}</title>
+    @auth
+        <title>{{ auth()->user()->first_name . ' ' . auth()->user()->last_name }}</title>
+    @else
+        <title>{{ config('app.name', 'Nunolawyer') }}</title>
+    @endauth
+
+    <link rel="shortcut icon" href="{{ asset('images/favicon.png') }}" type="image/png" />
 
     <!-- Scripts -->
     <script defer src="{{ asset('js/app.js') }}" defer></script>
     <script defer src="http://maps.google.com/maps/api/js?sensor=true"></script>
     <script defer src="{{ asset('js/main.js') }}"></script>
+    <script defer src="{{ asset('js/custom.js') }}"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/select2@4.1.0-beta.1/dist/js/select2.min.js"></script>
 
     <!-- Styles -->
     <link href="{{ asset('css/app.css') }}" rel="stylesheet"></link>
     <link href="{{ asset('css/main.css') }}" rel="stylesheet"></link>
+    <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-beta.1/dist/css/select2.min.css" rel="stylesheet" />
+    <link href="{{ asset('css/custom.css') }}" rel="stylesheet"></link>
 </head>
 <body>
     <div class="app-container app-theme-white body-tabs-shadow fixed-sidebar fixed-header">
@@ -75,6 +85,16 @@
                                                 <div tabindex="-1" role="menu" aria-hidden="true" class="dropdown-menu dropdown-menu-right">
                                                     <!--a class="dropdown-item" href="{{ route('clients.create') }}">{{ __('Register') }}</a>
                                                     <div tabindex="-1" class="dropdown-divider"></div-->
+                                                    @if (auth()->user()->isSuperAdmin())
+                                                        <!--a class="dropdown-item" href="{{ route('admin.profile') }}">
+                                                            {{ __('My Profile') }}
+                                                        </a-->
+                                                    @else
+                                                    @endif
+                                                    <a class="dropdown-item" target="__blank" href="{{ route((auth()->user()->isEditors() ? 'editors.edit' : 'clients.edit'), auth()->user()->id) }}">
+                                                        {{ __('My Profile') }}
+                                                    </a>
+
                                                     <a class="dropdown-item" href="{{ route('logout') }}"
                                                        onclick="event.preventDefault();
                                                                      document.getElementById('logout-form').submit();">

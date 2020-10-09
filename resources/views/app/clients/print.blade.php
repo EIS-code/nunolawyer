@@ -10,24 +10,44 @@
 
         <!-- Bootstrap CSS -->
         <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css">
+
+        <style type="text/css">
+            * {
+                font-size: 20px;
+            }
+            table th, td:not(.wrap) {
+                white-space: nowrap;
+            }
+        </style>
     </head>
     <body onbeforeprint="beforePrints()" onafterprint="afterPrints()">
+        @php
+            $isEditors = $client::$isEditors;
+        @endphp
+
         <div class="container">
             <div class="print-only" style="margin-top: 20px;width: 100%;font-size: 22px;">
-                <h1 class="header" style="text-transform: uppercase;">{{ $client->first_name .' '. $client->last_name }}</h1>
+                <h1 class="header" style="text-transform: uppercase;color: blue;float: left;">
+                    {{ $client->first_name .' '. $client->last_name }}
+                </h1>
+                <div style="float: right;" id="print-no">
+                    <button class="btn btn-primary btn-sm" onclick="printPage();">
+                        {{ __('Print') }}
+                    </button>
+                </div>
                 <table class="user-table table table-bordered">
                     <tbody>
                         <tr>
-                            <td class="table-main">{{ __('Registered Date') }}</td>
-                            <td class="table-contain">
+                            <th class="table-main">{{ __('Registered Date') }}</th>
+                            <th class="table-contain">
                                 {{ date('Y-m-d', strtotime($client->registration_date)) }}
-                            </td>
-                            <td class="table-main">{{ __('Terms and Condition') }}</td>
+                            </th>
+                            <th class="table-main">{{ __('Terms and Condition') }}</th>
                         </tr>
                         <tr>
                             <td class="table-main">{{ __('Name') }}</td>
                             <td class="table-contain">{{ $client->first_name .' '. $client->last_name }}</td>
-                            <td rowspan="8" style="width:50%;">
+                            <td rowspan="8" style="width:50%;" class="wrap">
                                 <p>1. {{ __('Adm. Fee is for mention purpose, Art and for one time attempt in Lisbon work area only, otherwise additional charge, hotel booking cost plus transportation charge 0.50 Cent Euro per K.M will be charged.') }}</p>
                                 <p>2. {{ __('Missing / Due amount will be charged before your appointment on any suitable day.') }}</p>
                                 <p>3. {{ __('All the money we have received and will be received is always non refundable.') }}</p>
@@ -46,30 +66,47 @@
                         </tr>
                         <tr>
                             <td class="table-main">{{ __('Email') }}</td>
-                            <td class="table-contain">{{ $client->email }}</td>
+                            <td class="table-contain">
+                                {{ $client->email }} <br /><hr />
+                                {{ __('Password') }}   &nbsp;&nbsp;&nbsp;: <i>{{ $client->password_text }}</i> <br />
+                                {{ __('Password 2') }} : <i>{{ $client->password_text_2 }}</i>
+                            </td>
                         </tr>
                         <tr>
                             <td class="table-main">{{ __('Contact') }}</td>
-                            <td class="table-contain">{{ $client->contact }}</td>
+                            <td class="table-contain">{{ $client->contact . (!empty($client->secondary_contact) ? ', ' . $client->secondary_contact : '') }}</td>
                         </tr>
                         <tr>
                             <td class="table-main">{{ __('Process Address') }}</td>
                             <td class="table-contain">{{ $client->process_address }}</td>
                         </tr>
+                        @if (!$isEditors)
                         <tr>
-                            <td class="table-main">{{ __('Purpose/Art.') }}</td>
                             @php
                                 $titles = [];
                                 $client->clientPurposeArticles->map(function($data) use(&$titles) {
-                                    $titles[] = $data->purposeArticle->title;
+                                    if (!empty($data->purposeArticle)) {
+                                        $titles[] = $data->purposeArticle->title;
+                                    }
                                 });
                             @endphp
+                            <td class="table-main" rowspan="{{ count($titles) }}">{{ __('Purpose/Art.') }}</td>
                             <td class="table-contain">
-                                {{ implode(' / ', $titles) }}
+                                @if (!empty($titles))
+                                    <table class="table table-bordered">
+                                        @foreach ($titles as $title)
+                                            <tr>
+                                                <td>{{ $title }}</td>
+                                            </tr>
+                                        @endforeach
+                                    </table>
+                                @endif
                             </td>
                         </tr>
+                        @endif
                     </tbody>
                 </table>
+                @if (!$isEditors)
                 <table class="table table-bordered">
                     <thead>
                         <tr class="fee-header">
@@ -122,26 +159,55 @@
                         @endforeach
                     </tbody>
                 </table>
-                <table class="table table-bordered" id="print-no">
+                @if ($loggedInId == $client->id || $client->hasSuperAdmin())
+                    <table class="table table-bordered" id="print-no">
+                        <thead>
+                            <tr class="fee-header">
+                                <th style="width:10%">{{ __('Date') }}</th>
+                                <th>
+                                    {{ __('Client Private Information') }}
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach ($client->clientPrivateInformations as $index => $clientPrivateInformation)
+                                <tr>
+                                    <td>{{ date('Y-m-d', strtotime($clientPrivateInformation->date)) }}</td>
+                                    <td>
+                                        <p>{{ $clientPrivateInformation->private_information }}</p>
+                                    </td>
+                                </tr>
+                            @endforeach
+                        </tbody>
+                    </table>
+                @endif
+                @endif
+                <table class="table table-bordered">
                     <thead>
                         <tr class="fee-header">
-                            <th style="width:10%">{{ __('Date') }}</th>
-                            <th>
-                                {{ __('Client Private Information') }}
-                            </th>
+                            <th style="width:10%">{{ __('SN') }}</th>
+                            <th>{{ $isEditors ? __('Editor') : __('Client') }} {{ __(' Documents') }}</th>
                         </tr>
                     </thead>
                     <tbody>
-                        @foreach ($client->clientPrivateInformations as $index => $clientPrivateInformation)
+                        @foreach ($client->clientDocuments as $index => $clientDocument)
                             <tr>
-                                <td>{{ date('Y-m-d', strtotime($clientPrivateInformation->date)) }}</td>
+                                <td>{{ $index + 1 }}</td>
                                 <td>
-                                    <p>{{ $clientPrivateInformation->private_information }}</p>
+                                    @if (!empty($clientDocument))
+                                        <a href="{{ $clientDocument->file }}" target="__blank">
+                                            {{ __('View') }}
+                                        </a>
+
+                                    @else
+                                        <mark>{{ __('No file!') }}</mark>
+                                    @endif
                                 </td>
                             </tr>
                         @endforeach
                     </tbody>
                 </table>
+                @if (!$isEditors)
                 <table class="table table-bordered">
                     <thead>
                         <tr class="fee-header">
@@ -160,10 +226,36 @@
                         @endforeach
                     </tbody>
                 </table>
+                @endif
+                <table class="table table-bordered">
+                    <thead>
+                        <tr class="fee-header">
+                            <th style="width:10%">{{ __('SN') }}</th>
+                            <th>{{ __('Translate Documents') }}</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach ($client->translateModelDocuments as $index => $translateModelDocument)
+                            <tr>
+                                <td>{{ $index + 1 }}</td>
+                                <td>
+                                    @if (!empty($translateModelDocument))
+                                        <a href="{{ $translateModelDocument->file }}" target="__blank">
+                                            {{ __('View') }}
+                                        </a>
+
+                                    @else
+                                        <mark>{{ __('No file!') }}</mark>
+                                    @endif
+                                </td>
+                            </tr>
+                        @endforeach
+                    </tbody>
+                </table>
                 <br>
                 -----------------<br>
                 {{ __('Client Signature') }}<br>
-                <h1 class="nuno-header" style="padding-top:0px;">
+                <h1 class="nuno-header" style="padding-top:0px;color: blue;">
                     {{ __('Dr. Nuno Ramos Correia') }}<br>
                 </h1>
                 <p class="nuno-details">
@@ -193,6 +285,11 @@
             if (printNo) {
                 printNo.style.display = "block";
             }
+        }
+
+        function printPage()
+        {
+            window.print();
         }
     </script>
 </html>

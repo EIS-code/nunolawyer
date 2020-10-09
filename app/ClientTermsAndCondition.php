@@ -28,11 +28,15 @@ class ClientTermsAndCondition extends BaseModel implements Auditable
     public static function validators(array $data, $returnBoolsOnly = false)
     {
         $validator = Validator::make($data, [
-            'terms_and_conditions' => ['required','string', 'max:255'],
+            'terms_and_conditions' => ['required', 'string', 'max:255'],
             'client_id'            => ['required', 'integer', 'exists:' . Client::getTableName() . ',id'],
         ]);
 
         if ($returnBoolsOnly === true) {
+            if ($validator->fails()) {
+                // \Session::flash('error', $validator->errors()->all());
+            }
+
             return !$validator->fails();
         }
 

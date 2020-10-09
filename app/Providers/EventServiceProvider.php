@@ -26,6 +26,10 @@ class EventServiceProvider extends ServiceProvider
         'Illuminate\Auth\Events\Logout' => [
             'App\Audit\Listeners\AuditLogout',
         ],
+
+        'item.updated' => [
+            'App\Events\ItemEvent@itemUpdated',
+        ],
     ];
 
     /**

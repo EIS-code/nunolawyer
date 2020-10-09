@@ -264,7 +264,53 @@
                 }
             });
             function numberingTc() {
-                let div    = $("#row-Tc"),
+                let div    = $("#row-tc"),
+                    tables = div.find("table").not(':first');
+
+                if (tables.length > 0) {
+                    var inc = 1;
+                    tables.each(function() {
+                        let self = $(this),
+                            td   = self.find("td:first-child");
+
+                        if (td) {
+                            td.html(inc);
+                            inc++;
+                        }
+                    });
+                }
+            }
+
+            // Assign
+            $(document).on("click", "#plus-sas", function() {
+                let clone     = $("#main-sas").clone()
+                                             .prop("id", "")
+                                             .find("#plus-sas").prop("id", "minus-sas").end()
+                                             .find("#minus-sas").toggleClass("fa-plus").addClass("fa-trash").end()
+                                             .find("input").val("").end()
+                                             .find("textarea").val("").end(),
+                    clonnedSas = $("#cloned-sas");
+
+                if (clonnedSas) {
+                    clonnedSas.before(clone);
+
+                    numberingSas();
+                }
+            });
+            $(document).on("click", "#minus-sas", function() {
+                let self = $(this),
+                    div  = self.closest("div").get(0);
+
+                if (div) {
+                    div.remove();
+
+                    numberingSas();
+                }
+            });
+            function numberingSas() {
+                select2PurposeArticles();
+
+                let div    = $("#row-sas"),
                     tables = div.find("table");
 
                 if (tables.length > 0) {
@@ -280,6 +326,96 @@
                     });
                 }
             }
+
+            // Select2
+            function select2PurposeArticles()
+            {
+                $(".purpose_articles").select2({
+                    placeholder: "{{ __('Select purpose / articles') }}",
+                    allowClear: true,
+                    width: '100%'
+                }).on("select2:select", function (e) {
+                    $("#last_purpose_articles").val(e.params.data.id);
+
+                    let $element = $(e.params.data.element);
+
+                    if ($element) {
+                        $element.detach();
+                        $(this).append($element);
+                        $(this).trigger("change");
+                    }
+                }).on("select2:unselect", function (e) {
+                    $("#last_purpose_articles").val(e.params.data.id);
+                });
+            }
+            select2PurposeArticles();
+
+            $(".work_status").select2({
+                placeholder: "{{ __('Select work status') }}",
+                allowClear: true,
+                width: '100%'
+            });
+
+            $(".assign_to").select2({
+                placeholder: "{{ __('Select') }}",
+                allowClear: true,
+                width: '100%'
+            });
+
+            let togglePassword = $(".togglePassword");
+            if (togglePassword) {
+                togglePassword.on('click', function (e) {
+                    let passwordInput = $(this).next();
+
+                    if (passwordInput) {
+                        if (passwordInput.attr('type') == 'password') {
+                            passwordInput.attr('type', 'text');
+                        } else {
+                            passwordInput.attr('type', 'password');
+                        }
+                    }
+                });
+            }
+
+            /*$("input[id='number']").on("keyup", function(e) {
+                let value = $(this).val();
+
+                // !/^[+-]?\d+$/
+                // /^[\d\(\)\-+]+$/
+                if (/^[\d\(\)\-+]+$/.test(value)) {
+                    return true;
+                }
+
+                return false;
+            });*/
         }
     });
+    function checkNumber(event) {
+        event = event || window.event;
+        console.log(event.keyCode);
+
+        var allowedKeys = [
+            48, 49, 50, 51, 52, 53, 54, 55, 56, 57, 8, 189, 9, 37, 39, 190, 13
+        ];
+
+        var isMinus = (event.target.value.indexOf("-") !== -1),
+            isPlus  = (event.target.value.indexOf("+") !== -1);
+
+        if (isMinus) {
+            var index = allowedKeys.indexOf(187);
+            allowedKeys.splice(index, 1);
+
+            var index = allowedKeys.indexOf(189);
+            allowedKeys.splice(index, 1);
+        }
+        if (isPlus) {
+            var index = allowedKeys.indexOf(189);
+            allowedKeys.splice(index, 1);
+
+            var index = allowedKeys.indexOf(187);
+            allowedKeys.splice(index, 1);
+        }
+
+        return (allowedKeys.indexOf(event.keyCode) !== -1 && event.key != '_');
+    }
 </script>

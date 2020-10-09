@@ -29,9 +29,17 @@
         @endif
 
         @if (session('error'))
-            <div class="alert alert-danger" role="alert">
-                {{ session('error') }}
-            </div>
+            @if (is_array(session('error')))
+                <div class="alert alert-danger" role="alert">
+                    @foreach (session('error') as $error)
+                        {{ $error }}<br />
+                    @endforeach
+                </div>
+            @else
+                <div class="alert alert-danger" role="alert">
+                    {{ session('error') }}
+                </div>
+            @endif
         @endif
 
         <div class="card bg-white">
@@ -83,7 +91,7 @@
 
                                             @if (!empty($purposeArticles) && !$purposeArticles->isEmpty())
                                                 @foreach ($purposeArticles as $purposeArticle)
-                                                    <option value="{{ $purposeArticle['id'] }}" @if ($term->get('pur')) selected="true" @endif>{{ $purposeArticle['title'] }}</option>
+                                                    <option value="{{ $purposeArticle['id'] }}" @if ($term->get('pur') && $term->get('pur') == $purposeArticle['id']) selected="true" @endif>{{ $purposeArticle['title'] }}</option>
                                                 @endforeach
                                             @endif
                                         </select>
@@ -95,8 +103,8 @@
                                         <label>{{__('Work Status')}}</label>
                                     </div>
                                     <div class="col-md-12">
-                                        <select name="ws[]" multiple="true">
-                                            <option value="">{{ __('Select') }}</option>
+                                        <select name="ws[]" multiple="true" class="form-control work_status">
+                                            <!--option value="">{{ __('Select') }}</option-->
 
                                             @foreach ($clientModel::$workStatus as $value => $text)
                                                 <option value="{{ $value }}" @php echo (!empty($term->get('ws')) && in_array($value, $term->get('ws')) ? 'selected' : ''); @endphp>{{ $text }}</option>
@@ -120,10 +128,12 @@
                                         <i class="fa fa-file"></i>
                                         {{ __('Export') }}
                                     </button-->
-                                    <button type="submit" name="export" value="{{ __('Export') }}" class="btn btn-success">
-                                        <i class="fa fa-file"></i>
-                                        {{ __('Export') }}
-                                    </button>
+                                    @if(!empty($clients) && $clients->total() > 0)
+                                        <button type="submit" name="export" value="{{ __('Export') }}" class="btn btn-success">
+                                            <i class="fa fa-file"></i>
+                                            {{ __('Export') }}
+                                        </button>
+                                    @endif
                                 </div>
                             </div>
                         </form>
@@ -132,7 +142,9 @@
                         <div class="page-title pull-right">
                             <div class="heading">
                                 @can('clients_create')
-                                    <a href="{{route('clients.create')}}" class="btn btn-primary btn-round"><i class="metismenu-icon pe-7s-user"></i> {{__('Add New Client')}}</a>
+                                    @if (!$clientModel::$isViewClients)
+                                        <a href="{{route('clients.create')}}" class="btn btn-primary btn-round"><i class="metismenu-icon pe-7s-user"></i> {{__('Add New Client')}}</a>
+                                    @endif
                                 @endcan
                             </div>
                         </div>
@@ -154,29 +166,40 @@
                                 <th>{{__('Name')}}</th>
                                 <th>{{ __('DOB') }}</th>
                                 <th>{{ __('Nationality') }}</th>
-                                <th>{{ __('Passport/Art.') }}</th>
+                                <th>{{ __('Passport/Add.') }}</th>
                                 <th>{{__('E-mail')}}</th>
                                 <th>{{ __('Contact') }}</th>
-                                <th>{{__('Role')}}</th>
-                                @can('clients_activity')
+                                <th>{{ __('Purpose/Article') }}</th>
+                                <!-- <th>{{__('Role')}}</th> -->
+                                <!-- @can('clients_activity')
                                     <th>{{ __('Log') }}</th>
                                 @endcan
                                 @can('clients_print')
                                     <th>{{ __('View') }}</th>
-                                @endcan
+                                @endcan -->
                             </tr>
                         </thead>
                         <tbody>
-                            @if($clients->total() == 0)
+                            @if(empty($clients) || $clients->total() == 0)
                                 <tr>
-                                    <td colspan="12" class="text-center"><mark>{{__('No results found.')}}</mark></td>
+                                    <td colspan="15" class="text-center"><mark>{{__('No results found.')}}</mark></td>
                                 </tr>
                             @else
                                 @foreach($clients as $client)
-                                    <tr>
+                                    @php
+                                        $style = '';
+                                        if ($client->getAttributes()['work_status'] == 0) {
+                                            $style = 'tr-default-status';
+                                        } elseif ($client->getAttributes()['work_status'] == 1) {
+                                            $style = 'tr-to-follow-status';
+                                        } elseif ($client->getAttributes()['work_status'] == 2) {
+                                            $style = 'tr-work-done-status';
+                                        }
+                                    @endphp
+                                    <tr class="{{ $style }}">
                                         <td width="1">
                                             @can('clients_show')
-                                                <a href="{{route('clients.show', $client->id)}}" data-toggle="tooltip" data-placement="top" title="{{__('View Client')}}">
+                                                <a href="{{route('clients.show', $client->id)}}" {{ ($clientModel::$isViewClients ? 'target="__blank"' : '') }} data-toggle="tooltip" data-placement="top" title="{{__('View Client')}}">
                                                     <i class="fa fa-eye"></i>
                                                 </a>
                                             @endcan
@@ -184,7 +207,7 @@
                                         <td width="1">
                                             @if(!$client->isSuperAdmin())
                                                 @can('clients_edit')
-                                                    <a href="{{route('clients.edit', $client->id)}}" data-toggle="tooltip" data-placement="top" title="{{__('Edit Client')}}">
+                                                    <a href="{{route('clients.edit', $client->id)}}" {{ ($clientModel::$isViewClients ? 'target="__blank"' : '') }} data-toggle="tooltip" data-placement="top" title="{{__('Edit Client')}}">
                                                         <i class="fa fa-edit"></i>
                                                     </a>
                                                 @endcan
@@ -193,7 +216,7 @@
                                         <td width="1">
                                             @if(!$client->isSuperAdmin())
                                                 @can('clients_delete')
-                                                    <form action="{{ route('clients.destroy', $client->id) }}" method="POST">
+                                                    <form action="{{ route('clients.destroy', $client->id) }}" {{ ($clientModel::$isViewClients ? 'target="__blank"' : '') }} method="POST">
                                                         @method('DELETE')
                                                         @csrf
                                                         <a href="#" class="deleteBtn" data-confirm-message="{{__("Are you sure you want to delete this client?")}}" data-toggle="tooltip" data-placement="top" title="{{__('Delete Client')}}"><i class="fa fa-trash"></i></a>
@@ -214,8 +237,26 @@
                                         <td>{{ $client->passport_number . ' / ' . $client->process_address }}</td>
                                         <td>{{$client->email}}</td>
                                         <td>{{$client->contact}}</td>
-                                        <td><span class="badge badge-lg badge-secondary text-white">{{@$client->getRoleNames()[0]}}</span></td>
-                                        @can('clients_activity')
+                                        @php
+                                            $purposeArticles = ['-'];
+                                            if (!empty($client->clientPurposeArticleLatests())) {
+                                                $getPurposeArticles = $client->clientPurposeArticleLatests()->get();
+
+                                                if (!empty($getPurposeArticles) && !$getPurposeArticles->isEmpty()) {
+                                                    $purposeArticles = [];
+
+                                                    foreach ($getPurposeArticles as $getPurposeArticle) {
+                                                        if (!empty($getPurposeArticle->purposeArticle)) {
+                                                            $purposeArticles[] = $getPurposeArticle->purposeArticle->title;
+                                                        }
+                                                    }
+                                                }
+                                            }
+                                            $purposeArticles = implode(", ", $purposeArticles);
+                                        @endphp
+                                        <td>{{ $purposeArticles }}</td>
+                                        <!-- <td><span class="badge badge-lg badge-secondary text-white">{{@$client->getRoleNames()[0]}}</span></td> -->
+                                        <!-- @can('clients_activity')
                                             <td>
                                                 <a href="{{ route('clients.activity', $client->id) }}#" target="_blank">{{ __('Log') }}</a>
                                             </td>
@@ -224,7 +265,7 @@
                                             <td>
                                                 <a href="{{ route('clients.print', $client->id) }}" target="_blank">{{ __('Print') }}</a>
                                             </td>
-                                        @endcan
+                                        @endcan -->
                                     </tr>
                                 @endforeach
                             @endif
@@ -232,18 +273,21 @@
                     </table>
 
                     <div class="float-left">
-                        @if(!empty($term))
-                            {{ $clients->appends(['s' => $term])->links() }}
-                        @else
+                        @if(!empty($term) && !empty($clients))
+                            {{ $clients->appends($term->all())->links() }}
+                        @elseif (!empty($clients))
                             {{ $clients->links() }}
                         @endif
                     </div>
 
                     <div class="float-right text-muted">
-                        {{__('Showing')}} {{ $clients->firstItem() }} - {{ $clients->lastItem() }} / {{ $clients->total() }} ({{__('page')}} {{ $clients->currentPage() }} )
+                        @if (!empty($clients))
+                            {{__('Showing')}} {{ $clients->firstItem() }} - {{ $clients->lastItem() }} / {{ $clients->total() }} ({{__('page')}} {{ $clients->currentPage() }} )
+                        @endif
                     </div>
                 </div>
             </div>
         </div>
     </div>
+    @include('app.clients.scripts')
 @endsection

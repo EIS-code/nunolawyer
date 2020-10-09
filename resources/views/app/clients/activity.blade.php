@@ -4,6 +4,8 @@
 
     @php
         $isEditors = $client::$isEditors;
+        $routeName = \Route::current()->getName();
+        $isOwnActivity = (!empty($routeName) && in_array($routeName, ['clients.own.activity', 'editors.own.activity']));
     @endphp
 
     <div class="page-header">
@@ -12,7 +14,7 @@
                 <div class="breadcrumb">
                     <a href="{{route('dashboard')}}" class="breadcrumb-item"><i class="metismenu-icon pe-7s-home" style="margin-top: 3px;"></i>&nbsp;{{__('Dashboard')}}</a>
                     <a href="{{route('clients.index')}}" class="breadcrumb-item">{{ ($isEditors ? __('Editors') : __('Clients')) }}</a>
-                    <span class="breadcrumb-item active">{{__('Activity Log')}}</span>
+                    <span class="breadcrumb-item active">{{__('Activity Log')}} {{ $isOwnActivity ? _(' Own') : '' }}</span>
                     <span class="breadcrumb-item active">{{$client->first_name . ' ' . $client->last_name}}</span>
                 </div>
             </div>
@@ -36,12 +38,30 @@
                             </tr>
                         </thead>
                         <tbody>
-                            @if($audits->total() == 0)
-                                <tr>
-                                    <td colspan="5">{{__('No results found.')}}</td>
-                                </tr>
-                            @else
+                            @php
+                                $isHave = false;
+                            @endphp
+
+                            @if($audits->total() > 0)
                                 @foreach($audits as $audit)
+                                    @if (!empty($audit->getModified()))
+                                        @if (count($audit->getModified()) == 1 && !empty($audit->getModified()['registration_date']))
+                                            @if (strtotime(date('Y-m-d', strtotime($audit->getModified()['registration_date']['old']))) == strtotime(date('Y-m-d', strtotime($audit->getModified()['registration_date']['new']))))
+                                                @continue
+                                            @endif
+                                        @endif
+
+                                        @if (count($audit->getModified()) == 1 && !empty($audit->getModified()['date']))
+                                            @if (strtotime(date('Y-m-d', strtotime($audit->getModified()['date']['old']))) == strtotime(date('Y-m-d', strtotime($audit->getModified()['date']['new']))))
+                                                @continue
+                                            @endif
+                                        @endif
+                                    @endif
+
+                                    @php
+                                        $isHave = true;
+                                    @endphp
+
                                     <tr>
                                         <td width="1">
                                             @can('activitylog_show')
@@ -64,6 +84,19 @@
                                         <td>{{$audit->ip_address}}</td>
                                     </tr>
                                 @endforeach
+                            @else
+                                @php
+                                    $isHave = true;
+                                @endphp
+                                <tr>
+                                    <td colspan="5" class="text-center">{{__('No results found.')}}</td>
+                                </tr>
+                            @endif
+
+                            @if (!$isHave)
+                                <tr>
+                                    <td colspan="6" class="text-center">{{__('No results found.')}}</td>
+                                </tr>
                             @endif
                         </tbody>
                     </table>

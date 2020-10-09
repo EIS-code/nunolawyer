@@ -3384,6 +3384,9 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
 
     // Public
     _proto.toggle = function toggle() {
+      /* SHIV */
+      return false;
+
       if (this._element.disabled || $(this._element).hasClass(ClassName$4.DISABLED)) {
         return;
       }
@@ -71071,6 +71074,7 @@ $(document).ready(function () {
   });
   $(".deleteBtn").on('click', function () {
     var form = $(this).parent().parent().find('form');
+    form = (form && form.length > 1) ? form[0] : form;
     var message = $(this).attr('data-confirm-message');
     bootbox.confirm({
       message: message,
@@ -71126,6 +71130,38 @@ $(document).ready(function () {
     } else {
       $("#" + name + "-settings").addClass('d-none');
     }
+  });
+  $(".toEmails").on('click', function () {
+    var html = $($(this).data('html')).clone().prop("class", "");
+    var form = $($(this).data('html'));
+
+    bootbox.dialog({
+      message: html,
+      locale: window.appLocale,
+    });
+  });
+  $(".view-details").on('click', function () {
+    let id   = $(this).data('id'),
+        url  = $(this).data('url'),
+        isEdit = $(this).data('is-edit'),
+        html = $("#view-details-" + id).html();
+
+    bootbox.dialog({
+      message: html,
+      size: 'large',
+      buttons: {
+        edit: {
+          className: (isEdit == true) ? 'btn-primary' : 'd-none',
+          callback: function() {
+            window.location.href = url;
+          }
+        },
+        cancel: {
+          className: 'btn-danger'
+        }
+      },
+      locale: window.appLocale
+    });
   });
 });
 
@@ -72449,6 +72485,10 @@ if (token) {
   window.onload = function () {
     return Authy.UI.instance();
   };
+
+  setTimeout(function() {
+    $(".close-sidebar-btn").first().click();
+  }, 1000);
 }).call(this);
 
 /***/ }),

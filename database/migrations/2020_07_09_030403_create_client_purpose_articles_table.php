@@ -20,6 +20,7 @@ class CreateClientPurposeArticlesTable extends Migration
             $table->foreign('purpose_article_id')->references('id')->on('purpose_articles')->onDelete('cascade');
 			$table->bigInteger('client_id')->unsigned();
             $table->foreign('client_id')->references('id')->on('clients')->onDelete('cascade');
+            $table->enum('is_last_inserted', ['0', '1'])->default('0')->comment('0: Nope, 1: Yes');
             $table->timestamps();
         });
     }
